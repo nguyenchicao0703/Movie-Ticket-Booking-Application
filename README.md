@@ -1,79 +1,71 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Movie Ticket Booking Application
 
-# Getting Started
+### Developer React-Native
+**Tổng:** 3.
+**Thành viên:** Cao, Dũng, Thuận.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+### Cấu trúc thư mục
+src/
+  ├── api/
+  │         └── index.js
+  ├── assets/
+  │     ├── Homes/
+  │     │     ├── image1.png
+  │     │     ├── image3.png
+  │     │     └── image2.png
+  │     └── Movies/
+  │             ├── image1.png
+  │             ├── image3.png
+  │             └── image2.png
+  ├── screens/
+  │         ├── HomeScreen.js
+  │         ├── LoginScreen.js
+  │         ├── RegisterScreen.js
+  │         ├── ProfileScreen.js
+  │         └── index.js
+  ├── components/
+  │         ├── TextInput.js
+  │         ├── Button.js
+  │         └── index.js
+  ├── constants/
+  │         ├── Colors.js
+  │         ├── Images.js
+  │         ├── Fonts.js
+  │         └── index.js
+  ├── navigators/
+  │         └── index.js
+  ├── redux/
+  │         ├── store.js
+  │         └── userSlice.js
+  └──  utils/
+              ├── Display.js
+              └── index.js
+                 
+### Dưới đây là giải thích ý nghĩa của từng thư mục trong cấu trúc thư mục được cung cấp:
+- **src/:** Thư mục gốc (root) của dự án.
+- **api/:** Chứa các tệp tin liên quan đến việc giao tiếp với API, bao gồm các tệp tin xử lý yêu cầu và phản hồi từ API.
+- **assets/:** Chứa các tài nguyên như hình ảnh, video, font chữ, vv. Đây là nơi lưu trữ các tài nguyên tĩnh được sử dụng trong dự án.
+- **screens/:** Chứa các thành phần màn hình (screens) của ứng dụng. Đây là nơi xác định và triển khai các màn hình giao diện người dùng.
+- **components/:** Chứa các thành phần (components) nhỏ tái sử dụng trong ứng dụng. Đây là nơi lưu trữ các thành phần UI có thể được sử dụng lại nhiều lần trong toàn bộ ứng dụng.
+- **constants/:** Chứa các tệp tin chứa các hằng số và giá trị cố định được sử dụng trong ứng dụng.
+- **navigators/:** Chứa các tệp tin liên quan đến điều hướng trong ứng dụng.
+- **redux/:** Chứa các tệp tin liên quan đến quản lý trạng thái ứng dụng bằng Redux, bao gồm các reducers, actions, selectors, vv.
+- **utils/:** Chứa các tệp tin chứa các hàm tiện ích, chức năng phụ trợ được sử dụng trong ứng dụng.
+                 
+### Quy ước đặt tên
+- **Components:** quy tắc PascalCase. viết hoa chữ cái đầu. Ví dụ: Button, Header,....
+- **Styles:** quy tắc camelCase: từ đầu tiên bắt đầu bằng chữ thường và các từ tiếp theo được viết hoa chữ cái đầu tiên. Ví dụ: titleHeader, textContent,....
+- **Props:** quy tắc camelCase. Ví dụ: title, onPress, isLoading,....
+- **States:** quy tắc camelCase. Ví dụ: isLoading, errorText, userData, ....
+- **Event Handlers:** handle + tên sự kiện + Event. Ví dụ: handlePressEvent, handleInputChangeEvent,....
+- **Variables và Functions:** quy tắc camelCase. Ví dụ: userName, fetchData, calculateTotal,....
+- **Constants:** quy tắc SNAKE_CASE, mỗi từ được viết hoa và được ngăn cách bằng dấu gạch dưới "_". Ví dụ: API_KEY, MAX_ATTEMPTS, DEFAULT_TIMEOUT,....
 
-## Step 1: Start the Metro Server
+### Quy tắc comment
+**Comment những phần mã nguồn quan trọng, logic phức tạp hoặc các giải thích cần thiết để các thành viên trong nhóm có thể hiểu rõ ngữ cảnh và mục đích của mã. Điều này bao gồm:**
+- Giải thích các thuật toán phức tạp.
+- Mô tả cách hoạt động của một phần quan trọng trong mã.
+- Giải thích các quyết định thiết kế và lựa chọn kỹ thuật.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
-
-To start Metro, run the following command from the _root_ of your React Native project:
-
-```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Start your Application
-
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## Lưu ý:
+- Dự án sử dụng 100% tiếng anh.
