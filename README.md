@@ -5,6 +5,36 @@
 
 **Thành viên:** Cao, Dũng, Thuận.
 
+## TODO List
+### Chí Cao
+| Task                                                      | Cấp độ               | Trạng thái           |
+|-----------------------------------------------------------|----------------------|----------------------|
+| Màn hình Home                                             | Trung bình           | Đang làm việc        |
+| Màn hình Select Showtime                                  | Khó                  | Đang làm việc        |
+| Màn hình Seat                                             | Khó                  | Đang làm việc        |
+| Màn hình Movie                                            | Trung bình           | Đang làm việc        |
+| Màn hình Ticket History                                   | Trung bình           | Đang làm việc        |
+
+### Hoàng Dũng
+| Task                                                      | Cấp độ               | Trạng thái           |
+|-----------------------------------------------------------|----------------------|----------------------|
+| Màn hình Combo                                            | Khó                  | Đang làm việc        |
+| Màn hình Payment                                          | Khó                  | Đang làm việc        |
+| Màn hình Discount                                         | Dễ                   | Đang làm việc        |
+| Màn hình Bill                                             | Dễ                   | Đang làm việc        |
+| Màn hình Profile                                          | Dễ                   | Đang làm việc        |
+| Màn hình Update Profile                                   | Trung bình           | Đang làm việc        |
+
+### Gia Thuận
+| Task                                                      | Cấp độ               | Trạng thái           |
+|-----------------------------------------------------------|----------------------|----------------------|
+| Màn hình Welcome                                          | Dễ                   | Đang làm việc        |
+| Màn hình Login                                            | Trung bình           | Đang làm việc        |
+| Màn hình Register                                         | Trung bình           | Đang làm việc        |
+| Màn hình Auth OTP                                         | Trung bình           | Đang làm việc        |
+| Màn hình Cinema                                           | Dễ                   | Đang làm việc        |
+| Màn hình Detail Movie                                     | khó                  | Đang làm việc        |
+
 ### Cấu trúc thư mục
 - `src/`: Thư mục gốc của dự án.
   - `api/`: Chứa các tệp tin liên quan đến việc giao tiếp với API.
