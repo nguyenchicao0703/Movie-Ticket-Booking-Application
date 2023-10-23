@@ -13,6 +13,8 @@ import ProfileImage from './ProfileImage';
 import SeatImage from './SeatImage';
 import SelectShowTimeImage from './SelectShowTimeImage';
 import UpdateProfileImage from './UpdateProfileImage';
+import Fonts from './Fonts';
+import Movies from './Movies';
 
 export {
     Colors,
@@ -30,4 +32,6 @@ export {
     SeatImage,
     SelectShowTimeImage,
     UpdateProfileImage,
+    Fonts,
+    Movies,
 };
