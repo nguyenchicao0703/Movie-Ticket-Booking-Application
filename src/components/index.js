@@ -1,3 +1,3 @@
 import MovieHomeItem from './item/MovieHomeItem';
-
-export { MovieHomeItem };
+import Input from './inputCustom/Input';
+export { MovieHomeItem, Input };
