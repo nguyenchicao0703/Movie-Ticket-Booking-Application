@@ -1,3 +1,4 @@
-import MovieHomeItem from './item/MovieHomeItem';
+import MovieHomeCard from './card/MovieHomeCard';
+import MovieList from './MovieList';
 
-export { MovieHomeItem };
+export { MovieHomeCard, MovieList };
