@@ -115,8 +115,9 @@ const HomeScreen = ({ navigation }) => {
                     alignSelf: 'center',
                 }}
             >
-                {bottomTabs.map((value) => (
+                {bottomTabs.map((value, index) => (
                     <Pressable
+                        key={index}
                         style={{
                             alignSelf: 'center',
                             marginTop: 5,
