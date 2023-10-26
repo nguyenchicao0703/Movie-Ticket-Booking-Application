@@ -1,5 +1,5 @@
-import { Dimensions } from 'react-native';
+// import { useWindowDimensions } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+// const { width, height, scale, fontScale } = useWindowDimensions();
 
-export default { width, height };
+// export { width, height, scale, fontScale };

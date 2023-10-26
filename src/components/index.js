@@ -1,3 +1,6 @@
-import MovieHomeItem from './item/MovieHomeItem';
+import MovieHomeCard from './card/MovieHomeCard';
 import Input from './inputCustom/Input';
-export { MovieHomeItem, Input };
+import MovieHomeCard from './card/MovieHomeCard';
+import MovieList from './MovieList';
+
+export { MovieHomeCard, MovieList, MovieHomeCard, Input };

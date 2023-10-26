@@ -1,13 +1,12 @@
-import { View } from 'react-native';
 import React from 'react';
-
-import Navigation from './src/navigators/Navigation';
+import Navigator from './src/navigators';
+import { NavigationContainer } from '@react-navigation/native';
 
 const App = () => {
     return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
-            <Navigation />
-        </View>
+        <NavigationContainer>
+            <Navigator />
+        </NavigationContainer>
     );
 };
 
