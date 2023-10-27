@@ -30,6 +30,10 @@ const HomeScreen = ({ navigation }) => {
         navigation.navigate(router);
     };
 
+    const handleButtonMenu = () => {
+        navigation.openDrawer();
+    };
+
     return (
         <View
             style={{
@@ -45,7 +49,8 @@ const HomeScreen = ({ navigation }) => {
             />
             <ScrollView
                 style={{
-                    marginBottom: 100,
+                    marginBottom: height * 0.1 + 13,
+                    paddingBottom: 100,
                 }}
             >
                 <View
@@ -63,21 +68,28 @@ const HomeScreen = ({ navigation }) => {
                         }}
                         source={DrawerImage[5].image}
                     />
-                    <View style={styles.headerRightView}>
-                        <Image
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                        }}
+                    >
+                        <Pressable
                             style={[
                                 styles.headerRight,
                                 { width: 32, height: 22 },
                             ]}
-                            source={HeaderImage[2].image}
-                        />
-                        <Image
+                        >
+                            <Image source={HeaderImage[2].image} />
+                        </Pressable>
+                        <Pressable
                             style={[
                                 styles.headerRight,
                                 { marginLeft: 20, marginRight: 15 },
                             ]}
-                            source={HeaderImage[1].image}
-                        />
+                            onPress={() => handleButtonMenu()}
+                        >
+                            <Image source={HeaderImage[1].image} />
+                        </Pressable>
                     </View>
                 </View>
                 <Text
@@ -105,7 +117,6 @@ const HomeScreen = ({ navigation }) => {
                 locations={[0.35, 1]}
                 style={{
                     position: 'absolute',
-                    backgroundColor: Colors.DARK_BG,
                     width: '95%',
                     height: height * 0.1 + 5,
                     bottom: height * 0.01,
@@ -154,9 +165,6 @@ const HomeScreen = ({ navigation }) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-    headerRightView: {
-        flexDirection: 'row',
-    },
     headerRight: {
         alignSelf: 'center',
     },

@@ -1,12 +1,5 @@
 import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import {
-    Button,
-    Card,
-    Title,
-    Paragraph,
-    Provider as PaperProvider,
-} from 'react-native-paper';
 const Welcome = () => {
     return (
         // <View style={styles.container}>

@@ -10,8 +10,6 @@ import {
 import React, { useState } from 'react';
 import { Input } from '../components';
 import { HeaderImage } from '../constants';
-import CircleCheckBox, { LABEL_POSITION } from 'react-native-circle-checkbox';
-import { Flag } from '@mui/icons-material';
 
 const Register = () => {
     const [unTickedMale, setUnTickedMale] = useState(true);

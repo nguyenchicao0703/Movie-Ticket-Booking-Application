@@ -15,4 +15,5 @@ export default {
     DARK_INDIGO: '#3B3C44',
     DARK_INDIGO_TICKET_HISTORY: '#2B2B2F',
     DARK_RED_BORDER: '#BA1111',
+    DARK_DRAWER: '#202020',
 };
