@@ -6,12 +6,13 @@ import {
     ImageBackground,
     TouchableOpacity,
     Image,
+    Pressable,
+    StatusBar,
 } from 'react-native';
 import React, { useState } from 'react';
-import { Input } from '../components';
-import { HeaderImage } from '../constants';
+import { HeaderImage, Images, Fonts, Colors } from '../constants';
 
-const Register = () => {
+const RegisterScreen = () => {
     const [unTickedMale, setUnTickedMale] = useState(true);
     const [unTickedFemale, setUnTickedFemale] = useState(true);
 
@@ -20,48 +21,62 @@ const Register = () => {
 
     return (
         <View>
+            <StatusBar
+                animated={true}
+                StatusBar="light-content"
+                backgroundColor={Colors.DEFAULT_BLACK}
+            />
             <ImageBackground
                 style={styles.backgroudImage}
-                source={require('../assets/Welcome/WelcomeScreen.png')}
+                source={Images[4].image}
             >
-                <TouchableOpacity>
+                <Pressable>
                     <Image
                         style={{ margin: 10 }}
                         source={HeaderImage[0].image}
                     />
-                </TouchableOpacity>
+                </Pressable>
                 <Text style={styles.textTitle}>Đăng ký</Text>
-                {/* FORM */}
+
                 <View style={styles.formRegister}>
-                    {/* Name */}
                     <View style={styles.groupInput}>
                         <Text style={styles.text}>Họ và tên</Text>
-                        <TextInput style={styles.input}>
-                            Cao Gia Thuận
-                        </TextInput>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Nhập họ và tên..."
+                            placeholderTextColor={Colors.LIGHT_GRAY}
+                        ></TextInput>
                     </View>
-                    {/* Phone number */}
+
                     <View style={styles.groupInput}>
                         <Text style={styles.text}>Số điện thoại</Text>
-                        <TextInput style={styles.input}>0339153975</TextInput>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Nhập số điện thoại..."
+                            placeholderTextColor={Colors.LIGHT_GRAY}
+                        ></TextInput>
                     </View>
-                    {/* Email */}
+
                     <View style={styles.groupInput}>
                         <Text style={styles.text}>Email</Text>
-                        <TextInput style={styles.input}>
-                            abcxzy@gmail.com
-                        </TextInput>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Nhập email..."
+                            placeholderTextColor={Colors.LIGHT_GRAY}
+                        ></TextInput>
                     </View>
-                    {/* Day Of Birth */}
+
                     <View style={styles.groupInput}>
                         <Text style={styles.text}>Ngày sinh</Text>
-                        <TextInput style={styles.input}>28/10/2001</TextInput>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Nhập ngày sinh..."
+                            placeholderTextColor={Colors.LIGHT_GRAY}
+                        ></TextInput>
                     </View>
                 </View>
                 <Text style={styles.titleCheckbox}>Giới tính</Text>
                 <View style={styles.groupCheckbox}>
-                    {/* Checkbox Male/Famle */}
-                    {/* Male */}
                     <View style={styles.miniGroupCheckbox}>
                         {unTickedMale ? (
                             <TouchableOpacity
@@ -78,7 +93,7 @@ const Register = () => {
                         )}
                         <Text style={styles.textCheckbox}>Nam</Text>
                     </View>
-                    {/* Female */}
+
                     <View style={styles.miniGroupCheckbox}>
                         {unTickedFemale ? (
                             <TouchableOpacity
@@ -99,7 +114,7 @@ const Register = () => {
                         )}
                         <Text style={styles.textCheckbox}>Nữ</Text>
                     </View>
-                    {/* Orther */}
+
                     <View style={styles.miniGroupCheckbox}>
                         {unTickedOrther ? (
                             <TouchableOpacity
@@ -121,10 +136,8 @@ const Register = () => {
                         <Text style={styles.textCheckbox}>Khác</Text>
                     </View>
                 </View>
-                {/* End CheckBox Gender*/}
-                {/* tick rule */}
+
                 <View style={styles.groupRule}>
-                    {/* CheckBox Rule */}
                     {unTickedRule ? (
                         <TouchableOpacity
                             onPress={() => setUnTickedRule(!unTickedRule)}
@@ -153,22 +166,24 @@ const Register = () => {
                 </View>
 
                 <View style={{ alignItems: 'center' }}>
-                    {/* Button Register */}
-                    <TouchableOpacity style={styles.buttonRegister}>
-                        <Text style={{ color: 'white', fontSize: 18 }}>
+                    <Pressable style={styles.buttonRegister}>
+                        <Text
+                            style={{
+                                color: Colors.DEFAULT_WHITE,
+                                fontSize: 18,
+                                fontFamily: Fonts.Regular,
+                            }}
+                        >
                             Đăng ký
                         </Text>
-                    </TouchableOpacity>
-                    {/* Button */}
+                    </Pressable>
                 </View>
-
-                {/* FORM */}
             </ImageBackground>
         </View>
     );
 };
 
-export default Register;
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
     backgroudImage: {
@@ -177,10 +192,10 @@ const styles = StyleSheet.create({
     },
     textTitle: {
         fontSize: 30,
-        color: 'white',
+        color: Colors.DEFAULT_WHITE,
         textAlign: 'center',
         paddingTop: 40,
-        fontWeight: 'bold',
+        fontFamily: Fonts.Bold,
     },
     textEmail: {
         color: '#C1C1C1',
@@ -215,21 +230,23 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     text: {
-        color: '#C1C1C1',
+        color: Colors.LIGHT_GRAY,
         paddingLeft: 10,
         zIndex: 3,
+        fontFamily: Fonts.Light,
     },
     input: {
         backgroundColor: 'transparent',
         width: '100%',
         height: 40,
-        borderColor: 'white',
-        color: 'white',
+        borderColor: Colors.DEFAULT_WHITE,
+        color: Colors.DEFAULT_WHITE,
         zIndex: 2,
         borderRadius: 15,
         paddingLeft: 10,
         paddingTop: -10,
         fontSize: 17,
+        fontFamily: Fonts.Regular,
     },
     groupCheckbox: {
         flexDirection: 'row',
@@ -240,15 +257,15 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         borderRadius: 20,
-        borderColor: '#b73131',
+        borderColor: Colors.DARK_RED,
         borderWidth: 2,
     },
     ButtonChecked: {
-        backgroundColor: '#b73131',
+        backgroundColor: Colors.DARK_RED,
         width: 20,
         height: 20,
         borderRadius: 20,
-        borderColor: 'white',
+        borderColor: Colors.DEFAULT_WHITE,
         borderWidth: 2,
     },
     miniGroupCheckbox: {
@@ -258,16 +275,18 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     textCheckbox: {
-        color: '#fff',
+        color: Colors.DEFAULT_WHITE,
         paddingLeft: 10,
+        fontFamily: Fonts.Regular,
     },
     titleCheckbox: {
-        color: '#C1C1C1',
+        color: Colors.LIGHT_GRAY,
         paddingLeft: 36,
         marginTop: 10,
+        fontFamily: Fonts.Light,
     },
     buttonRegister: {
-        backgroundColor: '#b73131',
+        backgroundColor: Colors.DARK_RED,
         width: '90%',
         maxHeight: 45,
         minHeight: 40,
@@ -278,7 +297,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     ButtonCheckBoxRule: {
-        backgroundColor: 'white',
+        backgroundColor: Colors.DEFAULT_WHITE,
         width: 20,
         height: 20,
         borderRadius: 10,
@@ -290,12 +309,14 @@ const styles = StyleSheet.create({
         paddingLeft: 41,
     },
     textAttention: {
-        color: '#B73131',
+        color: Colors.DARK_RED,
         textDecorationLine: 'underline',
-        textDecorationColor: '#B73131',
+        textDecorationColor: Colors.DARK_RED,
+        fontFamily: Fonts.Regular,
     },
     textRule: {
-        color: 'white',
+        color: Colors.DEFAULT_WHITE,
         paddingLeft: 10,
+        fontFamily: Fonts.Regular,
     },
 });

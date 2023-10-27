@@ -7,9 +7,9 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import MovieScreen from '../screens/MovieScreen';
-import Login from '../screens/Login';
-import Register from '../screens/Register';
-import Welcome from '../screens/Welcome';
+import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+import WelcomeScreen from '../screens/WelcomeScreen';
 import AuthOTPScreen from '../screens/AuthOTPScreen';
 import { CustomDrawerContent, MovieSelectCard } from '../components';
 
@@ -46,9 +46,9 @@ const Navigator = () => {
             <Stack.Screen name="Cinema" component={CinemaScreen} />
             <Stack.Screen name="Ticket" component={TicketScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Register" component={Register} />
-            <Stack.Screen name="Welcome" component={Welcome} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="AuthOTPScreen" component={AuthOTPScreen} />
             <Stack.Screen name="MovieSelectCard" component={MovieSelectCard} />
         </Stack.Navigator>

@@ -8,59 +8,56 @@ import {
     TextInputAndroidProps,
     Button,
     TouchableOpacity,
+    StatusBar,
+    useWindowDimensions,
+    Pressable,
 } from 'react-native';
 import React from 'react';
-import { HeaderImage } from '../constants';
+import { Colors, Fonts, HeaderImage, Images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Input } from '../components';
 
-const Login = () => {
+const LoginScreen = () => {
+    const { width, height, scale, fontScale } = useWindowDimensions();
     return (
-        // <View style={styles.container}>
-        //     {/* Emty Backgroud */}
-        //     <View style={styles.emtyBackgroud}/>
-        //     {/* Logo Image */}
-        //     <Image style={styles.logoImage} source={require('../assets/Welcome/Logo.png')} />
-        //     {/* darken the image */}
-        //     <ImageBackground
-        //         style={styles.loginImage}
-        //         source={require('../assets/Welcome/login.png')}
-        //     >
-        //         <View style={styles.child} />
-        //     </ImageBackground>
-
-        // </View>
         <SafeAreaView style={{ flex: 1, minHeight: '100%', minWidth: '100%' }}>
-            {/* Backgroud */}
+            <StatusBar
+                animated={true}
+                StatusBar="light-content"
+                backgroundColor={Colors.DEFAULT_BLACK}
+            />
             <ImageBackground
                 style={styles.backgroudImage}
-                source={require('../assets/Welcome/WelcomeScreen.png')}
+                source={Images[4].image}
             >
                 <View style={styles.child} />
-                <TouchableOpacity>
+                <Pressable>
                     <Image
                         style={{ margin: 10 }}
                         source={HeaderImage[0].image}
                     />
-                </TouchableOpacity>
+                </Pressable>
                 <Text style={styles.textTitle}>Đăng nhập</Text>
 
-                {/* FormLogin */}
                 <View style={styles.formLogin}>
                     <View style={styles.groupEmailInput}>
                         <Text style={styles.textEmail}>Email</Text>
-                        <TextInput style={styles.inputEmail}>
-                            caogiathuan@gmail.com
-                        </TextInput>
+                        <TextInput
+                            style={styles.inputEmail}
+                            placeholder="Nhập email ..."
+                            placeholderTextColor={Colors.LIGHT_GRAY}
+                        ></TextInput>
                     </View>
-                    {/* Button Login */}
-                    <TouchableOpacity style={styles.buttonLogin}>
-                        <Text style={{ color: 'white', fontSize: 18 }}>
+                    <Pressable style={styles.buttonLogin}>
+                        <Text
+                            style={{
+                                color: Colors.DEFAULT_WHITE,
+                                fontFamily: Fonts.Regular,
+                                fontSize: 18,
+                            }}
+                        >
                             Đăng nhập
                         </Text>
-                    </TouchableOpacity>
-                    {/* Button */}
-                    {/* Line */}
+                    </Pressable>
                     <View style={styles.groupLine}>
                         <View style={styles.line} />
                         <View>
@@ -68,23 +65,25 @@ const Login = () => {
                         </View>
                         <View style={styles.line} />
                     </View>
-                    {/* Line */}
-                    {/* Button Register */}
-                    <TouchableOpacity style={styles.buttonRegister}>
-                        <Text style={{ color: 'white', fontSize: 18 }}>
+
+                    <Pressable style={styles.buttonRegister}>
+                        <Text
+                            style={{
+                                color: Colors.DEFAULT_WHITE,
+                                fontSize: 18,
+                                fontFamily: Fonts.Regular,
+                            }}
+                        >
                             Đăng kí tài khoản
                         </Text>
-                    </TouchableOpacity>
-                    {/* Button */}
+                    </Pressable>
                 </View>
-                {/* FormLogin */}
             </ImageBackground>
-            {/* imageHeader */}
         </SafeAreaView>
     );
 };
 
-export default Login;
+export default LoginScreen;
 
 const styles = StyleSheet.create({
     formLogin: {
@@ -97,38 +96,40 @@ const styles = StyleSheet.create({
     },
     textTitle: {
         fontSize: 30,
-        color: 'white',
+        color: Colors.DEFAULT_WHITE,
         textAlign: 'center',
         paddingTop: 40,
+        fontFamily: Fonts.Bold,
     },
     backgroudImage: {
         width: '100%',
         height: '100%',
     },
     inputEmail: {
-        backgroundColor: 'white',
+        backgroundColor: Colors.DEFAULT_WHITE,
         width: '100%',
         height: 40,
-        borderColor: 'white',
-        backgroundColor: 'black',
-        color: 'white',
+        borderColor: Colors.DEFAULT_WHITE,
+        backgroundColor: Colors.DEFAULT_BLACK,
+        color: Colors.DEFAULT_WHITE,
         zIndex: 2,
         borderRadius: 15,
         paddingLeft: 10,
         paddingTop: -10,
         fontSize: 17,
+        fontFamily: Fonts.Regular,
     },
     groupEmailInput: {
         padding: 5,
         width: '90%',
         justifyContent: 'space-between',
         borderWidth: 1,
-        borderColor: 'white',
-        backgroundColor: 'black',
+        borderColor: Colors.DEFAULT_WHITE,
+        backgroundColor: Colors.DEFAULT_BLACK,
         borderRadius: 10,
     },
     buttonLogin: {
-        backgroundColor: '#b73131',
+        backgroundColor: Colors.DARK_RED,
         width: '90%',
         maxHeight: 45,
         minHeight: 40,
@@ -137,11 +138,12 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         marginTop: 35,
     },
-    line: { flex: 1, height: 0.6, backgroundColor: 'white' },
+    line: { flex: 1, height: 0.6, backgroundColor: Colors.DEFAULT_WHITE },
     textLine: {
         width: 50,
         textAlign: 'center',
-        color: '#C1C1C1',
+        color: Colors.LIGHT_GRAY,
+        fontFamily: Fonts.Light,
     },
     groupLine: {
         flexDirection: 'row',
@@ -150,9 +152,10 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     textEmail: {
-        color: '#C1C1C1',
+        color: Colors.LIGHT_GRAY,
         paddingLeft: 10,
         zIndex: 3,
+        fontFamily: Fonts.Light,
     },
     buttonRegister: {
         backgroundColor: 'transparent',
@@ -161,7 +164,7 @@ const styles = StyleSheet.create({
         minHeight: 40,
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: 'white',
+        borderColor: Colors.DEFAULT_WHITE,
         borderWidth: 1,
         borderRadius: 20,
         marginTop: 20,
