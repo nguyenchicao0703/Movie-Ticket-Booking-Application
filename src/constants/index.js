@@ -1,6 +1,6 @@
 import Colors from './Colors';
 import BottomTabImage from './BottomTabImage';
-import Image from './Image';
+import Images from './Image';
 import DrawerImage from './DrawerImage';
 import LineBill from './LineBill';
 import ComboImage from './ComboImage';
@@ -19,7 +19,7 @@ import Movies from './Movies';
 export {
     Colors,
     BottomTabImage,
-    Image,
+    Images,
     DrawerImage,
     LineBill,
     ComboImage,
