@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const LoginScreen = ({ navigation }) => {
     const clickLogin = () => {
-        navigation.navigate('AuthOTPScreen');
+        navigation.navigate('AuthOTP');
     };
     const clickRegister = () => {
         navigation.navigate('Register');

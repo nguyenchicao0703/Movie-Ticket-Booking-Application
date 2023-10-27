@@ -20,7 +20,7 @@ const RegisterScreen = ({ navigation }, props) => {
     const [unTickedRule, setUnTickedRule] = useState(true);
 
     const clickChangeAuthOTPScr = () => {
-        navigation.navigate('AuthOTPScreen');
+        navigation.navigate('AuthOTP');
     };
     const backToLogin = () => {
         navigation.goBack();
