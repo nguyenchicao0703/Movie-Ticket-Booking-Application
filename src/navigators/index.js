@@ -1,17 +1,17 @@
 import {
+    AuthOTPScreen,
     CinemaScreen,
     HomeScreen,
+    LoginScreen,
+    MovieScreen,
     ProfileScreen,
+    RegisterScreen,
     TicketScreen,
+    WelcomeScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import MovieScreen from '../screens/MovieScreen';
-import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
-import WelcomeScreen from '../screens/WelcomeScreen';
-import AuthOTPScreen from '../screens/AuthOTPScreen';
-import { CustomDrawerContent, MovieSelectCard } from '../components';
+import { CustomDrawerContent } from '../components';
 
 const Drawer = createDrawerNavigator();
 const AppDrawer = () => {
@@ -49,8 +49,7 @@ const Navigator = () => {
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Welcome" component={WelcomeScreen} />
-            <Stack.Screen name="AuthOTPScreen" component={AuthOTPScreen} />
-            <Stack.Screen name="MovieSelectCard" component={MovieSelectCard} />
+            <Stack.Screen name="AuthOTP" component={AuthOTPScreen} />
         </Stack.Navigator>
     );
 };
