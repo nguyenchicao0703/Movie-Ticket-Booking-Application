@@ -1,15 +1,17 @@
-import MovieHomeCard from './card/MovieHomeCard';
 import Input from './inputCustom/Input';
-import MovieList from './MovieList';
 import CustomDrawerContent from './CustomDrawerContent';
 import Header from './Header';
-import MovieSelectCard from './card/MovieSelectCard';
+import MovieCard from './card/MovieCard';
+import HomeCard from './card/HomeCard';
+import MovieList from './list/MovieList';
+import HomeList from './list/HomeList';
 
 export {
-    MovieHomeCard,
-    MovieList,
     Input,
     CustomDrawerContent,
     Header,
-    MovieSelectCard,
+    HomeCard,
+    MovieCard,
+    HomeList,
+    MovieList,
 };

@@ -1,7 +1,18 @@
-import { Pressable, Text, View, useWindowDimensions } from 'react-native';
+import {
+    Pressable,
+    Text,
+    View,
+    useWindowDimensions,
+    StatusBar,
+} from 'react-native';
 import React, { useState } from 'react';
-import { Header } from '../components';
+import { Header, MovieList } from '../components';
 import { Colors, Fonts } from '../constants';
+import {
+    SelectMoviesFuture,
+    SelectMoviesPresent,
+    SelectMoviesSpecial,
+} from '../constants/SelecteMovies';
 
 const TopTabsCategory = [
     { id: 1, category: 'Đang chiếu' },
@@ -14,12 +25,17 @@ const MovieScreen = ({ navigation }) => {
     const [clickTab, setClickTab] = useState(0);
 
     const handleClickTab = (index) => {
-        console.log(index);
+        console.log({ index });
         setClickTab(index);
     };
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
+            <StatusBar
+                animated={true}
+                StatusBar="light-content"
+                backgroundColor={Colors.DEFAULT_BLACK}
+            />
             <Header titleHeader={'Chọn phim'} navigation={navigation} />
             <View style={{ flexDirection: 'row' }}>
                 {TopTabsCategory.map((value, index) => (
@@ -43,6 +59,13 @@ const MovieScreen = ({ navigation }) => {
                     </Pressable>
                 ))}
             </View>
+            {clickTab === 0 ? (
+                <MovieList data={SelectMoviesPresent} />
+            ) : clickTab === 1 ? (
+                <MovieList data={SelectMoviesFuture} />
+            ) : (
+                <MovieList data={SelectMoviesSpecial} />
+            )}
         </View>
     );
 };

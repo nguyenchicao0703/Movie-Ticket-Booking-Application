@@ -1,8 +1,8 @@
 import { FlatList, useWindowDimensions } from 'react-native';
 import React from 'react';
-import MovieHomeCard from './card/MovieHomeCard';
+import HomeCard from '../card/HomeCard';
 
-const MovieList = ({ data }) => {
+const HomeList = ({ data }) => {
     const { width, height, fontScale } = useWindowDimensions();
 
     return (
@@ -17,7 +17,7 @@ const MovieList = ({ data }) => {
             decelerationRate={0}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item, index }) => (
-                <MovieHomeCard
+                <HomeCard
                     data={item}
                     shoudlMarginatedAtEnd={true}
                     isFirst={index === 0 ? true : false}
@@ -32,4 +32,4 @@ const MovieList = ({ data }) => {
     );
 };
 
-export default MovieList;
+export default HomeList;

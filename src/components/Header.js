@@ -36,7 +36,7 @@ const Header = ({ titleHeader, navigation }) => {
                 <Text
                     style={{
                         color: Colors.DEFAULT_WHITE,
-                        fontSize: fontScale * 23,
+                        fontSize: fontScale * 21,
                         fontFamily: Fonts.Medium,
                         marginLeft: 26,
                         marginTop: 5,

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../../constants/index';
 
-const MovieHomeCard = ({
+const HomeCard = ({
     data,
     isFirst,
     isLast,
@@ -37,7 +37,7 @@ const MovieHomeCard = ({
     );
 };
 
-export default MovieHomeCard;
+export default HomeCard;
 
 const styles = StyleSheet.create({
     container: {
