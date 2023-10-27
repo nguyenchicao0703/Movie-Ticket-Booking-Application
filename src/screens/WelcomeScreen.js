@@ -8,7 +8,10 @@ import {
 } from 'react-native';
 import React from 'react';
 import { Images, Fonts, Colors, BottomTabImage } from '../constants';
-const WelcomeScreen = () => {
+const WelcomeScreen = ({ navigation }, props) => {
+    setTimeout(() => {
+        navigation.navigate('Drawer');
+    }, 2500);
     return (
         <View style={styles.container}>
             <StatusBar

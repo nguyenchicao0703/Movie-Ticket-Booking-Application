@@ -12,13 +12,19 @@ import {
 import React, { useState } from 'react';
 import { HeaderImage, Images, Fonts, Colors } from '../constants';
 
-const RegisterScreen = () => {
+const RegisterScreen = ({ navigation }, props) => {
     const [unTickedMale, setUnTickedMale] = useState(true);
     const [unTickedFemale, setUnTickedFemale] = useState(true);
 
     const [unTickedOrther, setUnTickedOrther] = useState(true);
     const [unTickedRule, setUnTickedRule] = useState(true);
 
+    const clickChangeAuthOTPScr = () => {
+        navigation.navigate('AuthOTPScreen');
+    };
+    const backToLogin = () => {
+        navigation.goBack();
+    };
     return (
         <View>
             <StatusBar
@@ -30,7 +36,7 @@ const RegisterScreen = () => {
                 style={styles.backgroudImage}
                 source={Images[4].image}
             >
-                <Pressable>
+                <Pressable onPress={backToLogin}>
                     <Image
                         style={{ margin: 10 }}
                         source={HeaderImage[0].image}
@@ -166,7 +172,10 @@ const RegisterScreen = () => {
                 </View>
 
                 <View style={{ alignItems: 'center' }}>
-                    <Pressable style={styles.buttonRegister}>
+                    <Pressable
+                        onPress={clickChangeAuthOTPScr}
+                        style={styles.buttonRegister}
+                    >
                         <Text
                             style={{
                                 color: Colors.DEFAULT_WHITE,

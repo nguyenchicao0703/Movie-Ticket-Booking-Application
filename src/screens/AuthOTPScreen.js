@@ -12,10 +12,16 @@ import React, { useRef } from 'react';
 import { HeaderImage, Images, Fonts, Colors } from '../constants';
 import OTPTextInput from 'react-native-otp-textinput';
 
-const AuthOTPScreen = () => {
+const AuthOTPScreen = ({ navigation }, props) => {
     let otpInput = useRef(null);
     const setText = () => {
         otpInput.current.setValue('123456');
+    };
+    const clickToHome = () => {
+        navigation.navigate('Drawer');
+    };
+    const back = () => {
+        navigation.goBack();
     };
     return (
         <View>
@@ -28,7 +34,7 @@ const AuthOTPScreen = () => {
                 style={styles.backgroudImage}
                 source={Images[4].image}
             >
-                <Pressable>
+                <Pressable onPress={back}>
                     <Image
                         style={{ margin: 10 }}
                         source={HeaderImage[0].image}
@@ -51,7 +57,10 @@ const AuthOTPScreen = () => {
                         }}
                         tintColor={Colors.DEFAULT_WHITE}
                     />
-                    <Pressable style={styles.buttonRegister}>
+                    <Pressable
+                        onPress={clickToHome}
+                        style={styles.buttonRegister}
+                    >
                         <Text
                             style={{
                                 color: Colors.DEFAULT_WHITE,

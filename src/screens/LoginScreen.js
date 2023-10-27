@@ -16,7 +16,14 @@ import React from 'react';
 import { Colors, Fonts, HeaderImage, Images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
+    const clickLogin = () => {
+        navigation.navigate('AuthOTPScreen');
+    };
+    const clickRegister = () => {
+        navigation.navigate('Register');
+    };
+
     const { width, height, scale, fontScale } = useWindowDimensions();
     return (
         <SafeAreaView style={{ flex: 1, minHeight: '100%', minWidth: '100%' }}>
@@ -47,7 +54,7 @@ const LoginScreen = () => {
                             placeholderTextColor={Colors.LIGHT_GRAY}
                         ></TextInput>
                     </View>
-                    <Pressable style={styles.buttonLogin}>
+                    <Pressable onPress={clickLogin} style={styles.buttonLogin}>
                         <Text
                             style={{
                                 color: Colors.DEFAULT_WHITE,
@@ -66,7 +73,10 @@ const LoginScreen = () => {
                         <View style={styles.line} />
                     </View>
 
-                    <Pressable style={styles.buttonRegister}>
+                    <Pressable
+                        onPress={clickRegister}
+                        style={styles.buttonRegister}
+                    >
                         <Text
                             style={{
                                 color: Colors.DEFAULT_WHITE,
