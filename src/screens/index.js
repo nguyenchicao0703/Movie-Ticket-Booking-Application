@@ -7,6 +7,8 @@ import LoginScreen from './LoginScreen';
 import RegisterScreen from './RegisterScreen';
 import WelcomeScreen from './WelcomeScreen';
 import AuthOTPScreen from './AuthOTPScreen';
+import BillScreen from './BillScreen';
+import DiscountScreen from './DiscountScreen';
 
 export {
     HomeScreen,
@@ -18,4 +20,6 @@ export {
     RegisterScreen,
     WelcomeScreen,
     AuthOTPScreen,
+    BillScreen,
+    DiscountScreen,
 };

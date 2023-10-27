@@ -1,17 +1,13 @@
 import {
-    FlatList,
     Image,
     Pressable,
-    ScrollView,
-    StatusBar,
     StyleSheet,
     Text,
     TextInput,
     View,
 } from 'react-native';
 import React, { useState } from 'react';
-import { DrawerImage, HeaderImage, Movies } from '../constants';
-import { Colors, Fonts } from '../constants/index';
+import { HeaderImage, Colors, Fonts } from '../constants';
 
 const DiscountScreen = () => {
     return (

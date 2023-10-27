@@ -1,6 +1,8 @@
 import {
     AuthOTPScreen,
+    BillScreen,
     CinemaScreen,
+    DiscountScreen,
     HomeScreen,
     LoginScreen,
     MovieScreen,
@@ -50,6 +52,8 @@ const Navigator = () => {
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="AuthOTP" component={AuthOTPScreen} />
+            <Stack.Screen name="Bill" component={BillScreen} />
+            <Stack.Screen name="Discount" component={DiscountScreen} />
         </Stack.Navigator>
     );
 };

@@ -1,17 +1,6 @@
-import {
-    Dimensions,
-    FlatList,
-    Image,
-    Pressable,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-} from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
-import { DrawerImage, HeaderImage, LineBill, Movies } from '../constants';
+import { HeaderImage, LineBill } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 
 const BillScreen = () => {
