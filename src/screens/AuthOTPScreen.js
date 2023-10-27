@@ -3,7 +3,6 @@ import {
     Text,
     View,
     ImageBackground,
-    TouchableOpacity,
     Image,
     Pressable,
     StatusBar,
