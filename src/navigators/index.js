@@ -11,12 +11,13 @@ import Login from '../screens/Login';
 import Register from '../screens/Register';
 import Welcome from '../screens/Welcome';
 import AuthOTPScreen from '../screens/AuthOTPScreen';
-import { CustomDrawerContent } from '../components';
+import { CustomDrawerContent, MovieSelectCard } from '../components';
 
 const Drawer = createDrawerNavigator();
 const AppDrawer = () => {
     return (
         <Drawer.Navigator
+            initialRouteName="Home"
             screenOptions={{
                 headerShown: false,
                 swipeEnabled: false,
@@ -37,7 +38,7 @@ const Navigator = () => {
 
     return (
         <Stack.Navigator
-            initialRouteName="Drawer"
+            initialRouteName="MovieSelectCard"
             screenOptions={{ headerShown: false }}
         >
             <Stack.Screen name="Drawer" component={AppDrawer} />
@@ -49,6 +50,7 @@ const Navigator = () => {
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="Welcome" component={Welcome} />
             <Stack.Screen name="AuthOTPScreen" component={AuthOTPScreen} />
+            <Stack.Screen name="MovieSelectCard" component={MovieSelectCard} />
         </Stack.Navigator>
     );
 };
