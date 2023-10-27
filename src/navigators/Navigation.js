@@ -2,6 +2,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from '../screens';
 import { MovieHomeItem } from '../components';
+import DiscountScreen from '../screens/DiscountScreen';
+import BillScreen from '../screens/BillScreen';
 
 const Navigation = () => {
     const Stack = createNativeStackNavigator();
