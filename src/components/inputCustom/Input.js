@@ -1,38 +1,38 @@
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { Colors, Fonts } from '../../constants/index';
+import { TextInput } from 'react-native-paper';
 
-const Input = () => {
-    return <View style={styles.groupEmailInput}></View>;
+const Input = ({ label }) => {
+    return (
+        <View style={styles.groupEmailInput}>
+            <TextInput
+                style={{
+                    backgroundColor: 'transparent',
+                    fontFamily: Fonts.Regular,
+                }}
+                label={label}
+                underlineColor="white"
+                activeUnderlineColor={Colors.LIGHT_GRAY}
+                underlineStyle={{ borderColor: 'white' }}
+                cursorColor={Colors.DARK_RED}
+                keyboardType="text"
+                textColor={Colors.DEFAULT_WHITE}
+            ></TextInput>
+        </View>
+    );
 };
 
 export default Input;
 
 const styles = StyleSheet.create({
     groupEmailInput: {
-        padding: 5,
-        width: '90%',
+        width: '100%',
         justifyContent: 'space-between',
         borderWidth: 1,
-        borderColor: 'white',
-        backgroundColor: 'black',
-        borderRadius: 10,
-    },
-    textEmail: {
-        color: '#C1C1C1',
-        paddingLeft: 10,
-        zIndex: 3,
-    },
-    inputEmail: {
-        backgroundColor: 'white',
-        width: '100%',
-        height: 40,
-        borderColor: 'white',
-        backgroundColor: 'black',
-        color: 'white',
-        zIndex: 2,
-        borderRadius: 15,
-        paddingLeft: 10,
-        paddingTop: -10,
-        fontSize: 17,
+        borderColor: Colors.DEFAULT_WHITE,
+        backgroundColor: Colors.DEFAULT_BLACK,
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
     },
 });
