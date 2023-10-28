@@ -4,7 +4,6 @@ import {
     StyleSheet,
     Text,
     View,
-    TextInput,
     StatusBar,
     useWindowDimensions,
     Pressable,
@@ -12,7 +11,7 @@ import {
 import React from 'react';
 import { Colors, Fonts, HeaderImage, Images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { TextInput } from 'react-native-paper';
 const LoginScreen = ({ navigation }) => {
     const clickLogin = () => {
         navigation.navigate('AuthOTP');
@@ -44,11 +43,18 @@ const LoginScreen = ({ navigation }) => {
 
                 <View style={styles.formLogin}>
                     <View style={styles.groupEmailInput}>
-                        <Text style={styles.textEmail}>Email</Text>
                         <TextInput
-                            style={styles.inputEmail}
-                            placeholder="Nhập email ..."
-                            placeholderTextColor={Colors.LIGHT_GRAY}
+                            style={{
+                                backgroundColor: 'transparent',
+                                fontFamily: Fonts.Regular,
+                            }}
+                            label={'Email'}
+                            underlineColor="white"
+                            activeUnderlineColor="white"
+                            underlineStyle={{ borderColor: 'white' }}
+                            cursorColor={Colors.DARK_RED}
+                            keyboardType="text"
+                            textColor={Colors.DEFAULT_WHITE}
                         ></TextInput>
                     </View>
                     <Pressable onPress={clickLogin} style={styles.buttonLogin}>
@@ -127,13 +133,13 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.Regular,
     },
     groupEmailInput: {
-        padding: 5,
         width: '90%',
         justifyContent: 'space-between',
         borderWidth: 1,
         borderColor: Colors.DEFAULT_WHITE,
         backgroundColor: Colors.DEFAULT_BLACK,
-        borderRadius: 10,
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
     },
     buttonLogin: {
         backgroundColor: Colors.DARK_RED,
