@@ -2,11 +2,12 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { HeaderImage, LineBill } from '../constants';
 import { Colors, Fonts } from '../constants/index';
+import { Header } from '../components';
 
-const BillScreen = () => {
+const BillScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
+            {/* <View style={styles.header}>
                 <View style={styles.headerLeftView}>
                     <Image
                         style={styles.headerLeft}
@@ -23,7 +24,11 @@ const BillScreen = () => {
                         source={HeaderImage[1].image}
                     />
                 </View>
-            </View>
+            </View> */}
+            <Header
+                titleHeader={'Thông tin chi tiết'}
+                navigation={navigation}
+            />
             <View style={styles.body}>
                 <View style={styles.bodyAbove}>
                     <Text

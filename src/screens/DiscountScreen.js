@@ -8,28 +8,12 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { HeaderImage, Colors, Fonts } from '../constants';
+import { Header } from '../components';
 
-const DiscountScreen = () => {
+const DiscountScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <View style={styles.headerLeftView}>
-                    <Image
-                        style={styles.headerLeft}
-                        source={HeaderImage[0].image}
-                    />
-                    <Text style={styles.leftText}>Mã giảm giá</Text>
-                </View>
-                <View style={styles.headerRightView}>
-                    <Image
-                        style={[
-                            styles.headerRight,
-                            { marginLeft: 20, marginRight: 15 },
-                        ]}
-                        source={HeaderImage[1].image}
-                    />
-                </View>
-            </View>
+            <Header titleHeader={'Mã giảm giá'} navigation={navigation} />
             <View style={styles.body}>
                 <Text style={styles.leftText}>Nhập mã giảm giá</Text>
                 <TextInput
