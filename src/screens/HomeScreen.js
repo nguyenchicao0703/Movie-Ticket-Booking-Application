@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 import { BottomTabImage, DrawerImage, HeaderImage, Movies } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import LinearGradient from 'react-native-linear-gradient';
-import { MovieList } from '../components';
+import { HomeList } from '../components';
 
 const bottomTabs = [
     { id: 1, image: 1, title: 'Phim', tab: 'Movie' },
@@ -26,7 +26,7 @@ const HomeScreen = ({ navigation }) => {
     const { width, height, scale, fontScale } = useWindowDimensions();
     const textTitle = fontScale * 22;
 
-    const stackScreenBottom = (router) => {
+    const stackScreen = (router) => {
         navigation.navigate(router);
     };
 
@@ -60,14 +60,18 @@ const HomeScreen = ({ navigation }) => {
                         justifyContent: 'space-between',
                     }}
                 >
-                    <Image
-                        style={{
-                            width: 35,
-                            height: 35,
-                            marginLeft: 15,
-                        }}
-                        source={DrawerImage[5].image}
-                    />
+                    <Pressable
+                        style={{ marginLeft: 15 }}
+                        onPress={() => stackScreen('Profile')}
+                    >
+                        <Image
+                            style={{
+                                width: 35,
+                                height: 35,
+                            }}
+                            source={DrawerImage[5].image}
+                        />
+                    </Pressable>
                     <View
                         style={{
                             flexDirection: 'row',
@@ -78,6 +82,7 @@ const HomeScreen = ({ navigation }) => {
                                 styles.headerRight,
                                 { width: 32, height: 22 },
                             ]}
+                            onPress={() => stackScreen('TicketHistory')}
                         >
                             <Image source={HeaderImage[2].image} />
                         </Pressable>
@@ -100,7 +105,7 @@ const HomeScreen = ({ navigation }) => {
                 >
                     Phim đang chiếu
                 </Text>
-                <MovieList data={Movies} />
+                <HomeList data={Movies} />
                 <Text
                     style={[
                         styles.title,
@@ -109,7 +114,7 @@ const HomeScreen = ({ navigation }) => {
                 >
                     Phim sắp chiếu
                 </Text>
-                <MovieList data={Movies} />
+                <HomeList data={Movies} />
             </ScrollView>
             {/* bottom tab */}
             <LinearGradient
@@ -133,7 +138,7 @@ const HomeScreen = ({ navigation }) => {
                             alignSelf: 'center',
                             marginTop: 5,
                         }}
-                        onPress={() => stackScreenBottom(value.tab)}
+                        onPress={() => stackScreen(value.tab)}
                     >
                         <Image
                             style={{

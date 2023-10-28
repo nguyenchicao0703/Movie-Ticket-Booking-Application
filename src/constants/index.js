@@ -14,7 +14,13 @@ import SeatImage from './SeatImage';
 import SelectShowTimeImage from './SelectShowTimeImage';
 import UpdateProfileImage from './UpdateProfileImage';
 import Fonts from './Fonts';
-import Movies from './Movies';
+import Movies from './DataMovies';
+import {
+    SelectMoviesFuture,
+    SelectMoviesPresent,
+    SelectMoviesSpecial,
+} from './DataSelecteMovies';
+import { TicketHistory, TicketFuture } from './DataTicketHistory';
 
 export {
     Colors,
@@ -34,4 +40,9 @@ export {
     UpdateProfileImage,
     Fonts,
     Movies,
+    SelectMoviesFuture,
+    SelectMoviesPresent,
+    SelectMoviesSpecial,
+    TicketHistory,
+    TicketFuture,
 };

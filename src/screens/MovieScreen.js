@@ -7,12 +7,13 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { Header, MovieList } from '../components';
-import { Colors, Fonts } from '../constants';
 import {
+    Colors,
+    Fonts,
     SelectMoviesFuture,
     SelectMoviesPresent,
     SelectMoviesSpecial,
-} from '../constants/SelecteMovies';
+} from '../constants';
 
 const TopTabsCategory = [
     { id: 1, category: 'Đang chiếu' },

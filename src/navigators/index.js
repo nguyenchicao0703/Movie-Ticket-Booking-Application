@@ -8,6 +8,7 @@ import {
     MovieScreen,
     ProfileScreen,
     RegisterScreen,
+    TicketHistoryScreen,
     TicketScreen,
     WelcomeScreen,
 } from '../screens';
@@ -40,7 +41,7 @@ const Navigator = () => {
 
     return (
         <Stack.Navigator
-            initialRouteName="Login"
+            initialRouteName="TicketHistory"
             screenOptions={{ headerShown: false }}
         >
             <Stack.Screen name="Drawer" component={AppDrawer} />
@@ -54,6 +55,10 @@ const Navigator = () => {
             <Stack.Screen name="AuthOTP" component={AuthOTPScreen} />
             <Stack.Screen name="Bill" component={BillScreen} />
             <Stack.Screen name="Discount" component={DiscountScreen} />
+            <Stack.Screen
+                name="TicketHistory"
+                component={TicketHistoryScreen}
+            />
         </Stack.Navigator>
     );
 };

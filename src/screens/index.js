@@ -9,6 +9,7 @@ import WelcomeScreen from './WelcomeScreen';
 import AuthOTPScreen from './AuthOTPScreen';
 import BillScreen from './BillScreen';
 import DiscountScreen from './DiscountScreen';
+import TicketHistoryScreen from './TicketHistoryScreen';
 
 export {
     HomeScreen,
@@ -22,4 +23,5 @@ export {
     AuthOTPScreen,
     BillScreen,
     DiscountScreen,
+    TicketHistoryScreen,
 };
