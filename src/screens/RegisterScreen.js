@@ -4,22 +4,16 @@ import {
     View,
     TextInput,
     ImageBackground,
-    TouchableOpacity,
     Image,
     Pressable,
     StatusBar,
     Platform,
 } from 'react-native';
 import React, { useState } from 'react';
-import {
-    HeaderImage,
-    Images,
-    Fonts,
-    Colors,
-    BottomTabImage,
-} from '../constants';
+import { Images, Fonts, Colors, BottomTabImage } from '../constants';
 import { BackBtn, Button, Input } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
+
 const data = [
     { id: 1, gioitinh: 'Nam' },
     { id: 2, gioitinh: 'Nữ' },
@@ -228,37 +222,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: Fonts.Bold,
     },
-    textEmail: {
-        color: '#C1C1C1',
-        paddingLeft: 10,
-        zIndex: 3,
-    },
-    inputEmail: {
-        width: '100%',
-        height: 40,
-        borderColor: 'white',
-        backgroundColor: 'white',
-        color: 'white',
-        zIndex: 2,
-        borderRadius: 15,
-        paddingLeft: 10,
-        paddingTop: -10,
-        fontSize: 17,
-    },
     formRegister: {
         flexDirection: 'column',
         alignItems: 'center',
         padding: 20,
-    },
-    groupInput: {
-        padding: 5,
-        width: '90%',
-        justifyContent: 'space-between',
-        borderWidth: 1,
-        borderColor: 'white',
-        backgroundColor: 'transparent',
-        borderRadius: 10,
-        marginTop: 15,
     },
     text: {
         color: Colors.LIGHT_GRAY,
@@ -266,56 +233,11 @@ const styles = StyleSheet.create({
         zIndex: 3,
         fontFamily: Fonts.Light,
     },
-    input: {
-        backgroundColor: 'transparent',
-        width: '100%',
-        height: 40,
-        borderColor: Colors.DEFAULT_WHITE,
-        color: Colors.DEFAULT_WHITE,
-        zIndex: 2,
-        borderRadius: 15,
-        paddingLeft: 10,
-        paddingTop: -10,
-        fontSize: 17,
-        fontFamily: Fonts.Regular,
-    },
-    groupCheckbox: {
-        flexDirection: 'row',
-        paddingLeft: 20,
-    },
-    ButtonCheckBox: {
-        backgroundColor: 'transparent',
-        width: 20,
-        height: 20,
-        borderRadius: 20,
-        borderColor: Colors.DARK_RED,
-        borderWidth: 2,
-    },
-    ButtonChecked: {
-        backgroundColor: Colors.DARK_RED,
-        width: 20,
-        height: 20,
-        borderRadius: 20,
-        borderColor: Colors.DEFAULT_WHITE,
-        borderWidth: 2,
-    },
-    miniGroupCheckbox: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginLeft: 10,
-        padding: 10,
-    },
-    textCheckbox: {
-        color: Colors.DEFAULT_WHITE,
-        paddingLeft: 10,
-        fontFamily: Fonts.Regular,
-    },
     titleCheckbox: {
         color: Colors.LIGHT_GRAY,
         paddingLeft: 36,
         fontFamily: Fonts.Light,
     },
-
     groupRule: {
         width: '85%',
         flexDirection: 'row',

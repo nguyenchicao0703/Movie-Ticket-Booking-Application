@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
+import { Pressable, Image } from 'react-native';
 import React from 'react';
 import { HeaderImage } from '../../constants';
 
@@ -11,5 +11,3 @@ const BackBtn = ({ onPress }) => {
 };
 
 export default BackBtn;
-
-const styles = StyleSheet.create({});

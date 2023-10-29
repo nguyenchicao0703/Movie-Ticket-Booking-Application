@@ -3,20 +3,14 @@ import {
     Text,
     View,
     ImageBackground,
-    Image,
-    Pressable,
     StatusBar,
 } from 'react-native';
-import React, { useRef } from 'react';
-import { HeaderImage, Images, Fonts, Colors } from '../constants';
+import React from 'react';
+import { Images, Fonts, Colors } from '../constants';
 import OTPTextInput from 'react-native-otp-textinput';
 import { BackBtn, Button } from '../components';
 
-const AuthOTPScreen = ({ navigation }, props) => {
-    let otpInput = useRef(null);
-    const setText = () => {
-        otpInput.current.setValue('123456');
-    };
+const AuthOTPScreen = ({ navigation }) => {
     const clickToHome = () => {
         navigation.navigate('Drawer');
     };

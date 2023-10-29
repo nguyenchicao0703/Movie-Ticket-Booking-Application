@@ -9,21 +9,21 @@ import {
     Pressable,
 } from 'react-native';
 import React from 'react';
-import { Colors, Fonts, HeaderImage, Images } from '../constants';
+import { Colors, Fonts, Images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackBtn, Button, Input } from '../components';
 const LoginScreen = ({ navigation }) => {
     const clickLogin = () => {
         navigation.navigate('AuthOTP');
-        console.log('dc');
     };
+
     const clickRegister = () => {
         navigation.navigate('Register');
     };
 
     const { width, height, scale, fontScale } = useWindowDimensions();
     return (
-        <SafeAreaView style={{ flex: 1, minHeight: '100%', minWidth: '100%' }}>
+        <SafeAreaView style={{ flex: 1 }}>
             <StatusBar
                 animated={true}
                 StatusBar="light-content"
@@ -58,8 +58,8 @@ const LoginScreen = ({ navigation }) => {
                         >
                             <Text
                                 style={{
-                                    color: Colors.DEFAULT_WHITE,
-                                    fontSize: 18,
+                                    color: Colors.LIGHT_GRAY,
+                                    fontSize: 16,
                                     fontFamily: Fonts.Regular,
                                 }}
                             >
@@ -77,59 +77,26 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
     formLogin: {
-        flexDirection: 'column',
         alignItems: 'center',
         marginTop: 100,
-    },
-    imageHeader: {
-        margin: 10,
     },
     textTitle: {
         fontSize: 30,
         color: Colors.DEFAULT_WHITE,
         textAlign: 'center',
-        fontFamily: Fonts.Bold,
-
+        fontFamily: Fonts.Medium,
         position: 'relative',
     },
     backgroudImage: {
         width: '100%',
         height: '100%',
     },
-    inputEmail: {
-        backgroundColor: Colors.DEFAULT_WHITE,
-        width: '100%',
-        height: 40,
-        borderColor: Colors.DEFAULT_WHITE,
-        backgroundColor: Colors.DEFAULT_BLACK,
-        color: Colors.DEFAULT_WHITE,
-        zIndex: 2,
-        borderRadius: 15,
-        paddingLeft: 10,
-        paddingTop: -10,
-        fontSize: 17,
-        fontFamily: Fonts.Regular,
+    line: {
+        width: '40%',
+        height: 0.6,
+        backgroundColor: Colors.MEDIUM_GRAY_LINE,
+        opacity: 0.5,
     },
-    groupEmailInput: {
-        width: '90%',
-        justifyContent: 'space-between',
-        borderWidth: 1,
-        borderColor: Colors.DEFAULT_WHITE,
-        backgroundColor: Colors.DEFAULT_BLACK,
-        borderTopLeftRadius: 5,
-        borderTopRightRadius: 5,
-    },
-    buttonLogin: {
-        backgroundColor: Colors.DARK_RED,
-        width: '90%',
-        maxHeight: 45,
-        minHeight: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 20,
-        marginTop: 35,
-    },
-    line: { flex: 1, height: 0.6, backgroundColor: Colors.DEFAULT_WHITE },
     textLine: {
         width: 50,
         textAlign: 'center',
@@ -142,20 +109,13 @@ const styles = StyleSheet.create({
         padding: 5,
         marginTop: 20,
     },
-    textEmail: {
-        color: Colors.LIGHT_GRAY,
-        paddingLeft: 10,
-        zIndex: 3,
-        fontFamily: Fonts.Light,
-    },
     buttonRegister: {
         backgroundColor: 'transparent',
         width: '90%',
-        maxHeight: 45,
-        minHeight: 40,
+        height: 45,
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: Colors.DEFAULT_WHITE,
+        borderColor: Colors.LIGHT_GRAY,
         borderWidth: 1,
         borderRadius: 20,
         marginTop: 20,
@@ -163,6 +123,6 @@ const styles = StyleSheet.create({
     container: {
         height: '80%',
         width: '100%',
-        justifyContent: 'center',
+        marginTop: 90,
     },
 });
