@@ -12,7 +12,6 @@ const Input = ({ label, editable, value, onChangeText, keyboardType }) => {
                     fontFamily: Fonts.Regular,
                 }}
                 label={label}
-                underlineColor={Colors.DEFAULT_WHITE}
                 activeUnderlineColor={Colors.LIGHT_GRAY}
                 underlineStyle={{ backgroundColor: 'transparent' }}
                 cursorColor={Colors.DARK_RED}

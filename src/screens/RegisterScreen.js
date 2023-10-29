@@ -9,6 +9,7 @@ import {
     Pressable,
     StatusBar,
     Platform,
+    useWindowDimensions,
 } from 'react-native';
 import React, { useState } from 'react';
 import {
@@ -32,7 +33,6 @@ const RegisterScreen = ({ navigation }, props) => {
     const [date, setDate] = useState(new Date());
     const [showPicker, setshowPicker] = useState(false);
     const [dayOfBirth, setDayOfBirth] = useState('');
-
     const toggleDatepicker = () => {
         setshowPicker(!showPicker);
     };
@@ -120,6 +120,13 @@ const RegisterScreen = ({ navigation }, props) => {
                                         editable={false}
                                         onChangeText={setDayOfBirth}
                                         label={'Ngày sinh'}
+                                    />
+                                    <Image
+                                        style={{
+                                            position: 'absolute',
+                                            marginLeft: 330,
+                                        }}
+                                        source={BottomTabImage[6].image}
                                     />
                                 </Pressable>
                                 //    onChangeText={setDayOfBirth}

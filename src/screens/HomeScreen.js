@@ -1,7 +1,6 @@
 import {
     Image,
     Pressable,
-    ScrollView,
     StatusBar,
     StyleSheet,
     Text,
@@ -13,6 +12,7 @@ import { BottomTabImage, DrawerImage, HeaderImage, Movies } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import LinearGradient from 'react-native-linear-gradient';
 import { MovieList } from '../components';
+import { ScrollView } from 'react-native-virtualized-view';
 
 const bottomTabs = [
     { id: 1, image: 1, title: 'Phim', tab: 'Movie' },
