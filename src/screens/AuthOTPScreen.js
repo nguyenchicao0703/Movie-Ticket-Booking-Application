@@ -10,6 +10,7 @@ import {
 import React, { useRef } from 'react';
 import { HeaderImage, Images, Fonts, Colors } from '../constants';
 import OTPTextInput from 'react-native-otp-textinput';
+import { BackBtn, Button } from '../components';
 
 const AuthOTPScreen = ({ navigation }, props) => {
     let otpInput = useRef(null);
@@ -33,55 +34,42 @@ const AuthOTPScreen = ({ navigation }, props) => {
                 style={styles.backgroudImage}
                 source={Images[4].image}
             >
-                <Pressable onPress={back}>
-                    <Image
-                        style={{ margin: 10 }}
-                        source={HeaderImage[0].image}
-                    />
-                </Pressable>
-                <Text style={styles.textTitle}>Xác minh OTP</Text>
-                <Text style={styles.txtTileAttension}>
-                    Nhập mã OTP vừa được gửi về email của bạn
-                </Text>
-                <View style={styles.formOTPAuth}>
-                    <OTPTextInput
-                        inputCount={6}
-                        containerStyle={{
-                            backgroundColor: 'transparent',
-                            padding: 20,
-                        }}
-                        textInputStyle={{
-                            borderRadius: 5,
-                            backgroundColor: Colors.DEFAULT_WHITE,
-                        }}
-                        tintColor={Colors.DEFAULT_WHITE}
-                    />
-                    <Pressable
-                        onPress={clickToHome}
-                        style={styles.buttonRegister}
-                    >
+                <BackBtn onPress={back} />
+                <View style={styles.container}>
+                    <View>
+                        <Text style={styles.textTitle}>Xác minh OTP</Text>
+                        <Text style={styles.txtTileAttension}>
+                            Nhập mã OTP vừa được gửi về email của bạn
+                        </Text>
+                    </View>
+
+                    <View style={styles.formOTPAuth}>
+                        <OTPTextInput
+                            inputCount={6}
+                            containerStyle={{
+                                backgroundColor: 'transparent',
+                                padding: 20,
+                            }}
+                            textInputStyle={{
+                                borderRadius: 5,
+                                backgroundColor: Colors.DEFAULT_WHITE,
+                            }}
+                            tintColor={Colors.DEFAULT_WHITE}
+                        />
+                        <Button onPress={clickToHome} text={'Tiếp tục'} />
                         <Text
                             style={{
                                 color: Colors.DEFAULT_WHITE,
-                                fontSize: 18,
-                                fontFamily: Fonts.Regular,
+                                marginTop: 20,
+                                fontFamily: Fonts.Light,
                             }}
                         >
-                            Đăng ký
+                            Bạn chưa nhận được mã?{' '}
+                            <Text style={{ color: Colors.DEFAULT_ORANGE }}>
+                                Gửi lại mã
+                            </Text>
                         </Text>
-                    </Pressable>
-                    <Text
-                        style={{
-                            color: Colors.DEFAULT_WHITE,
-                            marginTop: 20,
-                            fontFamily: Fonts.Light,
-                        }}
-                    >
-                        Bạn chưa nhận được mã?{' '}
-                        <Text style={{ color: Colors.DEFAULT_ORANGE }}>
-                            Gửi lại mã
-                        </Text>
-                    </Text>
+                    </View>
                 </View>
             </ImageBackground>
         </View>
@@ -99,7 +87,6 @@ const styles = StyleSheet.create({
         fontSize: 30,
         color: Colors.DEFAULT_WHITE,
         textAlign: 'center',
-        paddingTop: 40,
         fontFamily: Fonts.Bold,
     },
     txtTileAttension: {
@@ -109,7 +96,6 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.Light,
     },
     formOTPAuth: {
-        marginTop: 100,
         alignItems: 'center',
     },
     buttonRegister: {
@@ -121,5 +107,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 20,
         marginTop: 20,
+    },
+    container: {
+        width: '100%',
+        height: '80%',
+        justifyContent: 'space-around',
     },
 });

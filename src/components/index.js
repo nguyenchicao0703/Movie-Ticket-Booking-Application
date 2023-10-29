@@ -5,7 +5,8 @@ import MovieCard from './card/MovieCard';
 import HomeCard from './card/HomeCard';
 import MovieList from './list/MovieList';
 import HomeList from './list/HomeList';
-
+import Button from './inputCustom/Button';
+import BackBtn from './inputCustom/BackBtn';
 export {
     Input,
     CustomDrawerContent,
@@ -14,4 +15,6 @@ export {
     MovieCard,
     HomeList,
     MovieList,
+    Button,
+    BackBtn,
 };
