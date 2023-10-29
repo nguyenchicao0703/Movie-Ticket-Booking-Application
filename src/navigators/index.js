@@ -32,6 +32,11 @@ const AppDrawer = () => {
             <Drawer.Screen name="Movie" component={MovieScreen} />
             <Drawer.Screen name="Cinema" component={CinemaScreen} />
             <Drawer.Screen name="Ticket" component={TicketScreen} />
+            <Drawer.Screen
+                name="TicketHistory"
+                component={TicketHistoryScreen}
+            />
+            <Drawer.Screen name="Bill" component={BillScreen} />
         </Drawer.Navigator>
     );
 };

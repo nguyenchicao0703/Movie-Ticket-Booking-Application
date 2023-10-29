@@ -15,6 +15,10 @@ const Header = ({ titleHeader, navigation }) => {
         navigation.openDrawer();
     };
 
+    const goBack = () => {
+        navigation.goBack();
+    };
+
     return (
         <View
             style={{
@@ -29,10 +33,12 @@ const Header = ({ titleHeader, navigation }) => {
                     alignItems: 'center',
                 }}
             >
-                <Image
-                    source={HeaderImage[0].image}
+                <Pressable
                     style={{ marginLeft: width * 0.02 + 5 }}
-                />
+                    onPress={goBack}
+                >
+                    <Image source={HeaderImage[0].image} />
+                </Pressable>
                 <Text
                     style={{
                         color: Colors.DEFAULT_WHITE,
@@ -44,7 +50,6 @@ const Header = ({ titleHeader, navigation }) => {
                 >
                     {titleHeader}
                 </Text>
-
                 <Pressable
                     style={{ position: 'absolute', right: width * 0.02 }}
                     onPress={() => handleButtonMenu()}

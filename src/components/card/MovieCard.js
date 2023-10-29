@@ -10,9 +10,10 @@ import React from 'react';
 import { Colors, Fonts } from '../../constants';
 import LinearGradient from 'react-native-linear-gradient';
 
-const MovieCard = ({ data }) => {
+const MovieCard = ({ data, listCase }) => {
     const { width, height, fontScale } = useWindowDimensions();
     const fontSize = fontScale * 14;
+
     return (
         <View
             style={{ flex: 1, backgroundColor: Colors.DARK_BG, marginTop: 25 }}
@@ -52,7 +53,11 @@ const MovieCard = ({ data }) => {
                         Thể loại: {data.category}
                     </Text>
                     <LinearGradient
-                        colors={[Colors.DARK_RED, '#FF6666']}
+                        colors={
+                            listCase === 'TicketHistory'
+                                ? [Colors.LIGHT_GRAY, Colors.LIGHT_GRAY]
+                                : [Colors.DARK_RED, '#FF6666']
+                        }
                         locations={[0.35, 1]}
                         style={{
                             width: width * 0.5 - 50,
@@ -68,10 +73,12 @@ const MovieCard = ({ data }) => {
                                     textAlign: 'center',
                                     color: Colors.DEFAULT_WHITE,
                                     fontFamily: Fonts.Medium,
-                                    fontSize: fontScale * 17,
+                                    fontSize: fontScale * 16,
                                 }}
                             >
-                                Đặt vé
+                                {listCase === 'TicketHistory'
+                                    ? 'Đã lên lịch'
+                                    : 'Đặt vé'}
                             </Text>
                         </Pressable>
                     </LinearGradient>

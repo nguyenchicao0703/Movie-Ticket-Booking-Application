@@ -1,22 +1,13 @@
 import {
     Image,
     Pressable,
-    ScrollView,
-    StatusBar,
     StyleSheet,
     Text,
     View,
     useWindowDimensions,
 } from 'react-native';
 import React, { useState } from 'react';
-import {
-    BottomTabImage,
-    DrawerImage,
-    HeaderImage,
-    Images,
-    Movies,
-    ProfileImage,
-} from '../constants';
+import { HeaderImage, Images, ProfileImage } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 
 const ProfileScreen = ({ navigation }) => {
@@ -189,7 +180,7 @@ const styles = StyleSheet.create({
         marginStart: 15,
     },
     footer: {
-        margin: '10%',
+        margin: '0%',
         flexDirection: 'row',
         justifyContent: 'center',
     },
