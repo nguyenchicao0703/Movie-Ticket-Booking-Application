@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import { Colors, Fonts, HeaderImage } from '../constants';
 
-const Header = ({ titleHeader, navigation }) => {
+const Header = ({ titleHeader, navigation, onPress }) => {
     const { width, height, fontScale } = useWindowDimensions();
 
     const handleButtonMenu = () => {
@@ -29,10 +29,12 @@ const Header = ({ titleHeader, navigation }) => {
                     alignItems: 'center',
                 }}
             >
-                <Image
-                    source={HeaderImage[0].image}
-                    style={{ marginLeft: width * 0.02 + 5 }}
-                />
+                <Pressable onPress={onPress}>
+                    <Image
+                        source={HeaderImage[0].image}
+                        style={{ marginLeft: width * 0.02 + 5 }}
+                    />
+                </Pressable>
                 <Text
                     style={{
                         color: Colors.DEFAULT_WHITE,

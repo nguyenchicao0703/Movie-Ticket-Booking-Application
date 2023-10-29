@@ -5,10 +5,13 @@ import { Colors, Fonts } from '../constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Color } from '../constants/Colors';
 import Cinemas from '../constants/Cinemas';
-const CinemaScreen = () => {
+const CinemaScreen = ({ navigation }) => {
+    const back = () => {
+        navigation.goBack();
+    };
     return (
         <View style={styles.container}>
-            <Header titleHeader={'Chọn rạp'} />
+            <Header onPress={back} titleHeader={'Chọn rạp'} />
             <TabTopBar text={'Gợi ý cho bạn'} />
 
             <ScrollView>
