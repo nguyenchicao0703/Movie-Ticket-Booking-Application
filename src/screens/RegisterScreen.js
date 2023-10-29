@@ -88,7 +88,10 @@ const RegisterScreen = ({ navigation }, props) => {
                             <Input label={'Họ và tên'} />
                         </View>
                         <View style={styles.containerInput}>
-                            <Input label={'Số điện thoại'} />
+                            <Input
+                                keyboardType={'numeric'}
+                                label={'Số điện thoại'}
+                            />
                         </View>
                         <View style={styles.containerInput}>
                             <Input label={'Email'} />

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { CinemaList, Header, TabTopBar } from '../components';
 import { Colors, Fonts } from '../constants';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-virtualized-view';
 import { Color } from '../constants/Colors';
 import Cinemas from '../constants/Cinemas';
 const CinemaScreen = ({ navigation }) => {

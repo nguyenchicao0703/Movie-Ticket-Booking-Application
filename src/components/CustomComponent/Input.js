@@ -3,7 +3,7 @@ import React from 'react';
 import { Colors, Fonts } from '../../constants/index';
 import { TextInput } from 'react-native-paper';
 
-const Input = ({ label, editable, value, onChangeText }) => {
+const Input = ({ label, editable, value, onChangeText, keyboardType }) => {
     return (
         <View style={styles.groupEmailInput}>
             <TextInput
@@ -12,15 +12,15 @@ const Input = ({ label, editable, value, onChangeText }) => {
                     fontFamily: Fonts.Regular,
                 }}
                 label={label}
-                underlineColor="white"
+                underlineColor={Colors.DEFAULT_WHITE}
                 activeUnderlineColor={Colors.LIGHT_GRAY}
                 underlineStyle={{ backgroundColor: 'transparent' }}
                 cursorColor={Colors.DARK_RED}
-                keyboardType="text"
                 textColor={Colors.DEFAULT_WHITE}
                 onChangeText={onChangeText}
                 editable={editable}
                 value={value}
+                keyboardType={keyboardType}
             ></TextInput>
         </View>
     );
