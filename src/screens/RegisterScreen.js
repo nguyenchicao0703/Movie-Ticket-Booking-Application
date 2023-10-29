@@ -2,16 +2,14 @@ import {
     StyleSheet,
     Text,
     View,
-    TextInput,
     ImageBackground,
-    Image,
     Pressable,
     StatusBar,
     Platform,
 } from 'react-native';
 import React, { useState } from 'react';
-import { Images, Fonts, Colors, BottomTabImage } from '../constants';
-import { BackBtn, Button, Input } from '../components';
+import { Images, Fonts, Colors } from '../constants';
+import { BackButton, Button, Input } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const data = [
@@ -74,7 +72,7 @@ const RegisterScreen = ({ navigation }, props) => {
                 style={styles.backgroudImage}
                 source={Images[4].image}
             >
-                <BackBtn onPress={backToLogin} />
+                <BackButton onPress={backToLogin} />
                 <View style={styles.container}>
                     <Text style={styles.textTitle}>Đăng ký</Text>
 
@@ -107,42 +105,16 @@ const RegisterScreen = ({ navigation }, props) => {
                                     }}
                                     onPress={toggleDatepicker}
                                 >
-                                    <Text
-                                        style={{
-                                            color: Colors.DEFAULT_WHITE,
-                                            textAlign: 'center',
-                                        }}
-                                    >
-                                        Ngày sinh:
-                                    </Text>
-                                    <View
-                                        style={{
-                                            width: '40%',
-                                            padding: 10,
-                                            borderRadius: 5,
-                                            marginLeft: 15,
-                                            flexDirection: 'row',
-                                            marginTop: 10,
-                                        }}
-                                    >
-                                        <TextInput
-                                            style={{
-                                                color: Colors.DEFAULT_WHITE,
-                                                height: 35,
-                                            }}
-                                            placeholder="Chọn ngày sinh"
-                                            placeholderTextColor={
-                                                Colors.LIGHT_GRAY
-                                            }
-                                            onChangeText={setDayOfBirth}
-                                            editable={false}
-                                            value={dayOfBirth}
-                                        ></TextInput>
-                                        <Image
-                                            source={BottomTabImage[6].image}
-                                        />
-                                    </View>
+                                    <Input
+                                        value={dayOfBirth}
+                                        editable={false}
+                                        onChangeText={setDayOfBirth}
+                                        label={'Ngày sinh'}
+                                    />
                                 </Pressable>
+                                //    onChangeText={setDayOfBirth}
+                                //    editable={false}
+                                //    value={dayOfBirth}
                             )}
                         </View>
                     </View>

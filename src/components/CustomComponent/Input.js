@@ -3,7 +3,7 @@ import React from 'react';
 import { Colors, Fonts } from '../../constants/index';
 import { TextInput } from 'react-native-paper';
 
-const Input = ({ label }) => {
+const Input = ({ label, editable, value, onChangeText }) => {
     return (
         <View style={styles.groupEmailInput}>
             <TextInput
@@ -18,6 +18,9 @@ const Input = ({ label }) => {
                 cursorColor={Colors.DARK_RED}
                 keyboardType="text"
                 textColor={Colors.DEFAULT_WHITE}
+                onChangeText={onChangeText}
+                editable={editable}
+                value={value}
             ></TextInput>
         </View>
     );

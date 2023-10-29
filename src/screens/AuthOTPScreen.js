@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import { Images, Fonts, Colors } from '../constants';
 import OTPTextInput from 'react-native-otp-textinput';
-import { BackBtn, Button } from '../components';
+import { BackButton, Button } from '../components';
 
 const AuthOTPScreen = ({ navigation }) => {
     const clickToHome = () => {
@@ -28,7 +28,7 @@ const AuthOTPScreen = ({ navigation }) => {
                 style={styles.backgroudImage}
                 source={Images[4].image}
             >
-                <BackBtn onPress={back} />
+                <BackButton onPress={back} />
                 <View style={styles.container}>
                     <View>
                         <Text style={styles.textTitle}>Xác minh OTP</Text>
