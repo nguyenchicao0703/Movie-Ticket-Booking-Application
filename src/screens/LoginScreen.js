@@ -11,7 +11,7 @@ import {
 import React from 'react';
 import { Colors, Fonts, HeaderImage, Images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BackBtn, Button, Input } from '../components';
+import { BackButton, Button, Input } from '../components';
 const LoginScreen = ({ navigation }) => {
     const clickLogin = () => {
         navigation.navigate('AuthOTP');
@@ -34,7 +34,7 @@ const LoginScreen = ({ navigation }) => {
                 style={styles.backgroudImage}
                 source={Images[4].image}
             >
-                <BackBtn />
+                <BackButton />
                 <View style={styles.container}>
                     <Text style={styles.textTitle}>Đăng nhập</Text>
                     <View style={styles.formLogin}>
