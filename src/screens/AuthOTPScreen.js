@@ -4,7 +4,6 @@ import {
     View,
     ImageBackground,
     StatusBar,
-    Alert,
 } from 'react-native';
 import React from 'react';
 import { Images, Fonts, Colors } from '../constants';

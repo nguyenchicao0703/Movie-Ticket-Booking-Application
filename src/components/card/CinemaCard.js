@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../../constants';
-const CinemaCard = ({ data, onPress, style }) => {
+const CinemaCard = ({ data, onPress }) => {
     const { width, height, fontScale } = useWindowDimensions();
     const fontSize = fontScale * 18;
     return (
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         borderBottomWidth: 1,
-        borderColor: Colors.MEDIUM_GRAY_LINE,
+        borderColor: Colors.OPACITY_MEDIUM_GRAY_LINE,
         backgroundColor: Colors.DARK_BG,
         flexDirection: 'row',
     },

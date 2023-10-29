@@ -6,9 +6,11 @@ import {
     Pressable,
     StatusBar,
     Platform,
+    useWindowDimensions,
+    Image,
 } from 'react-native';
 import React, { useState } from 'react';
-import { Images, Fonts, Colors } from '../constants';
+import { Images, Fonts, Colors, BottomTabImage } from '../constants';
 import { BackButton, Button, Input, TextTitle } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -18,13 +20,12 @@ const data = [
     { id: 3, gioitinh: 'Khác' },
 ];
 
-const RegisterScreen = ({ navigation }, props) => {
+const RegisterScreen = ({ navigation }) => {
     const [unTickedRule, setUnTickedRule] = useState(true);
     const [isClick, setIsClick] = useState(0);
     const [date, setDate] = useState(new Date());
     const [showPicker, setshowPicker] = useState(false);
     const [dayOfBirth, setDayOfBirth] = useState('');
-
     const toggleDatepicker = () => {
         setshowPicker(!showPicker);
     };
@@ -80,7 +81,10 @@ const RegisterScreen = ({ navigation }, props) => {
                             <Input label={'Họ và tên'} />
                         </View>
                         <View style={styles.containerInput}>
-                            <Input label={'Số điện thoại'} />
+                            <Input
+                                keyboardType={'numeric'}
+                                label={'Số điện thoại'}
+                            />
                         </View>
                         <View style={styles.containerInput}>
                             <Input label={'Email'} />
@@ -110,10 +114,14 @@ const RegisterScreen = ({ navigation }, props) => {
                                         onChangeText={setDayOfBirth}
                                         label={'Ngày sinh'}
                                     />
+                                    <Image
+                                        style={{
+                                            position: 'absolute',
+                                            marginLeft: 330,
+                                        }}
+                                        source={BottomTabImage[6].image}
+                                    />
                                 </Pressable>
-                                //    onChangeText={setDayOfBirth}
-                                //    editable={false}
-                                //    value={dayOfBirth}
                             )}
                         </View>
                     </View>

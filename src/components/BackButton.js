@@ -1,6 +1,6 @@
 import { Pressable, Image } from 'react-native';
 import React from 'react';
-import { HeaderImage } from '../../constants';
+import { HeaderImage } from '../constants';
 
 const BackBtn = ({ onPress }) => {
     return (

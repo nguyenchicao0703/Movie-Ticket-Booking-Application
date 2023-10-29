@@ -1,6 +1,6 @@
 import { Text, Pressable } from 'react-native';
 import React from 'react';
-import { Colors, Fonts } from '../../constants';
+import { Colors, Fonts } from '../constants';
 
 const Button = ({ onPress, text }) => {
     return (
