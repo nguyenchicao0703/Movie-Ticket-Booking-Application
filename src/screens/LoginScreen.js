@@ -11,7 +11,7 @@ import {
 import React from 'react';
 import { Colors, Fonts, Images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BackButton, Button, Input } from '../components';
+import { BackButton, Button, Input, TextTitle } from '../components';
 const LoginScreen = ({ navigation }) => {
     const clickLogin = () => {
         navigation.navigate('AuthOTP');
@@ -35,10 +35,10 @@ const LoginScreen = ({ navigation }) => {
                 source={Images[4].image}
             >
                 <BackButton />
+                <TextTitle text={'Đăng nhập'} />
                 <View style={styles.container}>
-                    <Text style={styles.textTitle}>Đăng nhập</Text>
                     <View style={styles.formLogin}>
-                        <View style={{ flexDirection: 'row', width: '90%' }}>
+                        <View style={{ flexDirection: 'row', width: '95%' }}>
                             <Input label={'Email'} />
                         </View>
 
@@ -88,8 +88,7 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     backgroudImage: {
-        width: '100%',
-        height: '100%',
+        flex: 1,
     },
     line: {
         width: '40%',
@@ -102,6 +101,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: Colors.LIGHT_GRAY,
         fontFamily: Fonts.Light,
+        fontSize: 12,
     },
     groupLine: {
         flexDirection: 'row',
@@ -123,6 +123,6 @@ const styles = StyleSheet.create({
     container: {
         height: '80%',
         width: '100%',
-        marginTop: 90,
+        marginTop: 20,
     },
 });

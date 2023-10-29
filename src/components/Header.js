@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import { Colors, Fonts, HeaderImage } from '../constants';
 
-const Header = ({ titleHeader, navigation }) => {
+const Header = ({ titleHeader, navigation, onPress }) => {
     const { width, height, fontScale } = useWindowDimensions();
 
     const handleButtonMenu = () => {

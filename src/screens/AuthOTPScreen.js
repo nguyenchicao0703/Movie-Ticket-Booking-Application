@@ -4,11 +4,12 @@ import {
     View,
     ImageBackground,
     StatusBar,
+    Alert,
 } from 'react-native';
 import React from 'react';
 import { Images, Fonts, Colors } from '../constants';
 import OTPTextInput from 'react-native-otp-textinput';
-import { BackButton, Button } from '../components';
+import { BackButton, Button, TextTitle } from '../components';
 
 const AuthOTPScreen = ({ navigation }) => {
     const clickToHome = () => {
@@ -17,6 +18,7 @@ const AuthOTPScreen = ({ navigation }) => {
     const back = () => {
         navigation.goBack();
     };
+
     return (
         <View>
             <StatusBar
@@ -29,16 +31,16 @@ const AuthOTPScreen = ({ navigation }) => {
                 source={Images[4].image}
             >
                 <BackButton onPress={back} />
+                <View>
+                    <TextTitle text={'Xác minh OTP'} />
+                    <Text style={styles.txtTileAttension}>
+                        Nhập mã OTP vừa được gửi về email của bạn
+                    </Text>
+                </View>
                 <View style={styles.container}>
-                    <View>
-                        <Text style={styles.textTitle}>Xác minh OTP</Text>
-                        <Text style={styles.txtTileAttension}>
-                            Nhập mã OTP vừa được gửi về email của bạn
-                        </Text>
-                    </View>
-
                     <View style={styles.formOTPAuth}>
                         <OTPTextInput
+                            handleTextChange={(text) => console.log({ text })}
                             inputCount={6}
                             containerStyle={{
                                 backgroundColor: 'transparent',
@@ -48,7 +50,7 @@ const AuthOTPScreen = ({ navigation }) => {
                                 borderRadius: 5,
                                 backgroundColor: Colors.DEFAULT_WHITE,
                             }}
-                            tintColor={Colors.DEFAULT_WHITE}
+                            tintColor={Colors.LIGHT_GRAY}
                         />
                         <Button onPress={clickToHome} text={'Tiếp tục'} />
                         <Text
@@ -104,7 +106,6 @@ const styles = StyleSheet.create({
     },
     container: {
         width: '100%',
-        height: '80%',
-        justifyContent: 'space-around',
+        marginTop: 120,
     },
 });
