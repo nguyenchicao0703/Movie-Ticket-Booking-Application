@@ -10,7 +10,7 @@ import {
 import React, { useRef } from 'react';
 import { HeaderImage, Images, Fonts, Colors } from '../constants';
 import OTPTextInput from 'react-native-otp-textinput';
-import { BackBtn, Button } from '../components';
+import { BackButton, Button } from '../components';
 
 const AuthOTPScreen = ({ navigation }, props) => {
     let otpInput = useRef(null);
@@ -34,7 +34,7 @@ const AuthOTPScreen = ({ navigation }, props) => {
                 style={styles.backgroudImage}
                 source={Images[4].image}
             >
-                <BackBtn onPress={back} />
+                <BackButton onPress={back} />
                 <View style={styles.container}>
                     <View>
                         <Text style={styles.textTitle}>Xác minh OTP</Text>
