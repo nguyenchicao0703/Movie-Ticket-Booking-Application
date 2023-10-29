@@ -14,7 +14,7 @@ const Input = ({ label, editable, value, onChangeText }) => {
                 label={label}
                 underlineColor="white"
                 activeUnderlineColor={Colors.LIGHT_GRAY}
-                underlineStyle={{ borderColor: 'white' }}
+                underlineStyle={{ backgroundColor: 'transparent' }}
                 cursorColor={Colors.DARK_RED}
                 keyboardType="text"
                 textColor={Colors.DEFAULT_WHITE}
@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: Colors.DEFAULT_WHITE,
         backgroundColor: Colors.DEFAULT_BLACK,
-        borderTopLeftRadius: 5,
-        borderTopRightRadius: 5,
+        borderRadius: 10,
     },
 });

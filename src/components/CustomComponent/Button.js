@@ -23,7 +23,7 @@ export default Button;
 const styles = StyleSheet.create({
     buttonLogin: {
         backgroundColor: Colors.DARK_RED,
-        width: '90%',
+        width: '95%',
         maxHeight: 45,
         minHeight: 40,
         justifyContent: 'center',

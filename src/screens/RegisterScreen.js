@@ -18,7 +18,7 @@ import {
     Colors,
     BottomTabImage,
 } from '../constants';
-import { BackButton, Button, Input } from '../components';
+import { BackButton, Button, Input, TextTitle } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 const data = [
     { id: 1, gioitinh: 'Nam' },
@@ -81,9 +81,8 @@ const RegisterScreen = ({ navigation }, props) => {
                 source={Images[4].image}
             >
                 <BackButton onPress={backToLogin} />
+                <TextTitle text={'Đăng ký'} />
                 <View style={styles.container}>
-                    <Text style={styles.textTitle}>Đăng ký</Text>
-
                     <View style={styles.formRegister}>
                         <View style={styles.containerInput}>
                             <Input label={'Họ và tên'} />
@@ -126,29 +125,46 @@ const RegisterScreen = ({ navigation }, props) => {
                             )}
                         </View>
                     </View>
-                    <Text style={styles.titleCheckbox}>Giới tính</Text>
-                    <View style={{ flexDirection: 'row' }}>
-                        {data.map((value, index) => (
-                            <View key={index} style={{ flexDirection: 'row' }}>
-                                <Pressable
-                                    onPress={() => handleButton(index)}
-                                    style={styles.checkBoxCircle}
-                                >
-                                    {isClick === index ? (
-                                        <View style={styles.inSideCircle} />
-                                    ) : null}
-                                </Pressable>
-                                <Text
+
+                    <View style={styles.sex}>
+                        <Text style={styles.titleCheckbox}>Giới tính</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            {data.map((value, index) => (
+                                <View
+                                    key={index}
                                     style={{
-                                        color: 'white',
-                                        marginLeft: 10,
+                                        flexDirection: 'row',
+                                        marginTop: 10,
+                                        justifyContent: 'space-between',
+                                        width: '30%',
                                     }}
                                 >
-                                    {value.gioitinh}
-                                </Text>
-                            </View>
-                        ))}
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <Pressable
+                                            onPress={() => handleButton(index)}
+                                            style={styles.checkBoxCircle}
+                                        >
+                                            {isClick === index ? (
+                                                <View
+                                                    style={styles.inSideCircle}
+                                                />
+                                            ) : null}
+                                        </Pressable>
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                marginLeft: 10,
+                                                fontFamily: Fonts.Regular,
+                                            }}
+                                        >
+                                            {value.gioitinh}
+                                        </Text>
+                                    </View>
+                                </View>
+                            ))}
+                        </View>
                     </View>
+
                     <View style={styles.groupRule}>
                         {unTickedRule ? (
                             <Pressable
@@ -177,7 +193,7 @@ const RegisterScreen = ({ navigation }, props) => {
                         </Text>
                     </View>
 
-                    <View style={{ alignItems: 'center' }}>
+                    <View style={{ alignItems: 'center', width: '100%' }}>
                         <Button
                             onPress={clickChangeAuthOTPScr}
                             text={'Đăng ký'}
@@ -222,7 +238,7 @@ const styles = StyleSheet.create({
     formRegister: {
         flexDirection: 'column',
         alignItems: 'center',
-        padding: 20,
+        width: '95%',
     },
     groupInput: {
         padding: 5,
@@ -255,30 +271,8 @@ const styles = StyleSheet.create({
     },
     groupCheckbox: {
         flexDirection: 'row',
-        paddingLeft: 20,
     },
-    ButtonCheckBox: {
-        backgroundColor: 'transparent',
-        width: 20,
-        height: 20,
-        borderRadius: 20,
-        borderColor: Colors.DARK_RED,
-        borderWidth: 2,
-    },
-    ButtonChecked: {
-        backgroundColor: Colors.DARK_RED,
-        width: 20,
-        height: 20,
-        borderRadius: 20,
-        borderColor: Colors.DEFAULT_WHITE,
-        borderWidth: 2,
-    },
-    miniGroupCheckbox: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginLeft: 10,
-        padding: 10,
-    },
+
     textCheckbox: {
         color: Colors.DEFAULT_WHITE,
         paddingLeft: 10,
@@ -286,15 +280,16 @@ const styles = StyleSheet.create({
     },
     titleCheckbox: {
         color: Colors.LIGHT_GRAY,
-        paddingLeft: 36,
         fontFamily: Fonts.Light,
     },
-
+    sex: {
+        width: '86%',
+        marginTop: 10,
+    },
     groupRule: {
         width: '85%',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingLeft: 40,
         paddingTop: 20,
     },
     textAttention: {
@@ -306,7 +301,8 @@ const styles = StyleSheet.create({
     textRule: {
         color: Colors.DEFAULT_WHITE,
         paddingLeft: 10,
-        fontFamily: Fonts.Regular,
+        fontFamily: Fonts.Light,
+        fontSize: 12,
     },
     containerInput: {
         marginTop: 20,
@@ -314,16 +310,14 @@ const styles = StyleSheet.create({
     },
     container: {
         width: '100%',
-        height: '90%',
-        justifyContent: 'center',
+        alignItems: 'center',
     },
     checkBoxCircle: {
         width: 20,
         height: 20,
         borderWidth: 2,
         borderRadius: 100,
-        borderColor: 'red',
-        marginLeft: 40,
+        borderColor: Colors.DARK_RED,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -336,7 +330,7 @@ const styles = StyleSheet.create({
     inSideCircle: {
         width: 10,
         height: 10,
-        backgroundColor: 'red',
+        backgroundColor: Colors.DARK_RED,
         borderRadius: 100,
     },
 });

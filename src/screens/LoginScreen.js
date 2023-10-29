@@ -11,7 +11,7 @@ import {
 import React from 'react';
 import { Colors, Fonts, HeaderImage, Images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BackButton, Button, Input } from '../components';
+import { BackButton, Button, Input, TextTitle } from '../components';
 const LoginScreen = ({ navigation }) => {
     const clickLogin = () => {
         navigation.navigate('AuthOTP');
@@ -23,7 +23,7 @@ const LoginScreen = ({ navigation }) => {
 
     const { width, height, scale, fontScale } = useWindowDimensions();
     return (
-        <SafeAreaView style={{ flex: 1, minHeight: '100%', minWidth: '100%' }}>
+        <SafeAreaView style={{ flex: 1 }}>
             <StatusBar
                 animated={true}
                 StatusBar="light-content"
@@ -35,10 +35,10 @@ const LoginScreen = ({ navigation }) => {
                 source={Images[4].image}
             >
                 <BackButton />
+                <TextTitle text={'Đăng nhập'} />
                 <View style={styles.container}>
-                    <Text style={styles.textTitle}>Đăng nhập</Text>
                     <View style={styles.formLogin}>
-                        <View style={{ flexDirection: 'row', width: '90%' }}>
+                        <View style={{ flexDirection: 'row', width: '95%' }}>
                             <Input label={'Email'} />
                         </View>
 
@@ -93,48 +93,16 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     backgroudImage: {
-        width: '100%',
-        height: '100%',
+        flex: 1,
     },
-    inputEmail: {
-        backgroundColor: Colors.DEFAULT_WHITE,
-        width: '100%',
-        height: 40,
-        borderColor: Colors.DEFAULT_WHITE,
-        backgroundColor: Colors.DEFAULT_BLACK,
-        color: Colors.DEFAULT_WHITE,
-        zIndex: 2,
-        borderRadius: 15,
-        paddingLeft: 10,
-        paddingTop: -10,
-        fontSize: 17,
-        fontFamily: Fonts.Regular,
-    },
-    groupEmailInput: {
-        width: '90%',
-        justifyContent: 'space-between',
-        borderWidth: 1,
-        borderColor: Colors.DEFAULT_WHITE,
-        backgroundColor: Colors.DEFAULT_BLACK,
-        borderTopLeftRadius: 5,
-        borderTopRightRadius: 5,
-    },
-    buttonLogin: {
-        backgroundColor: Colors.DARK_RED,
-        width: '90%',
-        maxHeight: 45,
-        minHeight: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 20,
-        marginTop: 35,
-    },
+
     line: { flex: 1, height: 0.6, backgroundColor: Colors.DEFAULT_WHITE },
     textLine: {
         width: 50,
         textAlign: 'center',
         color: Colors.LIGHT_GRAY,
         fontFamily: Fonts.Light,
+        fontSize: 12,
     },
     groupLine: {
         flexDirection: 'row',
@@ -150,7 +118,7 @@ const styles = StyleSheet.create({
     },
     buttonRegister: {
         backgroundColor: 'transparent',
-        width: '90%',
+        width: '95%',
         maxHeight: 45,
         minHeight: 40,
         justifyContent: 'center',
@@ -163,6 +131,6 @@ const styles = StyleSheet.create({
     container: {
         height: '80%',
         width: '100%',
-        justifyContent: 'center',
+        marginTop: 20,
     },
 });
