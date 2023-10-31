@@ -5,11 +5,12 @@ import MovieCard from './card/MovieCard';
 import HomeCard from './card/HomeCard';
 import MovieList from './list/MovieList';
 import HomeList from './list/HomeList';
-import Button from './Button';
+import AuthAccountButton from './AuthAccountButton';
 import BackButton from './BackButton';
 import TextTitle from './TextTitle';
 import CinemaCard from './card/CinemaCard';
 import CinemaList from './list/CinemaList';
+import GenderSelectionBox from './GenderSelectionBox';
 export {
     Input,
     CustomDrawerContent,
@@ -18,9 +19,10 @@ export {
     MovieCard,
     HomeList,
     MovieList,
-    Button,
+    AuthAccountButton,
     BackButton,
     TextTitle,
     CinemaCard,
     CinemaList,
+    GenderSelectionBox,
 };

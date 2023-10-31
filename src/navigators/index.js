@@ -2,6 +2,7 @@ import {
     AuthOTPScreen,
     BillScreen,
     CinemaScreen,
+    DetailScreen,
     DiscountScreen,
     HomeScreen,
     LoginScreen,
@@ -37,6 +38,7 @@ const AppDrawer = () => {
                 component={TicketHistoryScreen}
             />
             <Drawer.Screen name="Bill" component={BillScreen} />
+            <Drawer.Screen name="Detail" component={DetailScreen} />
         </Drawer.Navigator>
     );
 };
@@ -60,6 +62,7 @@ const Navigator = () => {
             <Stack.Screen name="AuthOTP" component={AuthOTPScreen} />
             <Stack.Screen name="Bill" component={BillScreen} />
             <Stack.Screen name="Discount" component={DiscountScreen} />
+
             <Stack.Screen
                 name="TicketHistory"
                 component={TicketHistoryScreen}

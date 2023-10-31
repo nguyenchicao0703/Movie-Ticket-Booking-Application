@@ -8,7 +8,12 @@ import {
 import React from 'react';
 import { Images, Fonts, Colors } from '../constants';
 import OTPTextInput from 'react-native-otp-textinput';
-import { BackButton, Button, TextTitle } from '../components';
+import {
+    AuthAccountButton,
+    BackButton,
+    Button,
+    TextTitle,
+} from '../components';
 
 const AuthOTPScreen = ({ navigation }) => {
     const clickToHome = () => {
@@ -51,7 +56,10 @@ const AuthOTPScreen = ({ navigation }) => {
                             }}
                             tintColor={Colors.LIGHT_GRAY}
                         />
-                        <Button onPress={clickToHome} text={'Tiếp tục'} />
+                        <AuthAccountButton
+                            onPress={clickToHome}
+                            text={'Tiếp tục'}
+                        />
                         <Text
                             style={{
                                 color: Colors.DEFAULT_WHITE,
