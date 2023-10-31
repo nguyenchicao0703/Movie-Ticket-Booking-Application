@@ -11,18 +11,18 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { Images, Fonts, Colors, BottomTabImage } from '../constants';
-import { BackButton, Button, Input, TextTitle } from '../components';
+import {
+    AuthAccountButton,
+    BackButton,
+    Button,
+    GenderSelectionBox,
+    Input,
+    TextTitle,
+} from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-const data = [
-    { id: 1, gioitinh: 'Nam' },
-    { id: 2, gioitinh: 'Nữ' },
-    { id: 3, gioitinh: 'Khác' },
-];
 
 const RegisterScreen = ({ navigation }) => {
     const [unTickedRule, setUnTickedRule] = useState(true);
-    const [isClick, setIsClick] = useState(0);
     const [date, setDate] = useState(new Date());
     const [showPicker, setshowPicker] = useState(false);
     const [dayOfBirth, setDayOfBirth] = useState('');
@@ -56,10 +56,6 @@ const RegisterScreen = ({ navigation }) => {
     };
     const backToLogin = () => {
         navigation.goBack();
-    };
-    const handleButton = (index) => {
-        console.log(index);
-        setIsClick(index);
     };
 
     return (
@@ -126,44 +122,7 @@ const RegisterScreen = ({ navigation }) => {
                         </View>
                     </View>
 
-                    <View style={styles.sex}>
-                        <Text style={styles.titleCheckbox}>Giới tính</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                            {data.map((value, index) => (
-                                <View
-                                    key={index}
-                                    style={{
-                                        flexDirection: 'row',
-                                        marginTop: 10,
-                                        justifyContent: 'space-between',
-                                        width: '30%',
-                                    }}
-                                >
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Pressable
-                                            onPress={() => handleButton(index)}
-                                            style={styles.checkBoxCircle}
-                                        >
-                                            {isClick === index ? (
-                                                <View
-                                                    style={styles.inSideCircle}
-                                                />
-                                            ) : null}
-                                        </Pressable>
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                marginLeft: 10,
-                                                fontFamily: Fonts.Regular,
-                                            }}
-                                        >
-                                            {value.gioitinh}
-                                        </Text>
-                                    </View>
-                                </View>
-                            ))}
-                        </View>
-                    </View>
+                    <GenderSelectionBox />
 
                     <View style={styles.groupRule}>
                         {unTickedRule ? (
@@ -194,7 +153,7 @@ const RegisterScreen = ({ navigation }) => {
                     </View>
 
                     <View style={{ alignItems: 'center', width: '100%' }}>
-                        <Button
+                        <AuthAccountButton
                             onPress={clickChangeAuthOTPScr}
                             text={'Đăng ký'}
                         />
@@ -273,14 +232,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         fontFamily: Fonts.Regular,
     },
-    titleCheckbox: {
-        color: Colors.LIGHT_GRAY,
-        fontFamily: Fonts.Light,
-    },
-    sex: {
-        width: '86%',
-        marginTop: 10,
-    },
+
     groupRule: {
         width: '85%',
         flexDirection: 'row',
@@ -307,25 +259,11 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
     },
-    checkBoxCircle: {
-        width: 20,
-        height: 20,
-        borderWidth: 2,
-        borderRadius: 100,
-        borderColor: Colors.DARK_RED,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+
     ButtonCheckBoxRule: {
         backgroundColor: Colors.DEFAULT_WHITE,
         width: 20,
         height: 20,
         borderRadius: 10,
-    },
-    inSideCircle: {
-        width: 10,
-        height: 10,
-        backgroundColor: Colors.DARK_RED,
-        borderRadius: 100,
     },
 });

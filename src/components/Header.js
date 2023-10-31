@@ -15,10 +15,6 @@ const Header = ({ titleHeader, navigation, onPress }) => {
         navigation.openDrawer();
     };
 
-    const goBack = () => {
-        navigation.goBack();
-    };
-
     return (
         <View
             style={{
@@ -35,7 +31,7 @@ const Header = ({ titleHeader, navigation, onPress }) => {
             >
                 <Pressable
                     style={{ marginLeft: width * 0.02 + 5 }}
-                    onPress={goBack}
+                    onPress={onPress}
                 >
                     <Image source={HeaderImage[0].image} />
                 </Pressable>

@@ -9,29 +9,34 @@ import {
 import React from 'react';
 import { Colors, Fonts } from '../../constants';
 import LinearGradient from 'react-native-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 
-const MovieCard = ({ data, listCase }) => {
-    const { width, height, fontScale } = useWindowDimensions();
+const MovieCard = ({ data, listCase, onPresss }) => {
+    const { width, height, fontScale, onPress } = useWindowDimensions();
     const fontSize = fontScale * 14;
-
+    const navigation = useNavigation();
     return (
         <View
             style={{ flex: 1, backgroundColor: Colors.DARK_BG, marginTop: 25 }}
         >
             <Pressable
+                onPress={onPresss}
                 style={{
                     flexDirection: 'row',
                 }}
             >
-                <Image
-                    source={data.image}
-                    style={{
-                        marginLeft: width * 0.035,
-                        width: width * 0.32,
-                        height: height * 0.28,
-                        borderRadius: 5,
-                    }}
-                />
+                <Pressable onPress={() => navigation.navigate('Detail')}>
+                    <Image
+                        source={data.image}
+                        style={{
+                            marginLeft: width * 0.035,
+                            width: width * 0.32,
+                            height: height * 0.28,
+                            borderRadius: 5,
+                        }}
+                    />
+                </Pressable>
+
                 <View style={{ flexDirection: 'column', marginLeft: 10 }}>
                     <Text
                         style={{

@@ -11,7 +11,13 @@ import {
 import React from 'react';
 import { Colors, Fonts, Images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BackButton, Button, Input, TextTitle } from '../components';
+import {
+    AuthAccountButton,
+    BackButton,
+    Button,
+    Input,
+    TextTitle,
+} from '../components';
 const LoginScreen = ({ navigation }) => {
     const clickLogin = () => {
         navigation.navigate('AuthOTP');
@@ -42,7 +48,10 @@ const LoginScreen = ({ navigation }) => {
                             <Input label={'Email'} />
                         </View>
 
-                        <Button text="Đăng nhập" onPress={clickLogin} />
+                        <AuthAccountButton
+                            text="Đăng nhập"
+                            onPress={clickLogin}
+                        />
 
                         <View style={styles.groupLine}>
                             <View style={styles.line} />

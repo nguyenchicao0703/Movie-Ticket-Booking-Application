@@ -2,7 +2,7 @@ import { Text, Pressable } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../constants';
 
-const Button = ({ onPress, text }) => {
+const AuthAccountButton = ({ onPress, text }) => {
     return (
         <Pressable
             onPress={onPress}
@@ -29,4 +29,4 @@ const Button = ({ onPress, text }) => {
     );
 };
 
-export default Button;
+export default AuthAccountButton;
