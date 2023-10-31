@@ -21,9 +21,11 @@ import {
     SelectMoviesSpecial,
 } from './DataSelecteMovies';
 import { TicketHistory, TicketFuture } from './DataTicketHistory';
+import { SelectDate } from './DataSelectDate';
 
 export {
     Colors,
+    Fonts,
     BottomTabImage,
     Images,
     DrawerImage,
@@ -38,11 +40,11 @@ export {
     SeatImage,
     SelectShowTimeImage,
     UpdateProfileImage,
-    Fonts,
     Movies,
     SelectMoviesFuture,
     SelectMoviesPresent,
     SelectMoviesSpecial,
     TicketHistory,
     TicketFuture,
+    SelectDate,
 };

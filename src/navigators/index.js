@@ -8,6 +8,7 @@ import {
     MovieScreen,
     ProfileScreen,
     RegisterScreen,
+    SelectShowtimeScreen,
     TicketHistoryScreen,
     TicketScreen,
     WelcomeScreen,
@@ -63,6 +64,10 @@ const Navigator = () => {
             <Stack.Screen
                 name="TicketHistory"
                 component={TicketHistoryScreen}
+            />
+            <Stack.Screen
+                name="SelectShowtime"
+                component={SelectShowtimeScreen}
             />
         </Stack.Navigator>
     );
