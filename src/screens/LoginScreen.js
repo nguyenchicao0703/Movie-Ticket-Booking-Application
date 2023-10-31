@@ -1,5 +1,4 @@
 import {
-    Image,
     ImageBackground,
     StyleSheet,
     Text,
@@ -11,13 +10,7 @@ import {
 import React from 'react';
 import { Colors, Fonts, Images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-    AuthAccountButton,
-    BackButton,
-    Button,
-    Input,
-    TextTitle,
-} from '../components';
+import { AuthAccountButton, BackButton, Input, TextTitle } from '../components';
 const LoginScreen = ({ navigation }) => {
     const clickLogin = () => {
         navigation.navigate('AuthOTP');

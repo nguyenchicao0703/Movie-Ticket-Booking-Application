@@ -8,12 +8,7 @@ import {
 import React from 'react';
 import { Images, Fonts, Colors } from '../constants';
 import OTPTextInput from 'react-native-otp-textinput';
-import {
-    AuthAccountButton,
-    BackButton,
-    Button,
-    TextTitle,
-} from '../components';
+import { AuthAccountButton, BackButton, TextTitle } from '../components';
 
 const AuthOTPScreen = ({ navigation }) => {
     const clickToHome = () => {
