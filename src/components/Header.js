@@ -7,19 +7,9 @@ import {
 } from 'react-native';
 import React from 'react';
 import { Colors, Fonts, HeaderImage } from '../constants';
-import { useNavigation } from '@react-navigation/native';
 
-const Header = ({ titleHeader, onButtonBack }) => {
+const Header = ({ titleHeader, onButtonBack, onButtonMenu }) => {
     const { width, height, fontScale } = useWindowDimensions();
-    const { navigation } = useNavigation();
-
-    const handleButtonMenu = () => {
-        navigation.openDrawer();
-    };
-
-    const handleButtonBack = () => {
-        navigation.goBack();
-    };
 
     return (
         <View
@@ -54,7 +44,7 @@ const Header = ({ titleHeader, onButtonBack }) => {
                 </Text>
                 <Pressable
                     style={{ position: 'absolute', right: width * 0.02 }}
-                    onPress={handleButtonMenu}
+                    onPress={onButtonMenu}
                 >
                     <Image source={HeaderImage[1].image} />
                 </Pressable>

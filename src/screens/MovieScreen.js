@@ -22,12 +22,19 @@ const TopTabsCategory = [
 ];
 
 const MovieScreen = ({ navigation }) => {
-    const { width, height, fontScale } = useWindowDimensions();
+    const { width, fontScale } = useWindowDimensions();
     const [clickTab, setClickTab] = useState(0);
 
     const handleClickTab = (index) => {
-        console.log({ index });
         setClickTab(index);
+    };
+
+    const handleButtonBack = () => {
+        navigation.goBack(null);
+    };
+
+    const handleButtonMenu = () => {
+        navigation.openDrawer();
     };
 
     return (
@@ -37,7 +44,11 @@ const MovieScreen = ({ navigation }) => {
                 StatusBar="light-content"
                 backgroundColor={Colors.DEFAULT_BLACK}
             />
-            <Header titleHeader={'Chọn phim'} navigation={navigation} />
+            <Header
+                titleHeader={'Chọn phim'}
+                onButtonBack={handleButtonBack}
+                onButtonMenu={handleButtonMenu}
+            />
             <View style={{ flexDirection: 'row' }}>
                 {TopTabsCategory.map((value, index) => (
                     <Pressable

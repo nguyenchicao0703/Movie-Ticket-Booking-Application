@@ -3,10 +3,17 @@ import React from 'react';
 import { Colors, Fonts } from '../constants';
 import { CalendarList, Header } from '../components';
 
-const SelectShowtimeScreen = () => {
+const SelectShowtimeScreen = ({ navigation }) => {
+    const handleButtonBack = () => {
+        navigation.goBack(null);
+    };
+
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
-            <Header titleHeader={'Chọn suất chiếu'} />
+            <Header
+                titleHeader={'Chọn suất chiếu'}
+                onButtonBack={handleButtonBack}
+            />
             <Text
                 style={{
                     fontSize: 18,

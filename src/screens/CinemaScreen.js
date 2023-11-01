@@ -4,13 +4,23 @@ import { CinemaList, Header } from '../components';
 import { Colors, Fonts } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
 import Cinemas from '../constants/Cinemas';
+
 const CinemaScreen = ({ navigation }) => {
-    const back = () => {
-        navigation.goBack();
+    const handleButtonBack = () => {
+        navigation.goBack(null);
     };
+
+    const handleButtonMenu = () => {
+        navigation.openDrawer();
+    };
+
     return (
         <View style={styles.container}>
-            <Header onPress={back} titleHeader={'Chọn rạp'} />
+            <Header
+                titleHeader={'Chọn rạp'}
+                onButtonBack={handleButtonBack}
+                onButtonMenu={handleButtonMenu}
+            />
             <ScrollView>
                 <View style={styles.tabBottomText}>
                     <Text style={styles.text}>GỢI Ý CHO BẠN</Text>

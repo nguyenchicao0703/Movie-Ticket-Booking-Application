@@ -10,19 +10,27 @@ import React from 'react';
 import { Header } from '../components';
 import { Colors, DetailMovieImage, Fonts, Images } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
-import { useNavigation } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
 
-const DetailScreen = () => {
+const DetailScreen = ({ navigation }) => {
     const { height, width, fontScale } = useWindowDimensions();
-    const navigation = useNavigation();
+    // const navigation = useNavigation();
 
     const handleButtonBack = () => {
-        navigation.goBack();
+        navigation.goBack(null);
+    };
+
+    const handleButtonMenu = () => {
+        navigation.openDrawer();
     };
 
     return (
         <View style={styles.container}>
-            <Header titleHeader={'Phim'} onButtonBack={handleButtonBack} />
+            <Header
+                titleHeader={'Phim'}
+                onButtonBack={handleButtonBack}
+                onButtonMenu={handleButtonMenu}
+            />
             <ScrollView style={{ width: '100%' }}>
                 <View style={styles.groupPlayMovie}>
                     <Image

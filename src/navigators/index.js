@@ -28,6 +28,7 @@ const AppDrawer = () => {
                 swipeEnabled: false,
                 drawerPosition: 'right',
             }}
+            backBehavior="history"
             drawerContent={(props) => <CustomDrawerContent {...props} />}
         >
             <Drawer.Screen name="Home" component={HomeScreen} />
@@ -35,6 +36,10 @@ const AppDrawer = () => {
             <Drawer.Screen name="Cinema" component={CinemaScreen} />
             <Drawer.Screen name="Ticket" component={TicketScreen} />
             <Drawer.Screen name="Detail" component={DetailScreen} />
+            <Drawer.Screen
+                name="TicketHistory"
+                component={TicketHistoryScreen}
+            />
         </Drawer.Navigator>
     );
 };
@@ -55,10 +60,6 @@ const Navigator = () => {
             <Stack.Screen name="AuthOTP" component={AuthOTPScreen} />
             <Stack.Screen name="Bill" component={BillScreen} />
             <Stack.Screen name="Discount" component={DiscountScreen} />
-            <Stack.Screen
-                name="TicketHistory"
-                component={TicketHistoryScreen}
-            />
             <Stack.Screen
                 name="SelectShowtime"
                 component={SelectShowtimeScreen}
