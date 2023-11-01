@@ -22,6 +22,7 @@ import {
 } from './DataSelecteMovies';
 import { TicketHistory, TicketFuture } from './DataTicketHistory';
 import { SelectDate } from './DataSelectDate';
+import { ShowtimeMovie } from './DataShowtime';
 
 export {
     Colors,
@@ -47,4 +48,5 @@ export {
     TicketHistory,
     TicketFuture,
     SelectDate,
+    ShowtimeMovie,
 };

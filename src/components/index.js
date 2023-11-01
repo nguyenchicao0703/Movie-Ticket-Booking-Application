@@ -7,6 +7,8 @@ import GenderSelectionBox from './GenderSelectionBox';
 import AuthAccountButton from './AuthAccountButton';
 import { HomeList, CinemaList, MovieList, CalendarList } from './list';
 import { HomeCard, CinemaCard, MovieCard, CalendarCard } from './card';
+import MovieTitle from './MovieTitle';
+import SelectShowtime from './SelectShowtime';
 
 export {
     Input,
@@ -24,4 +26,6 @@ export {
     HomeCard,
     MovieCard,
     CalendarCard,
+    MovieTitle,
+    SelectShowtime,
 };

@@ -28,17 +28,17 @@ const CalendarCard = ({
                     justifyContent: 'center',
                     alignItems: 'center',
                 },
-                isFirst ? { marginLeft: 16 } : null,
+                isFirst ? { marginLeft: 10 } : null,
                 isSelected
                     ? {
                           borderWidth: 3,
                           borderColor: Colors.DARK_RED_BORDER,
                           backgroundColor: Colors.LIGHT_RED,
-                          borderRadius: 12,
+                          borderRadius: 5,
                       }
                     : {
                           backgroundColor: Colors.DEFAULT_WHITE,
-                          borderRadius: 5,
+                          borderRadius: 10,
                       },
             ]}
         >

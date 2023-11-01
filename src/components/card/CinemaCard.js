@@ -7,11 +7,25 @@ import {
 } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../../constants';
-const CinemaCard = ({ data, onPress }) => {
+import { useNavigation, useRoute } from '@react-navigation/native';
+
+const CinemaCard = ({ data }) => {
+    const navigation = useNavigation();
+    const route = useRoute();
+    // const { caseItem } = route.params;
     const { width, height, fontScale } = useWindowDimensions();
     const fontSize = fontScale * 18;
+
+    const handleCinemaItemClick = () => {
+        // console.log(caseItem);
+        navigation.navigate('ShowtimeCinema', {
+            cinemaId: data.id,
+            cinemaTitle: data.name,
+        });
+    };
+
     return (
-        <Pressable onPress={onPress}>
+        <Pressable onPress={handleCinemaItemClick}>
             <View style={[styles.container, { height: height * 0.08 }]}>
                 <Text style={[styles.brandMTB, { fontSize }]}>MTB</Text>
                 <Text style={[styles.cinemaName, { fontSize }]}>

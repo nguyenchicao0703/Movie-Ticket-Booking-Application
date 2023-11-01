@@ -20,6 +20,13 @@ const MovieCard = ({ data, listCase }) => {
         navigation.navigate('Detail');
     };
 
+    const navigateMovieToShowtimeMovie = () => {
+        listCase !== 'TicketHistory'
+            ? navigation.navigate('ShowtimeMovie')
+            : null;
+        console.log({ listCase });
+    };
+
     return (
         <Pressable
             style={{
@@ -74,7 +81,7 @@ const MovieCard = ({ data, listCase }) => {
                         marginTop: 10,
                     }}
                 >
-                    <Pressable>
+                    <Pressable onPress={navigateMovieToShowtimeMovie}>
                         <Text
                             style={{
                                 textAlign: 'center',

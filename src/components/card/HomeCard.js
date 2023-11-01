@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../../constants/index';
+import { useNavigation } from '@react-navigation/native';
 
 const HomeCard = ({
     data,
@@ -12,8 +13,15 @@ const HomeCard = ({
     timeScale,
 }) => {
     // console.log({ data });
+    const navigation = useNavigation();
+
+    const handleButtonClickItem = () => {
+        navigation.navigate('Detail');
+    };
+
     return (
         <Pressable
+            onPress={handleButtonClickItem}
             style={[
                 styles.container,
                 isFirst ? { marginLeft: 15 } : isLast ? { marginRight: 0 } : {},

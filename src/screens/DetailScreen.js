@@ -10,11 +10,9 @@ import React from 'react';
 import { Header } from '../components';
 import { Colors, DetailMovieImage, Fonts, Images } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
-// import { useNavigation } from '@react-navigation/native';
 
 const DetailScreen = ({ navigation }) => {
     const { height, width, fontScale } = useWindowDimensions();
-    // const navigation = useNavigation();
 
     const handleButtonBack = () => {
         navigation.goBack(null);
@@ -22,6 +20,10 @@ const DetailScreen = ({ navigation }) => {
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
+    };
+
+    const navigateDetailToCinema = () => {
+        navigation.navigate('Cinema');
     };
 
     return (
@@ -158,6 +160,7 @@ const DetailScreen = ({ navigation }) => {
                     </Text>
                 </Pressable>
                 <Pressable
+                    onPress={navigateDetailToCinema}
                     style={[
                         styles.button,
                         { flex: 1, backgroundColor: Colors.DARK_RED },

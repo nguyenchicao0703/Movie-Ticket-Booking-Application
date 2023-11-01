@@ -82,7 +82,7 @@ const HomeScreen = ({ navigation }) => {
                                 styles.headerRight,
                                 { width: 32, height: 22 },
                             ]}
-                            onPress={() => stackScreen('TicketHistory')}
+                            onPress={() => stackScreen('Ticket')}
                         >
                             <Image source={HeaderImage[2].image} />
                         </Pressable>

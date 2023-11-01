@@ -9,8 +9,9 @@ import {
     MovieScreen,
     ProfileScreen,
     RegisterScreen,
-    SelectShowtimeScreen,
-    TicketHistoryScreen,
+    SeatScreen,
+    ShowtimeCinemaScreen,
+    ShowtimeMovieScreen,
     TicketScreen,
     WelcomeScreen,
 } from '../screens';
@@ -37,9 +38,14 @@ const AppDrawer = () => {
             <Drawer.Screen name="Ticket" component={TicketScreen} />
             <Drawer.Screen name="Detail" component={DetailScreen} />
             <Drawer.Screen
-                name="TicketHistory"
-                component={TicketHistoryScreen}
+                name="ShowtimeMovie"
+                component={ShowtimeMovieScreen}
             />
+            <Drawer.Screen
+                name="ShowtimeCinema"
+                component={ShowtimeCinemaScreen}
+            />
+            <Drawer.Screen name="Seat" component={SeatScreen} />
         </Drawer.Navigator>
     );
 };
@@ -60,10 +66,6 @@ const Navigator = () => {
             <Stack.Screen name="AuthOTP" component={AuthOTPScreen} />
             <Stack.Screen name="Bill" component={BillScreen} />
             <Stack.Screen name="Discount" component={DiscountScreen} />
-            <Stack.Screen
-                name="SelectShowtime"
-                component={SelectShowtimeScreen}
-            />
         </Stack.Navigator>
     );
 };

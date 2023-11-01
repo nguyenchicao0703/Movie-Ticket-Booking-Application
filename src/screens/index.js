@@ -9,9 +9,10 @@ import WelcomeScreen from './WelcomeScreen';
 import AuthOTPScreen from './AuthOTPScreen';
 import BillScreen from './BillScreen';
 import DiscountScreen from './DiscountScreen';
-import TicketHistoryScreen from './TicketHistoryScreen';
 import DetailScreen from './DetailScreen';
-import SelectShowtimeScreen from './SelectShowtimeScreen';
+import ShowtimeMovieScreen from './ShowtimeMovieScreen';
+import ShowtimeCinemaScreen from './ShowtimeCinemaScreen';
+import SeatScreen from './SeatScreen';
 
 export {
     HomeScreen,
@@ -25,7 +26,8 @@ export {
     AuthOTPScreen,
     BillScreen,
     DiscountScreen,
-    TicketHistoryScreen,
-    SelectShowtimeScreen,
     DetailScreen,
+    ShowtimeMovieScreen,
+    ShowtimeCinemaScreen,
+    SeatScreen,
 };
