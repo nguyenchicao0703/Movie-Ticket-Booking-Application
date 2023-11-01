@@ -18,6 +18,7 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { CustomDrawerContent } from '../components';
+import TestSeat from '../screens/TestSeat';
 
 const Drawer = createDrawerNavigator();
 const AppDrawer = () => {
@@ -66,6 +67,7 @@ const Navigator = () => {
             <Stack.Screen name="AuthOTP" component={AuthOTPScreen} />
             <Stack.Screen name="Bill" component={BillScreen} />
             <Stack.Screen name="Discount" component={DiscountScreen} />
+            <Stack.Screen name="Seat" component={SeatScreen} />
         </Stack.Navigator>
     );
 };

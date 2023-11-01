@@ -38,7 +38,6 @@ const DetailScreen = ({ navigation }) => {
     ]);
 
     const handleButtonBack = () => {
-        navigation.goBack();
         navigation.goBack(null);
     };
     const handleButtonMenu = () => {
@@ -139,6 +138,7 @@ const DetailScreen = ({ navigation }) => {
                                 fontFamily: Fonts.Light,
                                 marginLeft: 15,
                                 fontSize: fontScale * 14,
+                                marginTop: 5,
                             }}
                         >
                             4.9/5
@@ -156,6 +156,7 @@ const DetailScreen = ({ navigation }) => {
                             fontFamily: Fonts.SemiBold,
                             marginLeft: 15,
                         }}
+                        numberOfLines={1}
                     >
                         Spider-man No Way home
                     </Text>
