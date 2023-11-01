@@ -29,6 +29,7 @@ const RegisterScreen = ({ navigation }) => {
     const toggleDatepicker = () => {
         setshowPicker(!showPicker);
     };
+    const { height, width, scale, fontScale } = useWindowDimensions();
 
     const onChange = ({ type }, selectedDate) => {
         if (type == 'set') {
@@ -101,6 +102,7 @@ const RegisterScreen = ({ navigation }) => {
                                         width: '100%',
                                         alignItems: 'center',
                                         color: Colors.DEFAULT_WHITE,
+                                        justifyContent: 'flex-end',
                                     }}
                                     onPress={toggleDatepicker}
                                 >
@@ -113,7 +115,7 @@ const RegisterScreen = ({ navigation }) => {
                                     <Image
                                         style={{
                                             position: 'absolute',
-                                            marginLeft: 330,
+                                            width: width * 0.05,
                                         }}
                                         source={BottomTabImage[6].image}
                                     />
@@ -128,17 +130,41 @@ const RegisterScreen = ({ navigation }) => {
                         {unTickedRule ? (
                             <Pressable
                                 onPress={() => setUnTickedRule(!unTickedRule)}
-                                style={styles.ButtonCheckBoxRule}
+                                style={[
+                                    styles.ButtonCheckBoxRule,
+                                    {
+                                        width: width * 0.06,
+                                        height: height * 0.03,
+                                    },
+                                ]}
                             >
-                                <Text style={{ textAlign: 'center' }}>✓</Text>
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        fontSize: height * 0.018,
+                                    }}
+                                >
+                                    ✓
+                                </Text>
                             </Pressable>
                         ) : (
                             <Pressable
                                 onPress={() => setUnTickedRule(!unTickedRule)}
-                                style={styles.ButtonCheckBoxRule}
+                                style={[
+                                    styles.ButtonCheckBoxRule,
+                                    {
+                                        width: width * 0.06,
+                                        height: height * 0.03,
+                                    },
+                                ]}
                             ></Pressable>
                         )}
-                        <Text style={styles.textRule}>
+                        <Text
+                            style={[
+                                styles.textRule,
+                                { fontSize: height * 0.018 },
+                            ]}
+                        >
                             Khi đăng ký, tối đã xem xét và đồng ý với{' '}
                             <Text style={styles.textAttention}>
                                 điều khoản sử dụng
@@ -252,7 +278,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     containerInput: {
-        marginTop: 18,
+        marginTop: 19,
         flexDirection: 'row',
     },
     container: {
@@ -264,6 +290,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.DEFAULT_WHITE,
         width: 20,
         height: 20,
-        borderRadius: 10,
+        borderRadius: 100,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });

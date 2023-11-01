@@ -5,6 +5,7 @@ import {
     Text,
     View,
     StatusBar,
+    useWindowDimensions,
 } from 'react-native';
 import React from 'react';
 import { Images, Fonts, Colors, BottomTabImage } from '../constants';
@@ -12,6 +13,7 @@ const WelcomeScreen = ({ navigation }, props) => {
     setTimeout(() => {
         navigation.navigate('Drawer');
     }, 2500);
+    const { height, width, fonScale, scale } = useWindowDimensions();
     return (
         <View style={styles.container}>
             <StatusBar
@@ -22,7 +24,13 @@ const WelcomeScreen = ({ navigation }, props) => {
             <ImageBackground style={styles.loginImage} source={Images[4].image}>
                 <View style={styles.child} />
             </ImageBackground>
-            <Image style={styles.logoImage} source={BottomTabImage[5].image} />
+            <Image
+                style={[
+                    styles.logoImage,
+                    { width: width * 0.37, height: height * 0.19 },
+                ]}
+                source={BottomTabImage[5].image}
+            />
         </View>
     );
 };
@@ -38,8 +46,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     logoImage: {
-        width: '45%',
-        height: '24%',
+        width: '100%',
+        height: '100%',
         position: 'absolute',
     },
     loginImage: {

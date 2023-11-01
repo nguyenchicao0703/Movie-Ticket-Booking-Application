@@ -7,15 +7,11 @@ import GenderSelectionBox from './GenderSelectionBox';
 import AuthAccountButton from './AuthAccountButton';
 import { HomeList, CinemaList, MovieList, CalendarList } from './list';
 import { HomeCard, CinemaCard, MovieCard, CalendarCard } from './card';
-
+import ModalRate from './ModalRate';
 export {
     Input,
     CustomDrawerContent,
     Header,
-    HomeCard,
-    MovieCard,
-    HomeList,
-    MovieList,
     AuthAccountButton,
     GenderSelectionBox,
     BackButton,
@@ -28,4 +24,5 @@ export {
     HomeCard,
     MovieCard,
     CalendarCard,
+    ModalRate,
 };

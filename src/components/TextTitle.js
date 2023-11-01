@@ -1,10 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../constants';
 const TextTitle = ({ text }) => {
+    const { height, width, scale, fontScale } = useWindowDimensions();
     return (
         <View>
-            <Text style={styles.textTitle}>{text}</Text>
+            <Text style={[styles.textTitle, { fontSize: height * 0.04 }]}>
+                {text}
+            </Text>
         </View>
     );
 };
