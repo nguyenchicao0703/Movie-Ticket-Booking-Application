@@ -10,7 +10,8 @@ import {
 import React, { useState } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Colors, Fonts, ModalRatingImage } from '../constants';
-
+import { DetailScreen } from '../screens';
+import { transparent } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 const ModalRate = ({ visible, transparent }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
