@@ -8,12 +8,8 @@ import {
 import React from 'react';
 import { Colors, Fonts, HeaderImage } from '../constants';
 
-const Header = ({ titleHeader, navigation, onPress }) => {
+const Header = ({ titleHeader, onButtonBack, onButtonMenu }) => {
     const { width, height, fontScale } = useWindowDimensions();
-
-    const handleButtonMenu = () => {
-        navigation.openDrawer();
-    };
 
     return (
         <View
@@ -31,7 +27,7 @@ const Header = ({ titleHeader, navigation, onPress }) => {
             >
                 <Pressable
                     style={{ marginLeft: width * 0.02 + 5 }}
-                    onPress={onPress}
+                    onPress={onButtonBack}
                 >
                     <Image source={HeaderImage[0].image} />
                 </Pressable>
@@ -48,7 +44,7 @@ const Header = ({ titleHeader, navigation, onPress }) => {
                 </Text>
                 <Pressable
                     style={{ position: 'absolute', right: width * 0.02 }}
-                    onPress={() => handleButtonMenu()}
+                    onPress={onButtonMenu}
                 >
                     <Image source={HeaderImage[1].image} />
                 </Pressable>

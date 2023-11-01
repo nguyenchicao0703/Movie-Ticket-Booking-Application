@@ -28,18 +28,18 @@ const AppDrawer = () => {
                 swipeEnabled: false,
                 drawerPosition: 'right',
             }}
+            backBehavior="history"
             drawerContent={(props) => <CustomDrawerContent {...props} />}
         >
             <Drawer.Screen name="Home" component={HomeScreen} />
             <Drawer.Screen name="Movie" component={MovieScreen} />
             <Drawer.Screen name="Cinema" component={CinemaScreen} />
             <Drawer.Screen name="Ticket" component={TicketScreen} />
+            <Drawer.Screen name="Detail" component={DetailScreen} />
             <Drawer.Screen
                 name="TicketHistory"
                 component={TicketHistoryScreen}
             />
-            <Drawer.Screen name="Bill" component={BillScreen} />
-            <Drawer.Screen name="Detail" component={DetailScreen} />
         </Drawer.Navigator>
     );
 };
@@ -53,9 +53,6 @@ const Navigator = () => {
             screenOptions={{ headerShown: false }}
         >
             <Stack.Screen name="Drawer" component={AppDrawer} />
-            <Stack.Screen name="Movie" component={MovieScreen} />
-            <Stack.Screen name="Cinema" component={CinemaScreen} />
-            <Stack.Screen name="Ticket" component={TicketScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
@@ -63,11 +60,6 @@ const Navigator = () => {
             <Stack.Screen name="AuthOTP" component={AuthOTPScreen} />
             <Stack.Screen name="Bill" component={BillScreen} />
             <Stack.Screen name="Discount" component={DiscountScreen} />
-
-            <Stack.Screen
-                name="TicketHistory"
-                component={TicketHistoryScreen}
-            />
             <Stack.Screen
                 name="SelectShowtime"
                 component={SelectShowtimeScreen}

@@ -8,130 +8,57 @@ import {
     Modal,
     Alert,
 } from 'react-native';
-import React, { useState } from 'react';
-import { Header, ModalRate } from '../components';
+import React from 'react';
+import { Header } from '../components';
 import {
     Colors,
     DetailMovieImage,
     Fonts,
     HomeImage,
     Images,
-    ModalRatingImage,
 } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
-import DropDownPicker from 'react-native-dropdown-picker';
+
 const DetailScreen = () => {
     const { height, width, scale, fontScale } = useWindowDimensions();
-    const [modalVisible, setModalVisible] = useState(false);
-
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState('ten');
-    const [items, setItems] = useState([
-        { label: '10', value: 'ten' },
-        { label: '9', value: 'nine' },
-        { label: '8', value: 'eight' },
-        { label: '7', value: 'seven' },
-        { label: '6', value: 'six' },
-        { label: '5', value: 'five' },
-        { label: '4', value: 'four' },
-        { label: '3', value: 'three' },
-        { label: '2', value: 'two' },
-        { label: '1', value: 'one' },
-    ]);
-
     return (
         <View style={styles.container}>
-            <Header titleHeader={'Phim'} />
+            <Header
+                titleHeader={'Phim'}
+                onButtonBack={handleButtonBack}
+                onButtonMenu={handleButtonMenu}
+            />
             <ScrollView style={{ width: '100%' }}>
                 <View style={styles.groupPlayMovie}>
                     <Image
-                        style={{ position: 'absolute', zIndex: 2 }}
-                        source={DetailMovieImage[0].image}
+                        style={{ width: width, height: height * 0.28 }}
+                        source={DetailMovieImage[2].image}
                     />
                     <Image
-                        style={{ width: width * 1, height: height * 0.28 }}
-                        source={DetailMovieImage[2].image}
+                        style={{ position: 'absolute' }}
+                        source={DetailMovieImage[0].image}
                     />
                 </View>
 
-                <Modal transparent={true} visible={modalVisible}>
-                    <View style={styles.centeredView}>
-                        <View
-                            style={[
-                                styles.modalView,
-                                { height: height * 0.25 },
-                            ]}
-                        >
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-end',
-                                    width: '95%',
-                                }}
-                            >
-                                <Pressable
-                                    onPress={() =>
-                                        setModalVisible(!modalVisible)
-                                    }
-                                >
-                                    <Image source={ModalRatingImage[0].image} />
-                                </Pressable>
-                            </View>
-                            <Text style={[styles.modalText, { fontSize: 18 }]}>
-                                Đánh giá theo thang điểm 10
-                            </Text>
-                            <View style={{ width: '90%' }}>
-                                <DropDownPicker
-                                    open={open}
-                                    value={value}
-                                    items={items}
-                                    setOpen={setOpen}
-                                    setValue={setValue}
-                                    setItems={setItems}
-                                    disabledStyle={{
-                                        opacity: 0.5,
-                                    }}
-                                    mode="BADGE"
-                                    placeholder="Chọn điểm"
-                                    textStyle={{ fontFamily: Fonts.Regular }}
-                                    labelStyle={{ fontFamily: Fonts.Regular }}
-                                    style={{
-                                        backgroundColor: Colors.LIGHT_GRAY,
-                                        borderColor: 'transparent',
-                                    }}
-                                />
-                            </View>
-
-                            <Pressable
-                                style={[styles.button, styles.buttonClose]}
-                                onPress={() => console.log(value)}
-                            >
-                                <Text style={styles.textStyle}>Đánh giá</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </Modal>
-                <Pressable onPress={() => setModalVisible(true)}>
-                    <View style={styles.groupRate}>
-                        <Image
-                            style={{
-                                width: width * 0.064,
-                                height: height * 0.032,
-                            }}
-                            source={DetailMovieImage[1].image}
-                        />
-                        <Text
-                            style={{
-                                color: Colors.DEFAULT_WHITE,
-                                fontFamily: Fonts.Light,
-                                marginLeft: 15,
-                                fontSize: fontScale * 14,
-                            }}
-                        >
-                            4.9/5
-                        </Text>
-                    </View>
-                </Pressable>
+                <View style={styles.groupRate}>
+                    <Image
+                        style={{
+                            width: width * 0.064,
+                            height: height * 0.032,
+                        }}
+                        source={DetailMovieImage[1].image}
+                    />
+                    <Text
+                        style={{
+                            color: Colors.DEFAULT_WHITE,
+                            fontFamily: Fonts.Light,
+                            marginLeft: 15,
+                            fontSize: fontScale * 14,
+                        }}
+                    >
+                        4.9/5
+                    </Text>
+                </View>
 
                 <View style={styles.titleMovieName}>
                     <Image source={Images[3].image} />
@@ -150,7 +77,11 @@ const DetailScreen = () => {
 
                 <View style={styles.groupMovie}>
                     <Image
-                        style={{ width: width * 0.26, height: height * 0.23 }}
+                        style={{
+                            width: width * 0.26,
+                            height: height * 0.23,
+                            borderRadius: 5,
+                        }}
                         source={DetailMovieImage[3].image}
                     />
                     <View style={styles.grouptextDetail}>
@@ -166,7 +97,7 @@ const DetailScreen = () => {
                         <Text style={styles.textDetail}>
                             Đạo diễn: Jon Watts
                         </Text>
-                        <Text style={styles.textDetail}>
+                        <Text style={styles.textDetail} numberOfLines={3}>
                             Diễn viên: Tom Holland, Zendaya, Jacob Batalon,
                             Cumberbatch, Marisa Tomei, Benedict...
                         </Text>
@@ -189,6 +120,7 @@ const DetailScreen = () => {
                             fontSize: fontScale * 14,
                             color: Colors.LIGHT_GRAY,
                             fontFamily: Fonts.Light,
+                            lineHeight: 25,
                         }}
                     >
                         “Spider-Man: No Way Home" (2021) kể về Peter
@@ -212,7 +144,10 @@ const DetailScreen = () => {
                     <Text
                         style={[
                             styles.textButton,
-                            { color: Colors.DEFAULT_BLACK },
+                            {
+                                color: Colors.DEFAULT_BLACK,
+                                fontSize: fontScale * 16,
+                            },
                         ]}
                     >
                         Đánh giá
@@ -227,7 +162,10 @@ const DetailScreen = () => {
                     <Text
                         style={[
                             styles.textButton,
-                            { color: Colors.DEFAULT_WHITE },
+                            {
+                                color: Colors.DEFAULT_WHITE,
+                                fontSize: fontScale * 16,
+                            },
                         ]}
                     >
                         Đặt vé
@@ -257,13 +195,12 @@ const styles = StyleSheet.create({
     groupRate: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: '100%',
-        padding: 10,
+        margin: 10,
     },
     titleMovieName: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingLeft: 10,
+        marginLeft: 10,
     },
     groupMovie: {
         flexDirection: 'row',
@@ -276,20 +213,18 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: Colors.DEFAULT_WHITE,
         fontFamily: Fonts.Light,
-        padding: 3,
+        marginBottom: 6,
+        marginLeft: 3,
     },
     grouptextDetail: {
-        paddingLeft: 5,
+        marginLeft: 5,
         width: '75%',
     },
     contentDetailMovie: {
-        padding: 5,
-        alignItems: 'center',
-        width: '100%',
+        paddingHorizontal: 10,
     },
     boxButton: {
-        backgroundColor: 'transparent',
-        height: '7%',
+        height: '6%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -298,9 +233,9 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         borderColor: 'red',
         alignItems: 'center',
-        height: '90%',
+        height: '100%',
         justifyContent: 'center',
-        margin: 5,
+        marginHorizontal: 5,
     },
     textButton: {
         fontFamily: Fonts.Medium,

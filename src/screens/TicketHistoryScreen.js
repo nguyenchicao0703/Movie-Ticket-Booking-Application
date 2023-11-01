@@ -23,9 +23,21 @@ const TicketHistoryScreen = ({ navigation }) => {
         setClickButton(index);
     };
 
+    const handleButtonBack = () => {
+        navigation.goBack();
+    };
+
+    const handleButtonMenu = () => {
+        navigation.openDrawer();
+    };
+
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
-            <Header titleHeader={'Vé của tôi'} navigation={navigation} />
+            <Header
+                titleHeader={'Vé của tôi'}
+                onButtonBack={handleButtonBack}
+                onButtonMenu={handleButtonMenu}
+            />
             <View style={{ flexDirection: 'row', width: '100%' }}>
                 {TopTabsTicketHistory.map((value, index) => (
                     <Pressable
