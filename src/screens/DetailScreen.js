@@ -8,29 +8,30 @@ import {
 } from 'react-native';
 import React from 'react';
 import { Header } from '../components';
-import {
-    Colors,
-    DetailMovieImage,
-    Fonts,
-    HomeImage,
-    Images,
-} from '../constants';
+import { Colors, DetailMovieImage, Fonts, Images } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
+import { useNavigation } from '@react-navigation/native';
 
 const DetailScreen = () => {
-    const { height, width, scale, fontScale } = useWindowDimensions();
+    const { height, width, fontScale } = useWindowDimensions();
+    const navigation = useNavigation();
+
+    const handleButtonBack = () => {
+        navigation.goBack();
+    };
+
     return (
         <View style={styles.container}>
-            <Header titleHeader={'Phim'} />
+            <Header titleHeader={'Phim'} onButtonBack={handleButtonBack} />
             <ScrollView style={{ width: '100%' }}>
                 <View style={styles.groupPlayMovie}>
                     <Image
-                        style={{ position: 'absolute', zIndex: 2 }}
-                        source={DetailMovieImage[0].image}
+                        style={{ width: width, height: height * 0.28 }}
+                        source={DetailMovieImage[2].image}
                     />
                     <Image
-                        style={{ width: width * 1, height: height * 0.28 }}
-                        source={DetailMovieImage[2].image}
+                        style={{ position: 'absolute' }}
+                        source={DetailMovieImage[0].image}
                     />
                 </View>
 
@@ -47,7 +48,8 @@ const DetailScreen = () => {
                             color: Colors.DEFAULT_WHITE,
                             fontFamily: Fonts.Light,
                             marginLeft: 15,
-                            fontSize: fontScale * 14,
+                            fontSize: fontScale * 15,
+                            marginTop: 3,
                         }}
                     >
                         4.9/5
@@ -71,7 +73,11 @@ const DetailScreen = () => {
 
                 <View style={styles.groupMovie}>
                     <Image
-                        style={{ width: width * 0.26, height: height * 0.23 }}
+                        style={{
+                            width: width * 0.26,
+                            height: height * 0.23,
+                            borderRadius: 5,
+                        }}
                         source={DetailMovieImage[3].image}
                     />
                     <View style={styles.grouptextDetail}>
@@ -87,7 +93,7 @@ const DetailScreen = () => {
                         <Text style={styles.textDetail}>
                             Đạo diễn: Jon Watts
                         </Text>
-                        <Text style={styles.textDetail}>
+                        <Text style={styles.textDetail} numberOfLines={3}>
                             Diễn viên: Tom Holland, Zendaya, Jacob Batalon,
                             Cumberbatch, Marisa Tomei, Benedict...
                         </Text>
@@ -110,6 +116,7 @@ const DetailScreen = () => {
                             fontSize: fontScale * 14,
                             color: Colors.LIGHT_GRAY,
                             fontFamily: Fonts.Light,
+                            lineHeight: 25,
                         }}
                     >
                         “Spider-Man: No Way Home" (2021) kể về Peter
@@ -133,7 +140,10 @@ const DetailScreen = () => {
                     <Text
                         style={[
                             styles.textButton,
-                            { color: Colors.DEFAULT_BLACK },
+                            {
+                                color: Colors.DEFAULT_BLACK,
+                                fontSize: fontScale * 16,
+                            },
                         ]}
                     >
                         Đánh giá
@@ -148,7 +158,10 @@ const DetailScreen = () => {
                     <Text
                         style={[
                             styles.textButton,
-                            { color: Colors.DEFAULT_WHITE },
+                            {
+                                color: Colors.DEFAULT_WHITE,
+                                fontSize: fontScale * 16,
+                            },
                         ]}
                     >
                         Đặt vé
@@ -178,13 +191,12 @@ const styles = StyleSheet.create({
     groupRate: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: '100%',
-        padding: 10,
+        margin: 10,
     },
     titleMovieName: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingLeft: 10,
+        marginLeft: 10,
     },
     groupMovie: {
         flexDirection: 'row',
@@ -197,20 +209,18 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: Colors.DEFAULT_WHITE,
         fontFamily: Fonts.Light,
-        padding: 3,
+        marginBottom: 6,
+        marginLeft: 3,
     },
     grouptextDetail: {
-        paddingLeft: 5,
+        marginLeft: 5,
         width: '75%',
     },
     contentDetailMovie: {
-        padding: 5,
-        alignItems: 'center',
-        width: '100%',
+        paddingHorizontal: 10,
     },
     boxButton: {
-        backgroundColor: 'transparent',
-        height: '7%',
+        height: '6%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -219,9 +229,9 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         borderColor: 'red',
         alignItems: 'center',
-        height: '90%',
+        height: '100%',
         justifyContent: 'center',
-        margin: 5,
+        marginHorizontal: 5,
     },
     textButton: {
         fontFamily: Fonts.Medium,
