@@ -49,19 +49,29 @@ const LoginScreen = ({ navigation }) => {
                         <View style={styles.groupLine}>
                             <View style={styles.line} />
                             <View>
-                                <Text style={styles.textLine}>hoặc</Text>
+                                <Text
+                                    style={[
+                                        styles.textLine,
+                                        { fontSize: height * 0.015 },
+                                    ]}
+                                >
+                                    hoặc
+                                </Text>
                             </View>
                             <View style={styles.line} />
                         </View>
 
                         <Pressable
                             onPress={clickRegister}
-                            style={styles.buttonRegister}
+                            style={[
+                                styles.buttonRegister,
+                                { height: height * 0.05 },
+                            ]}
                         >
                             <Text
                                 style={{
                                     color: Colors.LIGHT_GRAY,
-                                    fontSize: 16,
+                                    fontSize: height * 0.02,
                                     fontFamily: Fonts.Regular,
                                 }}
                             >
@@ -94,33 +104,32 @@ const styles = StyleSheet.create({
     },
     line: {
         width: '40%',
-        height: 0.6,
+        height: 2,
         backgroundColor: Colors.MEDIUM_GRAY_LINE,
         opacity: 0.5,
     },
     textLine: {
-        width: 50,
         textAlign: 'center',
         color: Colors.LIGHT_GRAY,
         fontFamily: Fonts.Light,
         fontSize: 12,
+        margin: 10,
     },
     groupLine: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 5,
-        marginTop: 20,
+        marginTop: 15,
     },
     buttonRegister: {
         backgroundColor: 'transparent',
-        width: '90%',
-        height: 45,
+        width: '95%',
         justifyContent: 'center',
         alignItems: 'center',
         borderColor: Colors.LIGHT_GRAY,
         borderWidth: 1,
         borderRadius: 20,
-        marginTop: 20,
+        marginTop: 15,
     },
     container: {
         height: '80%',

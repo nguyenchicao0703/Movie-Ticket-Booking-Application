@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    Pressable,
+    useWindowDimensions,
+} from 'react-native';
 import React, { useState } from 'react';
 import { Colors, Fonts } from '../constants';
 const data = [
@@ -7,6 +13,8 @@ const data = [
     { id: 3, gioitinh: 'Khác' },
 ];
 const GenderSelectionBox = () => {
+    const { height, width, scale, fontScale } = useWindowDimensions();
+    const fontSize = height * 0.018;
     const [isClick, setIsClick] = useState(0);
     const handleButton = (index) => {
         console.log(index);
@@ -14,8 +22,10 @@ const GenderSelectionBox = () => {
     };
 
     return (
-        <View style={styles.sex}>
-            <Text style={styles.titleCheckbox}>Giới tính</Text>
+        <View style={styles.gender}>
+            <Text style={[styles.titleCheckbox, { fontSize: fontSize }]}>
+                Giới tính
+            </Text>
             <View style={{ flexDirection: 'row' }}>
                 {data.map((value, index) => (
                     <View
@@ -30,7 +40,13 @@ const GenderSelectionBox = () => {
                         <View style={{ flexDirection: 'row' }}>
                             <Pressable
                                 onPress={() => handleButton(index)}
-                                style={styles.checkBoxCircle}
+                                style={[
+                                    styles.checkBoxCircle,
+                                    {
+                                        width: width * 0.06,
+                                        height: height * 0.03,
+                                    },
+                                ]}
                             >
                                 {isClick === index ? (
                                     <View style={styles.inSideCircle} />
@@ -41,6 +57,7 @@ const GenderSelectionBox = () => {
                                     color: 'white',
                                     marginLeft: 10,
                                     fontFamily: Fonts.Regular,
+                                    fontSize: fontSize,
                                 }}
                             >
                                 {value.gioitinh}
@@ -56,17 +73,17 @@ const GenderSelectionBox = () => {
 export default GenderSelectionBox;
 
 const styles = StyleSheet.create({
-    sex: {
-        width: '86%',
+    gender: {
+        width: '100%',
+        alignItems: 'center',
         marginTop: 10,
     },
     titleCheckbox: {
         color: Colors.LIGHT_GRAY,
         fontFamily: Fonts.Light,
+        width: '90%',
     },
     checkBoxCircle: {
-        width: 20,
-        height: 20,
         borderWidth: 2,
         borderRadius: 100,
         borderColor: Colors.DARK_RED,
@@ -74,8 +91,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     inSideCircle: {
-        width: 10,
-        height: 10,
+        width: '50%',
+        height: '50%',
         backgroundColor: Colors.DARK_RED,
         borderRadius: 100,
     },

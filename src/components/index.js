@@ -9,6 +9,7 @@ import { HomeList, CinemaList, MovieList, CalendarList } from './list';
 import { HomeCard, CinemaCard, MovieCard, CalendarCard } from './card';
 import MovieTitle from './MovieTitle';
 import SelectShowtime from './SelectShowtime';
+import ModalRate from './ModalRate';
 
 export {
     Input,
@@ -28,4 +29,5 @@ export {
     CalendarCard,
     MovieTitle,
     SelectShowtime,
+    ModalRate,
 };

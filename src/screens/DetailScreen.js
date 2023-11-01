@@ -5,19 +5,42 @@ import {
     Image,
     useWindowDimensions,
     Pressable,
+    Modal,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { Header } from '../components';
-import { Colors, DetailMovieImage, Fonts, Images } from '../constants';
+import {
+    Colors,
+    DetailMovieImage,
+    Fonts,
+    Images,
+    ModalRatingImage,
+} from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const DetailScreen = ({ navigation }) => {
-    const { height, width, fontScale } = useWindowDimensions();
+    const { height, width, scale, fontScale } = useWindowDimensions();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState('ten');
+    const [items, setItems] = useState([
+        { label: '10', value: 'ten' },
+        { label: '9', value: 'nine' },
+        { label: '8', value: 'eight' },
+        { label: '7', value: 'seven' },
+        { label: '6', value: 'six' },
+        { label: '5', value: 'five' },
+        { label: '4', value: 'four' },
+        { label: '3', value: 'three' },
+        { label: '2', value: 'two' },
+        { label: '1', value: 'one' },
+    ]);
 
     const handleButtonBack = () => {
+        navigation.goBack();
         navigation.goBack(null);
     };
-
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -45,26 +68,83 @@ const DetailScreen = ({ navigation }) => {
                     />
                 </View>
 
-                <View style={styles.groupRate}>
-                    <Image
-                        style={{
-                            width: width * 0.064,
-                            height: height * 0.032,
-                        }}
-                        source={DetailMovieImage[1].image}
-                    />
-                    <Text
-                        style={{
-                            color: Colors.DEFAULT_WHITE,
-                            fontFamily: Fonts.Light,
-                            marginLeft: 15,
-                            fontSize: fontScale * 15,
-                            marginTop: 3,
-                        }}
-                    >
-                        4.9/5
-                    </Text>
-                </View>
+                <Modal transparent={true} visible={modalVisible}>
+                    <View style={styles.centeredView}>
+                        <View
+                            style={[
+                                styles.modalView,
+                                { height: height * 0.25 },
+                            ]}
+                        >
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'flex-end',
+                                    width: '95%',
+                                }}
+                            >
+                                <Pressable
+                                    onPress={() =>
+                                        setModalVisible(!modalVisible)
+                                    }
+                                >
+                                    <Image source={ModalRatingImage[0].image} />
+                                </Pressable>
+                            </View>
+                            <Text style={[styles.modalText, { fontSize: 18 }]}>
+                                Đánh giá theo thang điểm 10
+                            </Text>
+                            <View style={{ width: '90%' }}>
+                                <DropDownPicker
+                                    open={open}
+                                    value={value}
+                                    items={items}
+                                    setOpen={setOpen}
+                                    setValue={setValue}
+                                    setItems={setItems}
+                                    disabledStyle={{
+                                        opacity: 0.5,
+                                    }}
+                                    mode="BADGE"
+                                    placeholder="Chọn điểm"
+                                    textStyle={{ fontFamily: Fonts.Regular }}
+                                    labelStyle={{ fontFamily: Fonts.Regular }}
+                                    style={{
+                                        backgroundColor: Colors.LIGHT_GRAY,
+                                        borderColor: 'transparent',
+                                    }}
+                                />
+                            </View>
+                            <Pressable
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() => console.log(value)}
+                            >
+                                <Text style={styles.textStyle}>Đánh giá</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </Modal>
+                <Pressable onPress={() => setModalVisible(true)}>
+                    <View style={styles.groupRate}>
+                        <Image
+                            style={{
+                                width: width * 0.064,
+                                height: height * 0.032,
+                            }}
+                            source={DetailMovieImage[1].image}
+                        />
+                        <Text
+                            style={{
+                                color: Colors.DEFAULT_WHITE,
+                                fontFamily: Fonts.Light,
+                                marginLeft: 15,
+                                fontSize: fontScale * 14,
+                            }}
+                        >
+                            4.9/5
+                        </Text>
+                    </View>
+                </Pressable>
 
                 <View style={styles.titleMovieName}>
                     <Image source={Images[3].image} />
@@ -143,7 +223,7 @@ const DetailScreen = ({ navigation }) => {
             <View style={styles.boxButton}>
                 <Pressable
                     style={[
-                        styles.button,
+                        styles.button1,
                         { flex: 1, backgroundColor: Colors.DEFAULT_WHITE },
                     ]}
                 >
@@ -162,7 +242,7 @@ const DetailScreen = ({ navigation }) => {
                 <Pressable
                     onPress={navigateDetailToCinema}
                     style={[
-                        styles.button,
+                        styles.button1,
                         { flex: 1, backgroundColor: Colors.DARK_RED },
                     ]}
                 >
@@ -236,7 +316,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    button: {
+    button1: {
         borderRadius: 30,
         borderColor: 'red',
         alignItems: 'center',
@@ -246,5 +326,75 @@ const styles = StyleSheet.create({
     },
     textButton: {
         fontFamily: Fonts.Medium,
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'space-around',
+
+        width: '90%',
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+        backgroundColor: Colors.DARK_RED,
+        width: '50%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    textStyle: {
+        color: Colors.DEFAULT_WHITE,
+        textAlign: 'center',
+        fontFamily: Fonts.Medium,
+        fontSize: 15,
+    },
+    modalText: {
+        textAlign: 'center',
+        color: Colors.DEFAULT_BLACK,
+        fontFamily: Fonts.SemiBold,
+        marginTop: -20,
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        width: '90%',
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+        backgroundColor: Colors.DARK_RED,
+        width: '50%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    textStyle: {
+        color: Colors.DEFAULT_WHITE,
+        textAlign: 'center',
+        fontFamily: Fonts.Medium,
+        fontSize: 15,
+    },
+    modalText: {
+        textAlign: 'center',
+        color: Colors.DEFAULT_BLACK,
+        fontFamily: Fonts.SemiBold,
+        marginTop: -20,
     },
 });
