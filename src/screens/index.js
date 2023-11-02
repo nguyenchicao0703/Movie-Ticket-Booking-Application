@@ -13,6 +13,7 @@ import DetailScreen from './DetailScreen';
 import ShowtimeMovieScreen from './ShowtimeMovieScreen';
 import ShowtimeCinemaScreen from './ShowtimeCinemaScreen';
 import SeatScreen from './SeatScreen';
+import UpdateProfileScreen from './UpdateProfileScreen';
 
 export {
     HomeScreen,
@@ -30,4 +31,5 @@ export {
     ShowtimeMovieScreen,
     ShowtimeCinemaScreen,
     SeatScreen,
+    UpdateProfileScreen,
 };

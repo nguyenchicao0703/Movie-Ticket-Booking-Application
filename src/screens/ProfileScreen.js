@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 const ProfileScreen = ({}) => {
     const { height, width, scale, fontScale } = useWindowDimensions();
     const navigation = useNavigation();
+
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -72,7 +73,7 @@ const ProfileScreen = ({}) => {
                                 styles.headerRight,
                                 { marginLeft: 20, marginRight: 15 },
                             ]}
-                            onPress={() => handleButtonMenu()}
+                            onPress={handleButtonMenu}
                         >
                             <Image source={HeaderImage[1].image} />
                         </Pressable>

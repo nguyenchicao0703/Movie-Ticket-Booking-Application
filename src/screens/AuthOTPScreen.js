@@ -43,13 +43,15 @@ const AuthOTPScreen = ({ navigation }) => {
                             inputCount={6}
                             containerStyle={{
                                 backgroundColor: 'transparent',
-                                padding: 20,
+                                margin: 20,
                             }}
                             textInputStyle={{
                                 borderRadius: 5,
                                 backgroundColor: Colors.DEFAULT_WHITE,
                             }}
                             tintColor={Colors.LIGHT_GRAY}
+                            placeholder="-"
+                            placeholderTextColor={Colors.LIGHT_GRAY}
                         />
                         <AuthAccountButton
                             onPress={clickToHome}

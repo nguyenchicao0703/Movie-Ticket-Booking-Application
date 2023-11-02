@@ -12,7 +12,7 @@ const data = [
     { id: 2, gioitinh: 'Nữ' },
     { id: 3, gioitinh: 'Khác' },
 ];
-const GenderSelectionBox = () => {
+const GenderSelectionBox = ({ marginLeft }) => {
     const { height, width, scale, fontScale } = useWindowDimensions();
     const fontSize = height * 0.018;
     const [isClick, setIsClick] = useState(0);
@@ -22,7 +22,7 @@ const GenderSelectionBox = () => {
     };
 
     return (
-        <View style={styles.gender}>
+        <View style={[styles.gender, { marginLeft }]}>
             <Text style={[styles.titleCheckbox, { fontSize: fontSize }]}>
                 Giới tính
             </Text>
@@ -33,36 +33,33 @@ const GenderSelectionBox = () => {
                         style={{
                             flexDirection: 'row',
                             marginTop: 10,
-                            justifyContent: 'space-between',
-                            width: '30%',
                         }}
                     >
-                        <View style={{ flexDirection: 'row' }}>
-                            <Pressable
-                                onPress={() => handleButton(index)}
-                                style={[
-                                    styles.checkBoxCircle,
-                                    {
-                                        width: width * 0.06,
-                                        height: height * 0.03,
-                                    },
-                                ]}
-                            >
-                                {isClick === index ? (
-                                    <View style={styles.inSideCircle} />
-                                ) : null}
-                            </Pressable>
-                            <Text
-                                style={{
-                                    color: 'white',
-                                    marginLeft: 10,
-                                    fontFamily: Fonts.Regular,
-                                    fontSize: fontSize,
-                                }}
-                            >
-                                {value.gioitinh}
-                            </Text>
-                        </View>
+                        <Pressable
+                            onPress={() => handleButton(index)}
+                            style={[
+                                styles.checkBoxCircle,
+                                {
+                                    width: width * 0.06,
+                                    height: height * 0.03,
+                                },
+                            ]}
+                        >
+                            {isClick === index ? (
+                                <View style={styles.inSideCircle} />
+                            ) : null}
+                        </Pressable>
+                        <Text
+                            style={{
+                                color: 'white',
+                                marginLeft: 10,
+                                marginRight: 30,
+                                fontFamily: Fonts.Regular,
+                                fontSize: fontSize,
+                            }}
+                        >
+                            {value.gioitinh}
+                        </Text>
                     </View>
                 ))}
             </View>
@@ -75,13 +72,11 @@ export default GenderSelectionBox;
 const styles = StyleSheet.create({
     gender: {
         width: '100%',
-        alignItems: 'center',
-        marginTop: 10,
+        marginTop: 15,
     },
     titleCheckbox: {
         color: Colors.LIGHT_GRAY,
         fontFamily: Fonts.Light,
-        width: '90%',
     },
     checkBoxCircle: {
         borderWidth: 2,
