@@ -1,8 +1,14 @@
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import React from 'react';
+import {
+    StyleSheet,
+    useWindowDimensions,
+    Text,
+    View,
+    Platform,
+} from 'react-native';
+import React, { useState } from 'react';
 import { Colors, Fonts } from '../constants/index';
 import { TextInput } from 'react-native-paper';
-
+import DateTimePicker from '@react-native-community/datetimepicker';
 const Input = ({ label, editable, value, onChangeText, keyboardType }) => {
     const { height, width, scale, fontScale } = useWindowDimensions();
 
@@ -39,7 +45,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderWidth: 1,
         borderColor: Colors.DEFAULT_WHITE,
-        backgroundColor: Colors.DEFAULT_BLACK,
+        backgroundColor: 'transparent',
         borderRadius: 10,
     },
 });

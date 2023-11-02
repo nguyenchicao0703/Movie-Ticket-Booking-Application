@@ -9,9 +9,11 @@ import {
 import React, { useState } from 'react';
 import { HeaderImage, Images, ProfileImage } from '../constants';
 import { Colors, Fonts } from '../constants/index';
+import { useNavigation } from '@react-navigation/native';
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({}) => {
     const { height, width, scale, fontScale } = useWindowDimensions();
+    const navigation = useNavigation();
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -41,7 +43,7 @@ const ProfileScreen = ({ navigation }) => {
                 >
                     <Pressable
                         style={{ marginLeft: 15 }}
-                        onPress={() => navigation.goback()}
+                        onPress={() => navigation.goBack()}
                     >
                         <Image
                             style={{
@@ -77,28 +79,33 @@ const ProfileScreen = ({ navigation }) => {
                     </View>
                 </View>
                 <View style={styles.body}>
-                    <View style={styles.itemBorder}>
-                        <View style={styles.bodyItem}>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
+                    <Pressable
+                        onPress={() => navigation.navigate('UpdateProfile')}
+                    >
+                        <View style={styles.itemBorder}>
+                            <View style={styles.bodyItem}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Image
+                                        source={ProfileImage[2].image}
+                                        style={styles.img}
+                                    />
+                                    <Text style={styles.txt}>
+                                        Thay đổi thông tin TV
+                                    </Text>
+                                </View>
                                 <Image
-                                    source={ProfileImage[2].image}
-                                    style={styles.img}
+                                    style={[styles.imgArrow]}
+                                    source={Images[2].image}
                                 />
-                                <Text style={styles.txt}>
-                                    Thay đổi thông tin TV
-                                </Text>
                             </View>
-                            <Image
-                                style={[styles.imgArrow]}
-                                source={Images[2].image}
-                            />
                         </View>
-                    </View>
+                    </Pressable>
+
                     <View style={styles.itemBorder}>
                         <View style={styles.bodyItem}>
                             <View
