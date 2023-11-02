@@ -4,11 +4,42 @@ import {
     Text,
     TouchableOpacity,
     StyleSheet,
+    Pressable,
     Image,
 } from 'react-native';
 import React, { useState } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
 import { Header } from '../components';
+
+const TypeSeat = ({ backgroundColor, text }) => {
+    return (
+        <View
+            style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginRight: 50,
+            }}
+        >
+            <View
+                style={{
+                    width: 40,
+                    height: 40,
+                    backgroundColor,
+                }}
+            />
+            <Text
+                style={{
+                    color: Colors.DEFAULT_WHITE,
+                    fontSize: 14,
+                    fontFamily: Fonts.Medium,
+                    marginLeft: 10,
+                }}
+            >
+                {text}
+            </Text>
+        </View>
+    );
+};
 
 let seats = [
     'AAAAAAA_AAAAAAA/',
@@ -50,8 +81,8 @@ const alphabetSeats = [
     'P',
 ];
 
-const seatSize = 35;
-const seatGaping = 7;
+const seatSize = 40;
+const seatGaping = 6;
 
 const SeatScreen = () => {
     const [selectedSeats, setSelectedSeats] = useState([]);
@@ -77,6 +108,7 @@ const SeatScreen = () => {
             <ScrollView>
                 <ScrollView
                     horizontal
+                    showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -90,10 +122,10 @@ const SeatScreen = () => {
                     <Text
                         style={{
                             color: Colors.DEFAULT_WHITE,
-                            fontSize: 20,
+                            fontSize: 25,
                             fontFamily: Fonts.Bold,
                             alignSelf: 'center',
-                            marginBottom: 30,
+                            marginBottom: 20,
                         }}
                     >
                         Màn hình
@@ -118,6 +150,7 @@ const SeatScreen = () => {
                                         );
                                     } else if (seat === '/') {
                                         alphabetIndexNumber++;
+                                        seatNumber = 1;
                                         return;
                                     }
 
@@ -154,8 +187,85 @@ const SeatScreen = () => {
                             </View>
                         ))}
                     </View>
+                    <View style={{ marginBottom: 200, flexDirection: 'row' }}>
+                        <TypeSeat
+                            text={'Ghế tiêu chuẩn'}
+                            backgroundColor={Colors.DARK_SEAT}
+                        />
+                        <TypeSeat
+                            text={'Ghế đã đặt'}
+                            backgroundColor={Colors.MEDIUM_INDIGO}
+                        />
+                        <TypeSeat
+                            text={'Ghế đang chọn'}
+                            backgroundColor={Colors.DEFAULT_RED}
+                        />
+                    </View>
                 </ScrollView>
             </ScrollView>
+            <View
+                style={{
+                    width: '100%',
+                    height: 80,
+                    position: 'absolute',
+                    bottom: 0,
+                    backgroundColor: Colors.DEFAULT_WHITE,
+                    justifyContent: 'center',
+                }}
+            >
+                <Text
+                    style={{
+                        color: Colors.DEFAULT_BLACK,
+                        fontSize: 16,
+                        fontFamily: Fonts.Bold,
+                        marginLeft: 15,
+                        maxWidth: 240,
+                    }}
+                    numberOfLines={1}
+                >
+                    SPIDER-MAN NO WAY HOME
+                </Text>
+                <Text
+                    style={[
+                        styles.displayInfomation,
+                        { color: Colors.DEFAULT_BLACK },
+                    ]}
+                    numberOfLines={1}
+                >
+                    Ghế E09, E10
+                </Text>
+                <Text
+                    style={[
+                        styles.displayInfomation,
+                        { color: Colors.DEFAULT_RED },
+                    ]}
+                    numberOfLines={1}
+                >
+                    Tạm tính: 220.000 đ
+                </Text>
+                <Pressable
+                    style={{
+                        width: 120,
+                        height: 45,
+                        backgroundColor: Colors.DARK_RED,
+                        borderRadius: 40,
+                        position: 'absolute',
+                        right: 10,
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: Colors.DEFAULT_WHITE,
+                            fontSize: 16,
+                            textAlign: 'center',
+                            fontFamily: Fonts.Medium,
+                        }}
+                    >
+                        Tiếp tục
+                    </Text>
+                </Pressable>
+            </View>
         </View>
     );
 };
@@ -178,16 +288,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     seatText: {
-        fontSize: 12,
-        color: Colors.DEFAULT_BLACK,
+        fontSize: 14,
+        color: Colors.DEFAULT_WHITE,
+        fontFamily: Fonts.Medium,
     },
     availableSeat: {
-        backgroundColor: Colors.LIGHT_GRAY,
+        backgroundColor: Colors.DARK_SEAT,
     },
     bookedSeat: {
         backgroundColor: Colors.MEDIUM_INDIGO,
     },
     reservedSeat: {
         backgroundColor: Colors.DEFAULT_RED,
+    },
+    displayInfomation: {
+        fontSize: 14,
+        fontFamily: Fonts.Medium,
+        marginLeft: 15,
+        maxWidth: 240,
     },
 });

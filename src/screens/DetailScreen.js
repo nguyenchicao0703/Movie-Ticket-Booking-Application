@@ -45,7 +45,10 @@ const DetailScreen = ({ navigation }) => {
     };
 
     const navigateDetailToCinema = () => {
-        navigation.navigate('Cinema');
+        navigation.navigate('ShowtimeMovie', {
+            cinemaId: 1,
+            cinemaTitle: 'spider-man no way home',
+        });
     };
 
     return (
