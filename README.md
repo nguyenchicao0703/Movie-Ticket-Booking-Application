@@ -7,33 +7,35 @@
 
 ## TODO List
 ### Chí Cao
-| Task                                                      | Cấp độ               | Trạng thái           |
+| Task giao diện                                            | Cấp độ               | Trạng thái           |
 |-----------------------------------------------------------|----------------------|----------------------|
-| Màn hình Home                                             | Trung bình           | Đang làm việc        |
-| Màn hình Select Showtime                                  | Khó                  | Đang làm việc        |
+| Màn hình Home                                             | Khó                  | Hoàn thành           |
+| Màn hình Select Showtime                                  | Khó                  | Hoàn thành           |
 | Màn hình Seat                                             | Khó                  | Đang làm việc        |
-| Màn hình Movie                                            | Trung bình           | Đang làm việc        |
-| Màn hình Ticket History                                   | Trung bình           | Đang làm việc        |
+| Màn hình Movie                                            | Trung bình           | Hoàn thành           |
+| Màn hình Ticket History                                   | Trung bình           | Hoàn thành           |
 
 ### Hoàng Dũng
-| Task                                                      | Cấp độ               | Trạng thái           |
+| Task giao diện                                            | Cấp độ               | Trạng thái           |
 |-----------------------------------------------------------|----------------------|----------------------|
 | Màn hình Combo                                            | Khó                  | Đang làm việc        |
 | Màn hình Payment                                          | Khó                  | Đang làm việc        |
 | Màn hình Discount                                         | Dễ                   | Đang làm việc        |
-| Màn hình Bill                                             | Dễ                   | Đang làm việc        |
-| Màn hình Profile                                          | Dễ                   | Đang làm việc        |
+| Màn hình Bill                                             | Dễ                   | Chỉnh sửa            |
+| Màn hình Profile                                          | Dễ                   | Hoàn thành           |
 | Màn hình Update Profile                                   | Trung bình           | Đang làm việc        |
 
 ### Gia Thuận
-| Task                                                      | Cấp độ               | Trạng thái           |
+| Task giao diện                                            | Cấp độ               | Trạng thái           |
 |-----------------------------------------------------------|----------------------|----------------------|
-| Màn hình Welcome                                          | Dễ                   | Đang làm việc        |
-| Màn hình Login                                            | Trung bình           | Đang làm việc        |
-| Màn hình Register                                         | Trung bình           | Đang làm việc        |
-| Màn hình Auth OTP                                         | Trung bình           | Đang làm việc        |
-| Màn hình Cinema                                           | Dễ                   | Đang làm việc        |
-| Màn hình Detail Movie                                     | khó                  | Đang làm việc        |
+| Màn hình Welcome                                          | Dễ                   | Hoàn thành           |
+| Màn hình Login                                            | Dễ                   | Hoàn thành           |
+| Màn hình Register                                         | Trung bình           | Chỉnh sửa            |
+| Màn hình Auth OTP                                         | Trung bình           | Hoàn thành           |
+| Màn hình Cinema                                           | Dễ                   | Hoàn thành           |
+| Màn hình Detail Movie                                     | khó                  | Hoàn thành           |
+
+------Task giao diện chưa được responsive theo cửa sổ màn hình------
 
 ### Cấu trúc thư mục
 - `src/`: Thư mục gốc của dự án.
