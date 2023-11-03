@@ -9,7 +9,6 @@ import {
     Modal,
 } from 'react-native';
 import React, { useState } from 'react';
-import { Header } from '../components';
 import {
     Colors,
     DrawerImage,
@@ -21,14 +20,13 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import {
     AuthAccountButton,
-    BackButton,
-    Button,
     GenderSelectionBox,
     Input,
-    TextTitle,
+    Header,
 } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+
 const UpdateProfileScreen = () => {
     const navigation = useNavigation();
 
@@ -53,6 +51,7 @@ const UpdateProfileScreen = () => {
             toggleDatepicker();
         }
     };
+
     const formatDate = (rawDate) => {
         let date = new Date(rawDate);
         let year = date.getFullYear();
@@ -151,11 +150,11 @@ const UpdateProfileScreen = () => {
                 <View style={styles.avatar}>
                     <Image
                         style={{
-                            width: 100,
-                            height: 100,
-                            position: 'relative',
+                            width: 120,
+                            height: 120,
+                            borderRadius: 100,
                         }}
-                        source={DrawerImage[0].image}
+                        source={DrawerImage[5].image}
                     />
                     <Pressable onPress={() => setModalVisible(!modalVisible)}>
                         <Image
@@ -171,7 +170,7 @@ const UpdateProfileScreen = () => {
                         marginLeft: -10,
                         fontSize: 20,
                         fontFamily: Fonts.Medium,
-                        marginTop: 10,
+                        marginTop: 15,
                     }}
                 >
                     Nguyễn Chí Cao
@@ -218,20 +217,14 @@ const UpdateProfileScreen = () => {
                                 style={{
                                     position: 'absolute',
                                     width: width * 0.05,
+                                    right: 15,
                                 }}
                                 source={BottomTabImage[6].image}
                             />
                         </Pressable>
                     )}
                 </View>
-                <View
-                    style={{
-                        flexDirection: 'column',
-                        width: '100%',
-                    }}
-                >
-                    <GenderSelectionBox />
-                </View>
+                <GenderSelectionBox marginLeft={30} />
                 <AuthAccountButton text={'Cập nhật'} />
             </View>
         </View>

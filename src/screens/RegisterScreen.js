@@ -14,7 +14,6 @@ import { Images, Fonts, Colors, BottomTabImage } from '../constants';
 import {
     AuthAccountButton,
     BackButton,
-    Button,
     GenderSelectionBox,
     Input,
     TextTitle,
@@ -116,6 +115,7 @@ const RegisterScreen = ({ navigation }) => {
                                         style={{
                                             position: 'absolute',
                                             width: width * 0.05,
+                                            right: 15,
                                         }}
                                         source={BottomTabImage[6].image}
                                     />
@@ -124,7 +124,7 @@ const RegisterScreen = ({ navigation }) => {
                         </View>
                     </View>
 
-                    <GenderSelectionBox />
+                    <GenderSelectionBox marginLeft={40} />
 
                     <View style={styles.groupRule}>
                         {unTickedRule ? (
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: Colors.LIGHT_GRAY,
-        paddingLeft: 10,
+        marginLeft: 10,
         zIndex: 3,
         fontFamily: Fonts.Light,
     },
@@ -222,14 +222,10 @@ const styles = StyleSheet.create({
         color: Colors.DEFAULT_WHITE,
         zIndex: 2,
         borderRadius: 15,
-        paddingLeft: 10,
-        paddingTop: -10,
+        marginLeft: 10,
+        marginTop: -10,
         fontSize: 17,
         fontFamily: Fonts.Regular,
-    },
-    groupCheckbox: {
-        flexDirection: 'row',
-        paddingLeft: 20,
     },
     ButtonCheckBox: {
         backgroundColor: 'transparent',
@@ -237,14 +233,6 @@ const styles = StyleSheet.create({
         height: 20,
         borderRadius: 20,
         borderColor: Colors.DARK_RED,
-        borderWidth: 2,
-    },
-    ButtonChecked: {
-        backgroundColor: Colors.DARK_RED,
-        width: 20,
-        height: 20,
-        borderRadius: 20,
-        borderColor: Colors.DEFAULT_WHITE,
         borderWidth: 2,
     },
     miniGroupCheckbox: {
@@ -255,15 +243,15 @@ const styles = StyleSheet.create({
     },
     textCheckbox: {
         color: Colors.DEFAULT_WHITE,
-        paddingLeft: 10,
+        marginLeft: 10,
         fontFamily: Fonts.Regular,
     },
-
     groupRule: {
-        width: '85%',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingTop: 20,
+        marginTop: 20,
+        marginLeft: 30,
+        marginRight: 15,
     },
     textAttention: {
         color: Colors.DARK_RED,
@@ -273,12 +261,12 @@ const styles = StyleSheet.create({
     },
     textRule: {
         color: Colors.DEFAULT_WHITE,
-        paddingLeft: 10,
+        marginLeft: 10,
         fontFamily: Fonts.Light,
         fontSize: 14,
     },
     containerInput: {
-        marginTop: 19,
+        marginTop: 15,
         flexDirection: 'row',
     },
     container: {

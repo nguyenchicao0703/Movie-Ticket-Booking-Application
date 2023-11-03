@@ -14,11 +14,11 @@ import {
     ShowtimeMovieScreen,
     TicketScreen,
     WelcomeScreen,
+    UpdateProfileScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { CustomDrawerContent } from '../components';
-import UpdateProfileScreen from '../screens/UpdateProfileScreen';
 
 const Drawer = createDrawerNavigator();
 const AppDrawer = () => {
@@ -47,6 +47,10 @@ const AppDrawer = () => {
                 component={ShowtimeCinemaScreen}
             />
             <Drawer.Screen name="Seat" component={SeatScreen} />
+            <Drawer.Screen
+                name="UpdateProfile"
+                component={UpdateProfileScreen}
+            />
         </Drawer.Navigator>
     );
 };
@@ -67,11 +71,6 @@ const Navigator = () => {
             <Stack.Screen name="AuthOTP" component={AuthOTPScreen} />
             <Stack.Screen name="Bill" component={BillScreen} />
             <Stack.Screen name="Discount" component={DiscountScreen} />
-            <Stack.Screen name="Seat" component={SeatScreen} />
-            <Stack.Screen
-                name="UpdateProfile"
-                component={UpdateProfileScreen}
-            />
         </Stack.Navigator>
     );
 };
