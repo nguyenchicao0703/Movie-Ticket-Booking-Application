@@ -20,7 +20,8 @@ const ComboCard = ({ data }) => {
                 style={{
                     flexDirection: 'column',
                     height: '100%',
-                    padding: 10,
+                    //padding: 10,
+                    margin: 10,
                 }}
             >
                 <Text style={[styles.comboName, {}]}>{data.name}</Text>

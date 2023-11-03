@@ -19,6 +19,8 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { CustomDrawerContent } from '../components';
+import ComboScreen from '../screens/ComboScreen';
+import PaymentScreen from '../screens/PaymentScreen';
 
 const Drawer = createDrawerNavigator();
 const AppDrawer = () => {
@@ -60,7 +62,7 @@ const Navigator = () => {
 
     return (
         <Stack.Navigator
-            initialRouteName="Login"
+            initialRouteName="Payment"
             screenOptions={{ headerShown: false }}
         >
             <Stack.Screen name="Drawer" component={AppDrawer} />
@@ -71,6 +73,8 @@ const Navigator = () => {
             <Stack.Screen name="AuthOTP" component={AuthOTPScreen} />
             <Stack.Screen name="Bill" component={BillScreen} />
             <Stack.Screen name="Discount" component={DiscountScreen} />
+            <Stack.Screen name="Combo" component={ComboScreen} />
+            <Stack.Screen name="Payment" component={PaymentScreen} />
         </Stack.Navigator>
     );
 };
