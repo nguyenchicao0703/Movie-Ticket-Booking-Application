@@ -20,6 +20,7 @@ import { ScrollView } from 'react-native-virtualized-view';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const DetailScreen = ({ navigation }) => {
+    const fontSizeContent = height * 0.03;
     const { height, width, scale, fontScale } = useWindowDimensions();
     const [modalVisible, setModalVisible] = useState(false);
     const [open, setOpen] = useState(false);
@@ -90,10 +91,21 @@ const DetailScreen = ({ navigation }) => {
                                         setModalVisible(!modalVisible)
                                     }
                                 >
-                                    <Image source={ModalRatingImage[0].image} />
+                                    <Image
+                                        style={{
+                                            width: width * 0.04,
+                                            height: height * 0.02,
+                                        }}
+                                        source={ModalRatingImage[0].image}
+                                    />
                                 </Pressable>
                             </View>
-                            <Text style={[styles.modalText, { fontSize: 18 }]}>
+                            <Text
+                                style={[
+                                    styles.modalText,
+                                    { fontSize: height * 0.024 },
+                                ]}
+                            >
                                 Đánh giá theo thang điểm 10
                             </Text>
                             <View style={{ width: '90%' }}>
@@ -109,19 +121,38 @@ const DetailScreen = ({ navigation }) => {
                                     }}
                                     mode="BADGE"
                                     placeholder="Chọn điểm"
-                                    textStyle={{ fontFamily: Fonts.Regular }}
+                                    textStyle={{
+                                        fontFamily: Fonts.Regular,
+                                        fontSize: height * 0.018,
+                                    }}
                                     labelStyle={{ fontFamily: Fonts.Regular }}
                                     style={{
                                         backgroundColor: Colors.LIGHT_GRAY,
                                         borderColor: 'transparent',
+                                        width: width * 0.81,
+                                        height: height * 0.07,
                                     }}
                                 />
                             </View>
                             <Pressable
-                                style={[styles.button, styles.buttonClose]}
+                                style={[
+                                    styles.button,
+                                    styles.buttonClose,
+                                    {
+                                        width: width * 0.51,
+                                        height: height * 0.06,
+                                    },
+                                ]}
                                 onPress={() => console.log(value)}
                             >
-                                <Text style={styles.textStyle}>Đánh giá</Text>
+                                <Text
+                                    style={[
+                                        styles.textStyle,
+                                        { fontSize: height * 0.018 },
+                                    ]}
+                                >
+                                    Đánh giá
+                                </Text>
                             </Pressable>
                         </View>
                     </View>
@@ -138,9 +169,9 @@ const DetailScreen = ({ navigation }) => {
                         <Text
                             style={{
                                 color: Colors.DEFAULT_WHITE,
-                                fontFamily: Fonts.Light,
+                                fontFamily: Fonts.Regular,
                                 marginLeft: 15,
-                                fontSize: fontScale * 14,
+                                fontSize: height * 0.018,
                                 marginTop: 5,
                             }}
                         >
@@ -150,10 +181,16 @@ const DetailScreen = ({ navigation }) => {
                 </Pressable>
 
                 <View style={styles.titleMovieName}>
-                    <Image source={Images[3].image} />
+                    <Image
+                        style={{
+                            width: width * 0.08,
+                            height: height * 0.04,
+                        }}
+                        source={Images[3].image}
+                    />
                     <Text
                         style={{
-                            fontSize: fontScale * 18,
+                            fontSize: height * 0.023,
                             textTransform: 'uppercase',
                             color: Colors.DEFAULT_WHITE,
                             fontFamily: Fonts.SemiBold,
@@ -175,19 +212,45 @@ const DetailScreen = ({ navigation }) => {
                         source={DetailMovieImage[3].image}
                     />
                     <View style={styles.grouptextDetail}>
-                        <Text style={styles.textDetail}>
+                        <Text
+                            style={[
+                                styles.textDetail,
+                                { fontSize: height * 0.02 },
+                            ]}
+                        >
                             Thời lượng: 120 phút
                         </Text>
-                        <Text style={styles.textDetail}>
+                        <Text
+                            style={[
+                                styles.textDetail,
+                                { fontSize: height * 0.02 },
+                            ]}
+                        >
                             Khởi chiếu: 15/08/2023
                         </Text>
-                        <Text style={styles.textDetail}>
+                        <Text
+                            style={[
+                                styles.textDetail,
+                                { fontSize: height * 0.02 },
+                            ]}
+                        >
                             Thể loại: Adventure/Superhero
                         </Text>
-                        <Text style={styles.textDetail}>
+                        <Text
+                            style={[
+                                styles.textDetail,
+                                { fontSize: height * 0.02 },
+                            ]}
+                        >
                             Đạo diễn: Jon Watts
                         </Text>
-                        <Text style={styles.textDetail} numberOfLines={3}>
+                        <Text
+                            style={[
+                                styles.textDetail,
+                                { fontSize: height * 0.02 },
+                            ]}
+                            numberOfLines={3}
+                        >
                             Diễn viên: Tom Holland, Zendaya, Jacob Batalon,
                             Cumberbatch, Marisa Tomei, Benedict...
                         </Text>
@@ -195,8 +258,8 @@ const DetailScreen = ({ navigation }) => {
                 </View>
                 <Text
                     style={{
-                        fontSize: 17,
-                        fontFamily: Fonts.SemiBold,
+                        fontSize: height * 0.024,
+                        fontFamily: Fonts.Medium,
                         color: Colors.DEFAULT_WHITE,
                         marginTop: 10,
                         marginLeft: 10,
@@ -207,10 +270,11 @@ const DetailScreen = ({ navigation }) => {
                 <View style={styles.contentDetailMovie}>
                     <Text
                         style={{
-                            fontSize: fontScale * 14,
+                            fontSize: height * 0.018,
                             color: Colors.LIGHT_GRAY,
                             fontFamily: Fonts.Light,
                             lineHeight: 25,
+                            textAlign: 'justify',
                         }}
                     >
                         “Spider-Man: No Way Home" (2021) kể về Peter
@@ -236,7 +300,7 @@ const DetailScreen = ({ navigation }) => {
                             styles.textButton,
                             {
                                 color: Colors.DEFAULT_BLACK,
-                                fontSize: fontScale * 16,
+                                fontSize: height * 0.02,
                             },
                         ]}
                     >
@@ -255,7 +319,7 @@ const DetailScreen = ({ navigation }) => {
                             styles.textButton,
                             {
                                 color: Colors.DEFAULT_WHITE,
-                                fontSize: fontScale * 16,
+                                fontSize: height * 0.02,
                             },
                         ]}
                     >
@@ -301,18 +365,18 @@ const styles = StyleSheet.create({
         borderColor: Colors.OPACITY_MEDIUM_GRAY_LINE,
     },
     textDetail: {
-        fontSize: 15,
         color: Colors.DEFAULT_WHITE,
         fontFamily: Fonts.Light,
         marginBottom: 6,
         marginLeft: 3,
+        fontSize: 15,
     },
     grouptextDetail: {
         marginLeft: 5,
         width: '75%',
     },
     contentDetailMovie: {
-        paddingHorizontal: 10,
+        paddingHorizontal: 15,
     },
     boxButton: {
         height: '6%',

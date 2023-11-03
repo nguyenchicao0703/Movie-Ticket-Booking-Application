@@ -4,6 +4,7 @@ import {
     View,
     ImageBackground,
     StatusBar,
+    useWindowDimensions,
 } from 'react-native';
 import React from 'react';
 import { Images, Fonts, Colors } from '../constants';
@@ -17,6 +18,7 @@ const AuthOTPScreen = ({ navigation }) => {
     const back = () => {
         navigation.goBack();
     };
+    const { height, width, scale, fontScale } = useWindowDimensions();
 
     return (
         <View>
@@ -32,7 +34,12 @@ const AuthOTPScreen = ({ navigation }) => {
                 <BackButton onPress={back} />
                 <View>
                     <TextTitle text={'Xác minh OTP'} />
-                    <Text style={styles.txtTileAttension}>
+                    <Text
+                        style={[
+                            styles.txtTileAttension,
+                            { fontSize: height * 0.018 },
+                        ]}
+                    >
                         Nhập mã OTP vừa được gửi về email của bạn
                     </Text>
                 </View>
@@ -48,6 +55,8 @@ const AuthOTPScreen = ({ navigation }) => {
                             textInputStyle={{
                                 borderRadius: 5,
                                 backgroundColor: Colors.DEFAULT_WHITE,
+                                width: width * 0.12,
+                                height: height * 0.065,
                             }}
                             tintColor={Colors.LIGHT_GRAY}
                             placeholder="-"
@@ -62,6 +71,7 @@ const AuthOTPScreen = ({ navigation }) => {
                                 color: Colors.DEFAULT_WHITE,
                                 marginTop: 20,
                                 fontFamily: Fonts.Light,
+                                fontSize: height * 0.018,
                             }}
                         >
                             Bạn chưa nhận được mã?{' '}
