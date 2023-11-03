@@ -6,89 +6,101 @@ import {
     useWindowDimensions,
     Image,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { Colors, ComboImage, Fonts } from '../../constants';
+
 const ComboCard = ({ data }) => {
-    const { height, width } = useWindowDimensions();
+    const { height, width, fontScale } = useWindowDimensions();
+    const textSizeComboContent = fontScale * 13;
+    const textSizeButton = fontScale * 20;
+
+    const [quantity, setQuantity] = useState(0);
+
+    const handleQuantityCombo = (operator) => {
+        operator === '+'
+            ? setQuantity(quantity + 1)
+            : quantity === 0
+            ? null
+            : setQuantity(quantity - 1);
+    };
+
     return (
-        <View style={[styles.container, { height: height * 0.22 }]}>
+        <Pressable style={styles.container}>
             <Image
-                style={{ width: '25%', height: '80%' }}
+                style={{
+                    width: '25%',
+                    height: width * 0.33,
+                    borderRadius: 10,
+                    marginTop: 15,
+                }}
                 source={ComboImage[0].image}
             />
             <View
                 style={{
                     flexDirection: 'column',
-                    height: '100%',
-                    //padding: 10,
-                    margin: 10,
+                    paddingLeft: 10,
+                    marginTop: 10,
+                    width: '75%',
                 }}
             >
-                <Text style={[styles.comboName, {}]}>{data.name}</Text>
-                <Text style={[styles.comboContent, {}]}>{data.content1}</Text>
-                <Text style={[styles.comboContent, {}]}>*{data.content2}</Text>
-                <Text style={[styles.comboContent, {}]}>**{data.content3}</Text>
-                <Text style={[styles.comboContent, {}]}>
-                    ***{data.content4}
+                <Text style={[styles.comboName, { fontSize: fontScale * 15 }]}>
+                    {data.name}
                 </Text>
-
+                <Text
+                    style={[
+                        styles.comboContent,
+                        { fontSize: textSizeComboContent },
+                    ]}
+                    numberOfLines={5}
+                >
+                    {data.content}
+                </Text>
                 <View
                     style={{
                         flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        width: '30%',
-                        margin: 5,
+                        marginTop: 5,
                     }}
                 >
-                    <View
-                        style={{
-                            borderRadius: 5,
-                            width: 30,
-                            height: 30,
-                            backgroundColor: Colors.DEFAULT_WHITE,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
+                    <Pressable style={[styles.buttonView, { borderRadius: 5 }]}>
+                        <Text
+                            style={[
+                                styles.textButton,
+                                { fontSize: textSizeButton },
+                            ]}
+                        >
+                            {quantity}
+                        </Text>
+                    </Pressable>
+
+                    <Pressable
+                        style={[styles.buttonView, styles.downButton]}
+                        onPress={() => handleQuantityCombo('-')}
                     >
                         <Text
-                            style={{
-                                color: Colors.DEFAULT_BLACK,
-                                fontFamily: Fonts.Regular,
-                                fontSize: 19,
-                            }}
+                            style={[
+                                styles.textButton,
+                                { fontSize: textSizeButton },
+                            ]}
                         >
-                            0
+                            -
                         </Text>
-                    </View>
-
-                    <View style={{ flexDirection: 'row', marginLeft: 10 }}>
-                        <Pressable style={styles.downButton}>
-                            <Text
-                                style={{
-                                    color: Colors.DEFAULT_BLACK,
-                                    fontSize: 20,
-                                    fontFamily: Fonts.Medium,
-                                }}
-                            >
-                                -
-                            </Text>
-                        </Pressable>
-                        <Pressable style={styles.upButton}>
-                            <Text
-                                style={{
-                                    color: Colors.DEFAULT_BLACK,
-                                    fontSize: 20,
-                                    fontFamily: Fonts.Medium,
-                                }}
-                            >
-                                +
-                            </Text>
-                        </Pressable>
-                    </View>
+                    </Pressable>
+                    <Pressable
+                        style={[styles.buttonView, styles.upButton]}
+                        onPress={() => handleQuantityCombo('+')}
+                    >
+                        <Text
+                            style={[
+                                styles.textButton,
+                                { fontSize: textSizeButton },
+                            ]}
+                        >
+                            +
+                        </Text>
+                    </Pressable>
                 </View>
             </View>
-        </View>
+        </Pressable>
     );
 };
 
@@ -96,49 +108,42 @@ export default ComboCard;
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center',
-        width: '100%',
         borderBottomWidth: 1,
         borderColor: Colors.OPACITY_MEDIUM_GRAY_LINE,
         backgroundColor: Colors.DARK_BG,
         flexDirection: 'row',
-    },
-    brandMTB: {
-        color: Colors.DARK_RED,
-        fontFamily: Fonts.Medium,
-        marginLeft: 10,
+        paddingLeft: 10,
+        paddingBottom: 15,
     },
     comboName: {
         color: Colors.DEFAULT_WHITE,
-        fontFamily: Fonts.Light,
-        marginLeft: 5,
+        fontFamily: Fonts.Bold,
     },
     comboContent: {
         color: Colors.LIGHT_GRAY,
-        marginLeft: 5,
         fontFamily: Fonts.Light,
-        width: '100%',
-        fontSize: 13,
+        lineHeight: 20,
     },
-    downButton: {
-        height: 30,
+    buttonView: {
         width: 30,
+        height: 30,
         backgroundColor: Colors.DEFAULT_WHITE,
-        borderTopLeftRadius: 5,
-        borderBottomLeftRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    downButton: {
+        borderTopLeftRadius: 5,
+        borderBottomLeftRadius: 5,
         borderRightWidth: 0.5,
-
+        marginLeft: 15,
         borderLeftColor: Colors.DEFAULT_BLACK,
     },
     upButton: {
-        height: 30,
-        width: 30,
-        backgroundColor: Colors.DEFAULT_WHITE,
         borderTopRightRadius: 5,
         borderBottomRightRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
+    },
+    textButton: {
+        color: Colors.DEFAULT_BLACK,
+        fontFamily: Fonts.Regular,
     },
 });

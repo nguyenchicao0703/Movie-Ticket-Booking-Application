@@ -3,7 +3,7 @@ import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header, InformationBottom } from '../components';
 import ComboList from '../components/list/ComboList';
-import { Colors, Fonts, SelectCombo } from '../constants';
+import { Colors, SelectCombo } from '../constants';
 
 const ComboScreen = ({ navigation }) => {
     const handleButtonMenu = () => {
@@ -37,12 +37,3 @@ const ComboScreen = ({ navigation }) => {
 };
 
 export default ComboScreen;
-
-const styles = StyleSheet.create({
-    displayInfomation: {
-        fontSize: 14,
-        fontFamily: Fonts.Medium,
-        marginLeft: 15,
-        maxWidth: 240,
-    },
-});

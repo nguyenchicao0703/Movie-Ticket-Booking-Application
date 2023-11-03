@@ -8,8 +8,6 @@ const InformationBottom = ({ nameMovie, seat, totalPayment, onPress }) => {
             style={{
                 width: '100%',
                 height: 80,
-                position: 'absolute',
-                bottom: 0,
                 backgroundColor: Colors.DEFAULT_WHITE,
                 justifyContent: 'center',
             }}
