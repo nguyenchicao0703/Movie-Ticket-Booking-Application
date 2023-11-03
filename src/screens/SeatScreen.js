@@ -106,9 +106,21 @@ const SeatScreen = ({ navigation }) => {
         navigation.navigate('Combo');
     };
 
+    const handleButtonMenu = () => {
+        navigation.openDrawer();
+    };
+
+    const handleButtonBack = () => {
+        navigation.goBack(null);
+    };
+
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
-            <Header titleHeader={'MTP Gò Vấp'} />
+            <Header
+                titleHeader={'MTP Gò Vấp'}
+                onButtonBack={handleButtonBack}
+                onButtonMenu={handleButtonMenu}
+            />
             <ScrollView>
                 <ScrollView
                     horizontal

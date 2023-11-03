@@ -8,46 +8,71 @@ import {
 import React from 'react';
 import { Colors, ComboImage, Fonts } from '../constants';
 
-const PaymentCombo = ({ name, num, amount }) => {
-    const { height, width, scale, fontScale } = useWindowDimensions();
+const PaymentCombo = ({ name, number, amount }) => {
+    const { width, fontScale } = useWindowDimensions();
+    const fontSize = fontScale * 18;
+
     return (
         <View
-            style={[
-                {
-                    flex: 1,
-
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginEnd: 10,
-                    borderBottomColor: Colors.MEDIUM_GRAY_LINE,
-                    borderBottomWidth: 0.3,
-                },
-            ]}
+            style={{
+                width: '100%',
+                justifyContent: 'center',
+                paddingVertical: 16,
+                justifyContent: 'space-between',
+                paddingHorizontal: 10,
+                flexDirection: 'row',
+                borderBottomWidth: 1,
+                borderColor: Colors.OPACITY_MEDIUM_GRAY_LINE,
+            }}
         >
             <View style={{ flexDirection: 'row' }}>
                 <Image
-                    style={{
-                        marginLeft: width * 0.035,
-                        width: width * 0.1,
-                        height: height * 0.08,
-                        borderRadius: 7,
-                        margin: 10,
-                    }}
                     source={ComboImage[0].image}
+                    style={{ width: width * 0.13, height: width * 0.17 }}
                 />
                 <View
                     style={{
+                        width: '80%',
                         flexDirection: 'column',
+                        justifyContent: 'center',
                         marginLeft: 5,
-                        alignSelf: 'center',
                     }}
                 >
-                    <Text style={styles.text}>{name}</Text>
-                    <Text style={styles.text}>{amount}</Text>
+                    <Text
+                        style={[
+                            styles.text,
+                            {
+                                fontSize,
+                                textTransform: 'uppercase',
+                            },
+                        ]}
+                        numberOfLines={1}
+                    >
+                        {name}
+                    </Text>
+                    <Text
+                        style={[
+                            styles.text,
+                            {
+                                fontSize,
+                            },
+                        ]}
+                    >
+                        {amount} đ
+                    </Text>
                 </View>
             </View>
-            <Text style={styles.text}>{num}</Text>
+            <Text
+                style={[
+                    styles.text,
+                    {
+                        fontSize,
+                        alignSelf: 'center',
+                    },
+                ]}
+            >
+                {number}
+            </Text>
         </View>
     );
 };
@@ -56,9 +81,7 @@ export default PaymentCombo;
 
 const styles = StyleSheet.create({
     text: {
-        textTransform: 'uppercase',
+        color: Colors.LIGHT_GRAY,
         fontFamily: Fonts.Regular,
-        color: Colors.DEFAULT_WHITE,
-        fontSize: 13,
     },
 });

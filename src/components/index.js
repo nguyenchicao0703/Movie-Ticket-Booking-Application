@@ -23,6 +23,9 @@ import MovieTitle from './MovieTitle';
 import SelectShowtime from './SelectShowtime';
 import ModalRate from './ModalRate';
 import InformationBottom from './InformationBottom';
+import PaymentCombo from './PaymentCombo';
+import PaymentContentBar from './PaymentContentBar';
+import PaymentTitleBar from './PaymentTitleBar';
 
 export {
     Input,
@@ -46,4 +49,7 @@ export {
     SelectShowtime,
     ModalRate,
     InformationBottom,
+    PaymentCombo,
+    PaymentContentBar,
+    PaymentTitleBar,
 };

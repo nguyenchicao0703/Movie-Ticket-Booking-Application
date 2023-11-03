@@ -1,11 +1,34 @@
 import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../constants';
-const PaymentContentBar = ({ content, num }) => {
+
+const PaymentContentBar = ({ content, number, lineBoolean, numberBoolean }) => {
+    const { width, fontScale } = useWindowDimensions();
+    const fontSize = fontScale * 18;
+
     return (
-        <View style={[styles.bar]}>
-            <Text style={[styles.text]}>{content}</Text>
-            <Text style={[styles.text]}>{num}</Text>
+        <View
+            style={[
+                {
+                    width: '100%',
+                    height: width * 0.15,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingHorizontal: 10,
+                },
+                lineBoolean
+                    ? {
+                          borderBottomWidth: 0.8,
+                          borderColor: Colors.OPACITY_MEDIUM_GRAY_LINE,
+                      }
+                    : {},
+            ]}
+        >
+            <Text style={[styles.textContent, { fontSize }]}>{content}</Text>
+            <Text style={[styles.textContent, { fontSize }]}>
+                {number} {numberBoolean ? null : 'đ'}
+            </Text>
         </View>
     );
 };
@@ -13,19 +36,8 @@ const PaymentContentBar = ({ content, num }) => {
 export default PaymentContentBar;
 
 const styles = StyleSheet.create({
-    bar: {
-        backgroundColor: Colors.DARK_BG,
-        padding: 10,
-        marginTop: '0%',
-        borderTopWidth: 0.3,
-        borderTopColor: Colors.MEDIUM_GRAY_LINE,
-        borderBottomWidth: 0.3,
-        borderBottomColor: Colors.MEDIUM_GRAY_LINE,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-    },
-    text: {
+    textContent: {
+        color: Colors.LIGHT_GRAY,
         fontFamily: Fonts.Regular,
-        color: Colors.DEFAULT_WHITE,
     },
 });

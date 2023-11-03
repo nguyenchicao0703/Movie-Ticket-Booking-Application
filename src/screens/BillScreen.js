@@ -5,11 +5,20 @@ import { Colors, Fonts } from '../constants/index';
 import { Header } from '../components';
 
 const BillScreen = ({ navigation }) => {
+    const handleButtonMenu = () => {
+        navigation.openDrawer();
+    };
+
+    const handleButtonBack = () => {
+        navigation.navigate('Home');
+    };
+
     return (
         <View style={styles.container}>
             <Header
                 titleHeader={'Thông tin chi tiết'}
-                navigation={navigation}
+                onButtonBack={handleButtonBack}
+                onButtonMenu={handleButtonMenu}
             />
             <View style={styles.body}>
                 <View style={styles.bodyAbove}>

@@ -5,19 +5,21 @@ import {
     Image,
     useWindowDimensions,
     Pressable,
+    ScrollView,
 } from 'react-native';
 import React from 'react';
-import { Colors, Fonts, HomeImage } from '../constants';
-import { Header } from '../components';
-import { ScrollView } from 'react-native-virtualized-view';
-import PaymentTitleBar from '../components/PaymentTitleBar';
-import PaymentContentBar from '../components/PaymentContentBar';
-import PaymentCombo from '../components/PaymentCombo';
-import AuthAccountButton from '../components/AuthAccountButton';
-import ZaloPayment from '../components/ZaloPayment';
+import { Colors, Fonts, HomeImage, PaymentImage } from '../constants';
+import {
+    Header,
+    PaymentCombo,
+    PaymentContentBar,
+    PaymentTitleBar,
+    AuthAccountButton,
+} from '../components';
 
 const PaymentScreen = ({ navigation }) => {
-    const { width, height, fontScale } = useWindowDimensions();
+    const { width, fontScale } = useWindowDimensions();
+    const textSizeInfoMovie = fontScale * 14;
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
@@ -48,14 +50,13 @@ const PaymentScreen = ({ navigation }) => {
                     style={{
                         flexDirection: 'row',
                         alignItems: 'center',
-                        width: '100%',
+                        marginVertical: 10,
                     }}
                 >
                     <Image
                         style={{
-                            marginLeft: width * 0.035,
-                            width: width * 0.32,
-                            height: height * 0.23,
+                            width: '25%',
+                            height: width * 0.35,
                             borderRadius: 5,
                         }}
                         source={HomeImage[1].image}
@@ -64,27 +65,24 @@ const PaymentScreen = ({ navigation }) => {
                         style={{
                             flexDirection: 'column',
                             height: '100%',
-                            width: width * 0.7,
-                            padding: 15,
-                            margin: 10,
+                            width: '75%',
+                            marginLeft: 10,
                         }}
                     >
                         <Text
-                            style={[
-                                styles.comboContent,
-                                {
-                                    fontSize: fontScale * 18,
-                                    fontFamily: Fonts.Bold,
-                                },
-                            ]}
+                            style={{
+                                fontSize: fontScale * 16,
+                                fontFamily: Fonts.Bold,
+                                color: Colors.DEFAULT_WHITE,
+                                textTransform: 'uppercase',
+                            }}
                         >
                             SPIDER-MAN NO WAY HOME
                         </Text>
                         <Text
                             style={[
                                 styles.comboContent,
-                                styles.textContent,
-                                {},
+                                { fontSize: textSizeInfoMovie },
                             ]}
                         >
                             07 tháng 10, 2023
@@ -92,8 +90,7 @@ const PaymentScreen = ({ navigation }) => {
                         <Text
                             style={[
                                 styles.comboContent,
-                                styles.textContent,
-                                {},
+                                { fontSize: textSizeInfoMovie },
                             ]}
                         >
                             15:00 ~ 17:11
@@ -101,8 +98,7 @@ const PaymentScreen = ({ navigation }) => {
                         <Text
                             style={[
                                 styles.comboContent,
-                                styles.textContent,
-                                {},
+                                { fontSize: textSizeInfoMovie },
                             ]}
                         >
                             MTB Gò Vấp
@@ -110,8 +106,7 @@ const PaymentScreen = ({ navigation }) => {
                         <Text
                             style={[
                                 styles.comboContent,
-                                styles.textContent,
-                                {},
+                                { fontSize: textSizeInfoMovie },
                             ]}
                         >
                             Ghế: H18, H19
@@ -119,44 +114,93 @@ const PaymentScreen = ({ navigation }) => {
                         <Text
                             style={[
                                 styles.comboContent,
-                                styles.textContent,
-                                { color: Colors.DARK_RED },
+                                {
+                                    fontSize: textSizeInfoMovie,
+                                    color: Colors.DARK_RED,
+                                },
                             ]}
                         >
                             Tổng thanh toán: 590.000 đ
                         </Text>
                     </View>
                 </View>
-                <PaymentTitleBar title={'Thông tin vé '} />
-                <PaymentContentBar content={'Số lượng'} num={'3'} />
-                <PaymentContentBar content={'Tổng'} num={'220.000 đ'} />
+                <PaymentTitleBar title={'THÔNG TIN VÉ '} />
+                <PaymentContentBar
+                    content={'Số lượng'}
+                    number={'3'}
+                    lineBoolean
+                />
+                <PaymentContentBar content={'Tổng'} number={'220.000 đ'} />
                 <PaymentTitleBar title={'Thông tin bắp nước'} />
                 <PaymentCombo
                     name={'BABY SHARK SINGLE COMBO '}
-                    amount={'195.000 đ'}
-                    num={'1'}
+                    amount={'195.000'}
+                    number={'1'}
                 />
                 <PaymentCombo
                     name={'BABY SHARK SINGLE COMBO '}
-                    amount={'195.000 đ'}
-                    num={'1'}
+                    amount={'195.000'}
+                    number={'1'}
                 />
+                <PaymentContentBar content={'Tổng'} number={'390.000'} />
+                <PaymentTitleBar title={'Phương thức giảm giá'} />
                 <Pressable onPress={() => handleButtonNavigation('Discount')}>
-                    <PaymentContentBar content={'Phiếu giảm giá'} num={'>'} />
+                    <PaymentContentBar
+                        content={'Phiếu giảm giá'}
+                        number={'>'}
+                        numberBoolean
+                    />
                 </Pressable>
                 {/* Change */}
                 <PaymentTitleBar title={'Tổng kết'} />
                 <PaymentContentBar
                     content={'Giá vé bao gồm F&B'}
-                    num={'610.000 đ'}
+                    number={'610.000'}
+                    lineBoolean
                 />
                 <PaymentContentBar
                     content={'Số tiền được giảm giá'}
-                    num={'20.000 đ'}
+                    number={'20.000'}
+                    lineBoolean
                 />
-                <PaymentContentBar content={'Tổng tiền'} num={'590.000 đ'} />
+                <PaymentContentBar content={'Tổng tiền'} number={'590.000'} />
                 <PaymentTitleBar title={'Thanh toán'} />
-                <ZaloPayment />
+                {/* ZaloPay */}
+                <Pressable
+                    style={{
+                        width: '100%',
+                        height: width * 0.15,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        paddingHorizontal: 10,
+                        borderBottomWidth: 0.8,
+                        borderColor: Colors.OPACITY_MEDIUM_GRAY_LINE,
+                    }}
+                >
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Image
+                            source={PaymentImage[0].image}
+                            style={{ width: width * 0.1, height: width * 0.1 }}
+                        />
+                        <Text
+                            style={{
+                                color: Colors.LIGHT_GRAY,
+                                fontSize: fontScale * 18,
+                                fontFamily: Fonts.Regular,
+                                marginLeft: 10,
+                            }}
+                        >
+                            ZaloPay
+                        </Text>
+                    </View>
+                    <Image source={PaymentImage[1].image} />
+                </Pressable>
                 <View style={{ alignItems: 'center', paddingBottom: 20 }}>
                     <AuthAccountButton
                         onPress={() => handleButtonNavigation('Bill')}
@@ -173,8 +217,7 @@ export default PaymentScreen;
 const styles = StyleSheet.create({
     comboContent: {
         color: Colors.LIGHT_GRAY,
-        fontFamily: Fonts.Light,
-        width: '100%',
+        fontFamily: Fonts.Regular,
     },
     textContent: {
         fontFamily: Fonts.Regular,
