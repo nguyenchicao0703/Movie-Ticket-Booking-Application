@@ -18,6 +18,7 @@ const BillScreen = ({ navigation }) => {
                             fontFamily: Fonts.Bold,
                             textTransform: 'uppercase',
                             color: Colors.DEFAULT_WHITE,
+                            fontSize: 22,
                         }}
                     >
                         spider-man no way home
@@ -98,6 +99,7 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         color: Colors.DEFAULT_WHITE,
         fontFamily: Fonts.Medium,
+        fontSize: 16,
     },
     headerRightView: {
         flexDirection: 'row',
@@ -133,6 +135,7 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: Fonts.SemiBold,
         color: Colors.LIGHT_GRAY,
+        fontSize: 18,
     },
     lineBill: {
         marginTop: 10,
@@ -150,7 +153,7 @@ const styles = StyleSheet.create({
     txt2: {
         fontFamily: Fonts.Regular,
         color: Colors.DEFAULT_WHITE,
-        fontSize: 14,
+        fontSize: 16,
         marginBottom: 10,
     },
     qr: {
