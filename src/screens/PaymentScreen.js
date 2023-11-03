@@ -3,13 +3,12 @@ import {
     Text,
     View,
     Image,
-    Pressable,
     useWindowDimensions,
+    Pressable,
 } from 'react-native';
 import React from 'react';
-import { Colors, DetailMovieImage, Fonts, HomeImage } from '../constants';
-import { Header, TextTitle } from '../components';
-import MovieTitle from '../components/MovieTitle';
+import { Colors, Fonts, HomeImage } from '../constants';
+import { Header } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import PaymentTitleBar from '../components/PaymentTitleBar';
 import PaymentContentBar from '../components/PaymentContentBar';
@@ -18,13 +17,20 @@ import AuthAccountButton from '../components/AuthAccountButton';
 import ZaloPayment from '../components/ZaloPayment';
 
 const PaymentScreen = ({ navigation }) => {
+    const { width, height, fontScale } = useWindowDimensions();
+
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
+
     const handleButtonBack = () => {
         navigation.goBack(null);
     };
-    const { width, height, fontScale } = useWindowDimensions();
+
+    const handleButtonNavigation = (router) => {
+        navigation.navigate(router);
+    };
+
     return (
         <View
             style={{
@@ -61,7 +67,6 @@ const PaymentScreen = ({ navigation }) => {
                             width: width * 0.7,
                             padding: 15,
                             margin: 10,
-                            // backgroundColor: Colors.DEFAULT_ORANGE,
                         }}
                     >
                         <Text
@@ -136,7 +141,9 @@ const PaymentScreen = ({ navigation }) => {
                     amount={'195.000 đ'}
                     num={'1'}
                 />
-                <PaymentContentBar content={'Phiếu giảm giá'} num={'>'} />
+                <Pressable onPress={() => handleButtonNavigation('Discount')}>
+                    <PaymentContentBar content={'Phiếu giảm giá'} num={'>'} />
+                </Pressable>
                 {/* Change */}
                 <PaymentTitleBar title={'Tổng kết'} />
                 <PaymentContentBar
@@ -151,7 +158,10 @@ const PaymentScreen = ({ navigation }) => {
                 <PaymentTitleBar title={'Thanh toán'} />
                 <ZaloPayment />
                 <View style={{ alignItems: 'center', paddingBottom: 20 }}>
-                    <AuthAccountButton text={'Thanh toán'} />
+                    <AuthAccountButton
+                        onPress={() => handleButtonNavigation('Bill')}
+                        text={'Thanh toán'}
+                    />
                 </View>
             </ScrollView>
         </View>

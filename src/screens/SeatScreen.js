@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
-import { Header } from '../components';
+import { Header, InformationBottom } from '../components';
 
 const TypeSeat = ({ backgroundColor, text }) => {
     return (
@@ -84,7 +84,7 @@ const alphabetSeats = [
 const seatSize = 40;
 const seatGaping = 6;
 
-const SeatScreen = () => {
+const SeatScreen = ({ navigation }) => {
     const [selectedSeats, setSelectedSeats] = useState([]);
     let seatNumber = 1;
     let alphabetIndexNumber = 0;
@@ -100,6 +100,10 @@ const SeatScreen = () => {
                 setSelectedSeats([...selectedSeats, seatId]);
             }
         }
+    };
+
+    const navigationSeatToCombo = () => {
+        navigation.navigate('Combo');
     };
 
     return (
@@ -203,69 +207,12 @@ const SeatScreen = () => {
                     </View>
                 </ScrollView>
             </ScrollView>
-            <View
-                style={{
-                    width: '100%',
-                    height: 80,
-                    position: 'absolute',
-                    bottom: 0,
-                    backgroundColor: Colors.DEFAULT_WHITE,
-                    justifyContent: 'center',
-                }}
-            >
-                <Text
-                    style={{
-                        color: Colors.DEFAULT_BLACK,
-                        fontSize: 16,
-                        fontFamily: Fonts.Bold,
-                        marginLeft: 15,
-                        maxWidth: 240,
-                    }}
-                    numberOfLines={1}
-                >
-                    SPIDER-MAN NO WAY HOME
-                </Text>
-                <Text
-                    style={[
-                        styles.displayInfomation,
-                        { color: Colors.DEFAULT_BLACK },
-                    ]}
-                    numberOfLines={1}
-                >
-                    Ghế E09, E10
-                </Text>
-                <Text
-                    style={[
-                        styles.displayInfomation,
-                        { color: Colors.DEFAULT_RED },
-                    ]}
-                    numberOfLines={1}
-                >
-                    Tạm tính: 220.000 đ
-                </Text>
-                <Pressable
-                    style={{
-                        width: 120,
-                        height: 45,
-                        backgroundColor: Colors.DARK_RED,
-                        borderRadius: 40,
-                        position: 'absolute',
-                        right: 10,
-                        justifyContent: 'center',
-                    }}
-                >
-                    <Text
-                        style={{
-                            color: Colors.DEFAULT_WHITE,
-                            fontSize: 16,
-                            textAlign: 'center',
-                            fontFamily: Fonts.Medium,
-                        }}
-                    >
-                        Tiếp tục
-                    </Text>
-                </Pressable>
-            </View>
+            <InformationBottom
+                nameMovie={'SIPDER-MAN NO WAY HOME'}
+                seat={'E09, E10'}
+                totalPayment={'220.000'}
+                onPress={navigationSeatToCombo}
+            />
         </View>
     );
 };

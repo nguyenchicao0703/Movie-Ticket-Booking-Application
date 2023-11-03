@@ -5,11 +5,24 @@ import BackButton from './BackButton';
 import TextTitle from './TextTitle';
 import GenderSelectionBox from './GenderSelectionBox';
 import AuthAccountButton from './AuthAccountButton';
-import { HomeList, CinemaList, MovieList, CalendarList } from './list';
-import { HomeCard, CinemaCard, MovieCard, CalendarCard } from './card';
+import {
+    HomeList,
+    CinemaList,
+    MovieList,
+    CalendarList,
+    ComboList,
+} from './list';
+import {
+    HomeCard,
+    CinemaCard,
+    MovieCard,
+    CalendarCard,
+    ComboCard,
+} from './card';
 import MovieTitle from './MovieTitle';
 import SelectShowtime from './SelectShowtime';
 import ModalRate from './ModalRate';
+import InformationBottom from './InformationBottom';
 
 export {
     Input,
@@ -23,11 +36,14 @@ export {
     CinemaList,
     MovieList,
     CalendarList,
+    ComboList,
     CinemaCard,
     HomeCard,
     MovieCard,
     CalendarCard,
+    ComboCard,
     MovieTitle,
     SelectShowtime,
     ModalRate,
+    InformationBottom,
 };

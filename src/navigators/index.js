@@ -15,12 +15,12 @@ import {
     TicketScreen,
     WelcomeScreen,
     UpdateProfileScreen,
+    ComboScreen,
+    PaymentScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { CustomDrawerContent } from '../components';
-import ComboScreen from '../screens/ComboScreen';
-import PaymentScreen from '../screens/PaymentScreen';
 
 const Drawer = createDrawerNavigator();
 const AppDrawer = () => {
@@ -40,6 +40,12 @@ const AppDrawer = () => {
             <Drawer.Screen name="Cinema" component={CinemaScreen} />
             <Drawer.Screen name="Ticket" component={TicketScreen} />
             <Drawer.Screen name="Detail" component={DetailScreen} />
+            <Drawer.Screen name="Seat" component={SeatScreen} />
+            <Drawer.Screen name="Combo" component={ComboScreen} />
+            <Drawer.Screen name="Payment" component={PaymentScreen} />
+            <Drawer.Screen name="Discount" component={DiscountScreen} />
+            <Drawer.Screen name="Bill" component={BillScreen} />
+            <Drawer.Screen name="Profile" component={ProfileScreen} />
             <Drawer.Screen
                 name="ShowtimeMovie"
                 component={ShowtimeMovieScreen}
@@ -48,7 +54,6 @@ const AppDrawer = () => {
                 name="ShowtimeCinema"
                 component={ShowtimeCinemaScreen}
             />
-            <Drawer.Screen name="Seat" component={SeatScreen} />
             <Drawer.Screen
                 name="UpdateProfile"
                 component={UpdateProfileScreen}
@@ -66,15 +71,10 @@ const Navigator = () => {
             screenOptions={{ headerShown: false }}
         >
             <Stack.Screen name="Drawer" component={AppDrawer} />
-            <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
-            <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="AuthOTP" component={AuthOTPScreen} />
-            <Stack.Screen name="Bill" component={BillScreen} />
-            <Stack.Screen name="Discount" component={DiscountScreen} />
-            <Stack.Screen name="Combo" component={ComboScreen} />
-            <Stack.Screen name="Payment" component={PaymentScreen} />
         </Stack.Navigator>
     );
 };

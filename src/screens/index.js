@@ -14,6 +14,8 @@ import ShowtimeMovieScreen from './ShowtimeMovieScreen';
 import ShowtimeCinemaScreen from './ShowtimeCinemaScreen';
 import SeatScreen from './SeatScreen';
 import UpdateProfileScreen from './UpdateProfileScreen';
+import PaymentScreen from './PaymentScreen';
+import ComboScreen from './ComboScreen';
 
 export {
     HomeScreen,
@@ -32,4 +34,6 @@ export {
     ShowtimeCinemaScreen,
     SeatScreen,
     UpdateProfileScreen,
+    PaymentScreen,
+    ComboScreen,
 };
