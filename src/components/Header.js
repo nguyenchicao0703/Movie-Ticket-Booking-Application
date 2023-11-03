@@ -34,7 +34,7 @@ const Header = ({ titleHeader, onButtonBack, onButtonMenu }) => {
                 <Text
                     style={{
                         color: Colors.DEFAULT_WHITE,
-                        fontSize: fontScale * 21,
+                        fontSize: height * 0.027,
                         fontFamily: Fonts.Medium,
                         marginLeft: 20,
                         marginTop: 5,

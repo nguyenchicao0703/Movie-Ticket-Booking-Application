@@ -89,13 +89,22 @@ const ProfileScreen = ({}) => {
                                     style={{
                                         flexDirection: 'row',
                                         alignItems: 'center',
+                                        width: '80%',
                                     }}
                                 >
                                     <Image
                                         source={ProfileImage[2].image}
-                                        style={styles.img}
+                                        style={[styles.img]}
                                     />
-                                    <Text style={styles.txt}>
+                                    <Text
+                                        style={[
+                                            styles.txt,
+                                            {
+                                                fontSize: height * 0.018,
+                                                width: '80%',
+                                            },
+                                        ]}
+                                    >
                                         Thay đổi thông tin TV
                                     </Text>
                                 </View>
@@ -119,7 +128,17 @@ const ProfileScreen = ({}) => {
                                     source={ProfileImage[0].image}
                                     style={styles.img}
                                 />
-                                <Text style={styles.txt}>Xóa tài khoản</Text>
+                                <Text
+                                    style={[
+                                        styles.txt,
+                                        {
+                                            fontSize: height * 0.018,
+                                            width: '80%',
+                                        },
+                                    ]}
+                                >
+                                    Xóa tài khoản
+                                </Text>
                             </View>
                             <Image
                                 style={[styles.imgArrow]}

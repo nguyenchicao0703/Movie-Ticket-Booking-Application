@@ -103,12 +103,7 @@ const UpdateProfileScreen = () => {
             <View style={styles.groupAvatar}>
                 <Modal transparent={true} visible={modalVisible}>
                     <View style={styles.centeredView}>
-                        <View
-                            style={[
-                                styles.modalView,
-                                { height: height * 0.25 },
-                            ]}
-                        >
+                        <View style={[styles.modalView, { height: '30%' }]}>
                             <View
                                 style={{
                                     flexDirection: 'row',
@@ -121,25 +116,56 @@ const UpdateProfileScreen = () => {
                                         setModalVisible(!modalVisible)
                                     }
                                 >
-                                    <Image source={ModalRatingImage[0].image} />
+                                    <Image
+                                        style={{
+                                            width: width * 0.04,
+                                            height: height * 0.02,
+                                        }}
+                                        source={ModalRatingImage[0].image}
+                                    />
                                 </Pressable>
                             </View>
-                            <Text style={[styles.modalText, { fontSize: 18 }]}>
+                            <Text
+                                style={[
+                                    styles.modalText,
+                                    { fontSize: height * 0.024 },
+                                ]}
+                            >
                                 Cập nhật avatar
                             </Text>
                             <Pressable
-                                style={[styles.button]}
+                                style={[
+                                    styles.button,
+                                    { width: '80%', height: height * 0.06 },
+                                ]}
                                 onPress={() => ImagePicker()}
                             >
-                                <Text style={styles.textStyle}>
+                                <Text
+                                    style={[
+                                        styles.textStyle,
+                                        { fontSize: height * 0.02 },
+                                    ]}
+                                >
                                     Chọn ảnh từ thư viện
                                 </Text>
                             </Pressable>
                             <Pressable
-                                style={[styles.button]}
+                                style={[
+                                    styles.button,
+                                    {
+                                        width: '80%',
+                                        height: height * 0.06,
+                                        margin: 10,
+                                    },
+                                ]}
                                 onPress={() => LaunchCamera()}
                             >
-                                <Text style={styles.textStyle}>
+                                <Text
+                                    style={[
+                                        styles.textStyle,
+                                        { fontSize: height * 0.02 },
+                                    ]}
+                                >
                                     Chụp từ camera
                                 </Text>
                             </Pressable>
@@ -150,15 +176,19 @@ const UpdateProfileScreen = () => {
                 <View style={styles.avatar}>
                     <Image
                         style={{
-                            width: 120,
-                            height: 120,
-                            borderRadius: 100,
+                            width: width * 0.32,
+                            height: height * 0.16,
+                            borderRadius: 500,
                         }}
                         source={DrawerImage[5].image}
                     />
                     <Pressable onPress={() => setModalVisible(!modalVisible)}>
                         <Image
-                            style={{ marginLeft: -15 }}
+                            style={{
+                                marginLeft: -15,
+                                width: width * 0.06,
+                                height: height * 0.026,
+                            }}
                             source={UpdateProfileImage[0].image}
                         />
                     </Pressable>
@@ -168,7 +198,7 @@ const UpdateProfileScreen = () => {
                     style={{
                         color: Colors.DEFAULT_WHITE,
                         marginLeft: -10,
-                        fontSize: 20,
+                        fontSize: height * 0.026,
                         fontFamily: Fonts.Medium,
                         marginTop: 15,
                     }}
@@ -285,7 +315,7 @@ const styles = StyleSheet.create({
     modalText: {
         textAlign: 'center',
         color: Colors.DEFAULT_BLACK,
-        fontFamily: Fonts.SemiBold,
+        fontFamily: Fonts.Medium,
         marginTop: -20,
     },
 });
