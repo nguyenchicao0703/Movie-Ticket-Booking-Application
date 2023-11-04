@@ -6,11 +6,16 @@ import {
     StatusBar,
     useWindowDimensions,
     Pressable,
+    Image,
 } from 'react-native';
 import React from 'react';
 import { Colors, Fonts, Images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthAccountButton, BackButton, Input, TextTitle } from '../components';
+import {
+    GoogleSignin,
+    GoogleSigninButton,
+} from '@react-native-google-signin/google-signin';
 const LoginScreen = ({ navigation }) => {
     const clickLogin = () => {
         navigation.navigate('AuthOTP');
@@ -37,14 +42,39 @@ const LoginScreen = ({ navigation }) => {
                 <TextTitle text={'Đăng nhập'} />
                 <View style={styles.container}>
                     <View style={styles.formLogin}>
-                        <View style={{ flexDirection: 'row', width: '95%' }}>
+                        {/* <View style={{ flexDirection: 'row', width: '95%' }}>
                             <Input label={'Email'} />
-                        </View>
+                        </View> */}
 
-                        <AuthAccountButton
+                        {/* <AuthAccountButton
                             text="Đăng nhập"
                             onPress={clickLogin}
-                        />
+                        /> */}
+                        <Pressable
+                            style={{
+                                backgroundColor: Colors.DEFAULT_WHITE,
+                                width: '95%',
+                                borderRadius: 20,
+                                height: height * 0.06,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flexDirection: 'row',
+                            }}
+                        >
+                            <Image
+                                source={require('../assets/Login/google.png')}
+                            />
+                            <Text
+                                style={{
+                                    color: Colors.DEFAULT_BLACK,
+                                    fontSize: height * 0.02,
+                                    fontFamily: Fonts.Medium,
+                                    paddingLeft: 10,
+                                }}
+                            >
+                                Sign in with Google
+                            </Text>
+                        </Pressable>
 
                         <View style={styles.groupLine}>
                             <View style={styles.line} />
@@ -65,7 +95,7 @@ const LoginScreen = ({ navigation }) => {
                             onPress={clickRegister}
                             style={[
                                 styles.buttonRegister,
-                                { height: height * 0.05 },
+                                { height: height * 0.06 },
                             ]}
                         >
                             <Text

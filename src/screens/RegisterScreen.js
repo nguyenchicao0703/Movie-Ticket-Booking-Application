@@ -76,16 +76,16 @@ const RegisterScreen = ({ navigation }) => {
                         <View style={styles.containerInput}>
                             <Input label={'Họ và tên'} />
                         </View>
-                        <View style={styles.containerInput}>
+                        {/* <View style={styles.containerInput}>
                             <Input
                                 keyboardType={'numeric'}
                                 label={'Số điện thoại'}
                             />
-                        </View>
+                        </View> */}
                         <View style={styles.containerInput}>
                             <Input label={'Email'} />
                         </View>
-                        <View style={styles.containerInput}>
+                        {/* <View style={styles.containerInput}>
                             {showPicker && (
                                 <DateTimePicker
                                     mode="date"
@@ -121,10 +121,10 @@ const RegisterScreen = ({ navigation }) => {
                                     />
                                 </Pressable>
                             )}
-                        </View>
+                        </View> */}
                     </View>
 
-                    <GenderSelectionBox marginLeft={40} />
+                    {/* <GenderSelectionBox marginLeft={40} /> */}
 
                     <View style={styles.groupRule}>
                         {unTickedRule ? (
