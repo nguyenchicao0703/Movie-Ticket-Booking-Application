@@ -41,23 +41,6 @@ const TypeSeat = ({ backgroundColor, text }) => {
     );
 };
 
-let seats = [
-    'AAAAAAA_AAAAAAA/',
-    'AAAAAAA_AAAAAAA/',
-    'AAAAAAA_AAUUAAA/',
-    'AAAAAAA_AAAAAAA/',
-    'AAAAARR_AAAAAAA/',
-    'AAAAAAA_AAUUUAA/',
-    'AAAAAAA_AAAAUUU/',
-    'AAUUAAU_AAAAAAA/',
-    'UUAAAAA_AAUUURR/',
-    'AAAAAUU_AAAAAAA/',
-    'AAAARRU_UUUAAAA/',
-    'AAUUAAA_AAAAAAA/',
-    'AAAAAAA_AUUUUAA/',
-    '________________',
-];
-
 const STATUS_AVAILABLE = 1;
 const STATUS_BOOKED = 2;
 const STATUS_RESERVED = 3;
@@ -86,11 +69,27 @@ const seatGaping = 6;
 
 const SeatScreen = ({ navigation }) => {
     const [selectedSeats, setSelectedSeats] = useState([]);
+    const [seats, setSeats] = useState(
+        'AAAAAAA_AAAAAAA/' +
+            'AAAAAAA_AAAAAAA/' +
+            'AAAAAAA_AAUUAAA/' +
+            'AAAAAAA_AAAAAAA/' +
+            'AAAAARR_AAAAAAA/' +
+            'AAAAAAA_AAUUUAA/' +
+            'AAAAAAA_AAAAUUU/' +
+            'AAUUAAU_AAAAAAA/' +
+            'UUAAAAA_AAUUURR/' +
+            'AAAAAUU_AAAAAAA/' +
+            'AAAARRU_UUUAAAA/' +
+            'AAUUAAA_AAAAAAA/' +
+            'AAAAAAA_AUUUUAA/' +
+            '________________',
+    );
+
     let seatNumber = 1;
     let alphabetIndexNumber = 0;
 
-    const handleSeatPress = (seatId, status) => {
-        console.log({ seatId });
+    const handleSeatPress = (seatId, seatIndex, status) => {
         if (status === STATUS_AVAILABLE) {
             if (selectedSeats.includes(seatId)) {
                 setSelectedSeats(
@@ -98,9 +97,17 @@ const SeatScreen = ({ navigation }) => {
                 );
             } else {
                 setSelectedSeats([...selectedSeats, seatId]);
+                const seatsArr = seats.split('');
+                seatsArr[seatIndex] = 'R';
+                const seatsStr = seatsArr.join('');
+                console.log({ seatsStr });
+                setSeats(seatsStr);
             }
         }
     };
+
+    console.log({ selectedSeats });
+    console.log({ seats });
 
     const navigationSeatToCombo = () => {
         navigation.navigate('Combo');
@@ -147,7 +154,7 @@ const SeatScreen = ({ navigation }) => {
                         Màn hình
                     </Text>
                     <View style={styles.layoutSeat}>
-                        {seats.map((row, rowIndex) => (
+                        {seats.split('/').map((row, rowIndex) => (
                             <View key={rowIndex} style={styles.row}>
                                 {row.split('').map((seat, seatIndex) => {
                                     let status = null;
@@ -188,7 +195,11 @@ const SeatScreen = ({ navigation }) => {
                                                     styles.reservedSeat,
                                             ]}
                                             onPress={() =>
-                                                handleSeatPress(seatId, status)
+                                                handleSeatPress(
+                                                    seatId,
+                                                    seatIndex,
+                                                    status,
+                                                )
                                             }
                                             disabled={
                                                 status !== STATUS_AVAILABLE
