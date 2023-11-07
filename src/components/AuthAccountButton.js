@@ -7,7 +7,12 @@ const AuthAccountButton = ({ onPress, text }) => {
     return (
         <Pressable
             onPress={onPress}
-            style={[styles.container, { height: height * 0.05 }]}
+            style={[
+                styles.container,
+                {
+                    height: height * 0.06,
+                },
+            ]}
         >
             <Text style={[styles.text1, { fontSize: height * 0.02 }]}>
                 {text}
