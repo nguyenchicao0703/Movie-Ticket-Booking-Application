@@ -6,14 +6,27 @@ import {
     View,
     StatusBar,
     useWindowDimensions,
+    Animated,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Images, Fonts, Colors, BottomTabImage } from '../constants';
-const WelcomeScreen = ({ navigation }, props) => {
-    setTimeout(() => {
-        navigation.navigate('Drawer');
-    }, 2500);
+
+const WelcomeScreen = ({ navigation }) => {
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 2500,
+            useNativeDriver: true,
+        }).start();
+        setTimeout(() => {
+            navigation.navigate('Drawer');
+        }, 3000);
+    }, [fadeAnim, navigation]);
+
     const { height, width, fonScale, scale } = useWindowDimensions();
+
     return (
         <View style={styles.container}>
             <StatusBar
@@ -24,10 +37,14 @@ const WelcomeScreen = ({ navigation }, props) => {
             <ImageBackground style={styles.loginImage} source={Images[4].image}>
                 <View style={styles.child} />
             </ImageBackground>
-            <Image
+            <Animated.Image
                 style={[
                     styles.logoImage,
-                    { width: width * 0.37, height: height * 0.19 },
+                    {
+                        width: width * 0.37,
+                        height: height * 0.19,
+                        opacity: fadeAnim,
+                    },
                 ]}
                 source={BottomTabImage[5].image}
             />

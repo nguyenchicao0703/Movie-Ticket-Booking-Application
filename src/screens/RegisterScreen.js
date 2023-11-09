@@ -8,6 +8,9 @@ import {
     Platform,
     useWindowDimensions,
     Image,
+    ActivityIndicator,
+    Modal,
+    Button,
 } from 'react-native';
 import React, { useState } from 'react';
 import { Images, Fonts, Colors, BottomTabImage } from '../constants';
@@ -22,44 +25,96 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const RegisterScreen = ({ navigation }) => {
     const [unTickedRule, setUnTickedRule] = useState(true);
-    const [date, setDate] = useState(new Date());
-    const [showPicker, setshowPicker] = useState(false);
-    const [dayOfBirth, setDayOfBirth] = useState('');
-    const toggleDatepicker = () => {
-        setshowPicker(!showPicker);
-    };
+    const [phone, setPhone] = useState('');
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [countdown, setCountdown] = useState(5);
+    const [error, setError] = useState('');
     const { height, width, scale, fontScale } = useWindowDimensions();
 
-    const onChange = ({ type }, selectedDate) => {
-        if (type == 'set') {
-            const currentDate = selectedDate;
-            setDate(currentDate);
-
-            if (Platform.OS === 'android') {
-                toggleDatepicker();
-                setDayOfBirth(formatDate(currentDate));
-            }
-        } else {
-            toggleDatepicker();
-        }
-    };
-    const formatDate = (rawDate) => {
-        let date = new Date(rawDate);
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1;
-        let day = date.getDate();
-
-        return `${day}-${month}-${year}`;
-    };
-    const clickChangeAuthOTPScr = () => {
-        navigation.navigate('AuthOTP');
-    };
     const backToLogin = () => {
         navigation.goBack();
     };
 
+    const registerUser = async (phone) => {
+        const url = 'http://10.0.2.2:1234/api/Dang-ky-tai-khoan-sdt.php'; // Replace with your actual API endpoint
+
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ phone }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Registration failed');
+                }
+                return response.json();
+            })
+            .catch((error) => {
+                throw error;
+            });
+    };
+
+    const handlePhoneChange = (text) => {
+        setPhone(text);
+    };
+
+    const handleSubmit = () => {
+        if (!unTickedRule) {
+            setError(
+                'Bạn hãy đồng ý với điều khoản của chúng tôi để tiếp tục!',
+            );
+            return;
+        }
+        if (phone.trim() === '') {
+            setError('Số điện thoại không được để trống');
+            return;
+        }
+
+        if (!phone.startsWith('0')) {
+            setError('Số điện thoại phải bắt đầu bằng số 0');
+            return;
+        }
+
+        registerUser(phone)
+            .then((response) => {
+                // Handle successful registration
+                console.log('Success:', response);
+                setIsModalVisible(true); // Show the modal after successful registration
+                const interval = setInterval(() => {
+                    setCountdown((prevCountdown) => prevCountdown - 1);
+                }, 1000);
+
+                setTimeout(() => {
+                    setIsModalVisible(false);
+                    clearInterval(interval);
+                    navigation.navigate('Login'); // Navigate to the next screen after 5 seconds
+                }, 5000);
+            })
+            .catch((error) => {
+                // Handle registration error
+                console.error('Error:', error.message);
+            });
+    };
     return (
         <View>
+            <Modal
+                visible={isModalVisible}
+                animationType="slide"
+                transparent={true}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalText}>
+                            Đăng kí thành công!
+                        </Text>
+                        <Text style={{}}>
+                            Quay về trang đăng nhập sau {countdown}
+                        </Text>
+                    </View>
+                </View>
+            </Modal>
             <StatusBar
                 animated={true}
                 StatusBar="light-content"
@@ -74,57 +129,14 @@ const RegisterScreen = ({ navigation }) => {
                 <View style={styles.container}>
                     <View style={styles.formRegister}>
                         <View style={styles.containerInput}>
-                            <Input label={'Họ và tên'} />
-                        </View>
-                        {/* <View style={styles.containerInput}>
                             <Input
                                 keyboardType={'numeric'}
                                 label={'Số điện thoại'}
+                                value={phone}
+                                onChangeText={handlePhoneChange}
                             />
-                        </View> */}
-                        <View style={styles.containerInput}>
-                            <Input label={'Email'} />
                         </View>
-                        {/* <View style={styles.containerInput}>
-                            {showPicker && (
-                                <DateTimePicker
-                                    mode="date"
-                                    display="spinner"
-                                    value={date}
-                                    onChange={onChange}
-                                />
-                            )}
-                            {!showPicker && (
-                                <Pressable
-                                    style={{
-                                        flexDirection: 'row',
-                                        width: '100%',
-                                        alignItems: 'center',
-                                        color: Colors.DEFAULT_WHITE,
-                                        justifyContent: 'flex-end',
-                                    }}
-                                    onPress={toggleDatepicker}
-                                >
-                                    <Input
-                                        value={dayOfBirth}
-                                        editable={false}
-                                        onChangeText={setDayOfBirth}
-                                        label={'Ngày sinh'}
-                                    />
-                                    <Image
-                                        style={{
-                                            position: 'absolute',
-                                            width: width * 0.05,
-                                            right: 15,
-                                        }}
-                                        source={BottomTabImage[6].image}
-                                    />
-                                </Pressable>
-                            )}
-                        </View> */}
                     </View>
-
-                    {/* <GenderSelectionBox marginLeft={40} /> */}
 
                     <View style={styles.groupRule}>
                         {unTickedRule ? (
@@ -177,10 +189,13 @@ const RegisterScreen = ({ navigation }) => {
                             của MTB Cinema.
                         </Text>
                     </View>
+                    {error !== '' && (
+                        <Text style={styles.errorText}>{error}</Text>
+                    )}
 
                     <View style={{ alignItems: 'center', width: '100%' }}>
                         <AuthAccountButton
-                            onPress={clickChangeAuthOTPScr}
+                            onPress={handleSubmit}
                             text={'Đăng ký'}
                         />
                     </View>
@@ -189,8 +204,6 @@ const RegisterScreen = ({ navigation }) => {
         </View>
     );
 };
-
-export default RegisterScreen;
 
 const styles = StyleSheet.create({
     backgroudImage: {
@@ -282,4 +295,32 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+        width: '80%',
+    },
+    modalText: {
+        fontSize: 18,
+        fontFamily: Fonts.Medium,
+        marginBottom: 20,
+        color: Colors.DEFAULT_BLACK,
+    },
+    errorText: {
+        color: 'yellow',
+        marginTop: 10,
+        fontSize: 14,
+        textAlign: 'center',
+        fontFamily: Fonts.Regular,
+        padding: 20,
+    },
 });
+export default RegisterScreen;

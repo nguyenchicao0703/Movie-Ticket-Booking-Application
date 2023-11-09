@@ -6,12 +6,41 @@ import {
     View,
     useWindowDimensions,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HeaderImage, Images, ProfileImage } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import { useNavigation } from '@react-navigation/native';
-
+import {
+    GoogleSignin,
+    GoogleSigninButton,
+    statusCodes,
+} from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 const ProfileScreen = ({}) => {
+    useEffect(() => {
+        GoogleSignin.configure({
+            webClientId:
+                '243901576266-jcuvlf63l60k3n7qhvdsi66icu86inuu.apps.googleusercontent.com',
+        });
+    }, []);
+    const [userInfo, setUserInfo] = useState(null);
+
+    const handleSignOut = async () => {
+        try {
+            const isSignedIn = await GoogleSignin.isSignedIn();
+            if (isSignedIn) {
+                await GoogleSignin.revokeAccess(); // Revoke Google access token
+                await GoogleSignin.signOut(); // Sign out from Google
+            }
+
+            // Clear any relevant authentication state in your app
+            setUserInfo(null);
+            console.log('Sign out');
+            navigation.navigate('Login');
+        } catch (error) {
+            console.log('Sign out error:', error.message);
+        }
+    };
     const { height, width, scale, fontScale } = useWindowDimensions();
     const navigation = useNavigation();
 
@@ -149,7 +178,7 @@ const ProfileScreen = ({}) => {
                 </View>
             </View>
 
-            <Pressable style={styles.footer}>
+            <Pressable onPress={() => handleSignOut()} style={styles.footer}>
                 <Image source={ProfileImage[1].image} />
                 <Text
                     style={[

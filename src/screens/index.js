@@ -16,6 +16,7 @@ import SeatScreen from './SeatScreen';
 import UpdateProfileScreen from './UpdateProfileScreen';
 import PaymentScreen from './PaymentScreen';
 import ComboScreen from './ComboScreen';
+import WaitingScreen from './WaitingScreen';
 
 export {
     HomeScreen,
@@ -36,4 +37,5 @@ export {
     UpdateProfileScreen,
     PaymentScreen,
     ComboScreen,
+    WaitingScreen,
 };

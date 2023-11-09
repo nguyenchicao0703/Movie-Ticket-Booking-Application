@@ -4,6 +4,7 @@ import { CinemaList, Header } from '../components';
 import { Colors, Fonts } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
 import Cinemas from '../constants/Cinemas';
+import { CinemaAPI } from '../api';
 
 const CinemaScreen = ({ navigation }) => {
     const handleButtonBack = () => {
@@ -25,11 +26,11 @@ const CinemaScreen = ({ navigation }) => {
                 <View style={styles.tabBottomText}>
                     <Text style={styles.text}>GỢI Ý CHO BẠN</Text>
                 </View>
-                <CinemaList data={Cinemas} />
+                <CinemaAPI />
                 <View style={styles.tabBottomText}>
                     <Text style={styles.text}>KHU VỰC TP.HCM</Text>
                 </View>
-                <CinemaList data={Cinemas} />
+                <CinemaAPI />
             </ScrollView>
         </View>
     );

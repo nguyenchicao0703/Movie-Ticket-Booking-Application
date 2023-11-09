@@ -9,7 +9,14 @@ import React, { useState } from 'react';
 import { Colors, Fonts } from '../constants/index';
 import { TextInput } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
-const Input = ({ label, editable, value, onChangeText, keyboardType }) => {
+const Input = ({
+    label,
+    editable,
+    value,
+    onChangeText,
+    keyboardType,
+    style,
+}) => {
     const { height, width, scale, fontScale } = useWindowDimensions();
 
     return (
@@ -22,6 +29,7 @@ const Input = ({ label, editable, value, onChangeText, keyboardType }) => {
                         fontSize: height * 0.021,
                         height: height * 0.075,
                     },
+                    { style },
                 ]}
                 label={label}
                 activeUnderlineColor={Colors.LIGHT_GRAY}
