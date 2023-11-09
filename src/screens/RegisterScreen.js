@@ -5,23 +5,12 @@ import {
     ImageBackground,
     Pressable,
     StatusBar,
-    Platform,
     useWindowDimensions,
-    Image,
-    ActivityIndicator,
     Modal,
-    Button,
 } from 'react-native';
 import React, { useState } from 'react';
-import { Images, Fonts, Colors, BottomTabImage } from '../constants';
-import {
-    AuthAccountButton,
-    BackButton,
-    GenderSelectionBox,
-    Input,
-    TextTitle,
-} from '../components';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Images, Fonts, Colors } from '../constants';
+import { AuthAccountButton, BackButton, Input, TextTitle } from '../components';
 
 const RegisterScreen = ({ navigation }) => {
     const [unTickedRule, setUnTickedRule] = useState(true);
