@@ -21,6 +21,7 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { CustomDrawerContent } from '../components';
+import WaitingScreen from '../screens/WaitingScreen';
 
 const Drawer = createDrawerNavigator();
 const AppDrawer = () => {
@@ -46,6 +47,7 @@ const AppDrawer = () => {
             <Drawer.Screen name="Discount" component={DiscountScreen} />
             <Drawer.Screen name="Bill" component={BillScreen} />
             <Drawer.Screen name="Profile" component={ProfileScreen} />
+
             <Drawer.Screen
                 name="ShowtimeMovie"
                 component={ShowtimeMovieScreen}
@@ -75,6 +77,7 @@ const Navigator = () => {
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="AuthOTP" component={AuthOTPScreen} />
+            <Stack.Screen name="Waitting" component={WaitingScreen} />
         </Stack.Navigator>
     );
 };
