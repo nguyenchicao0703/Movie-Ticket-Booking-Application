@@ -2,15 +2,19 @@ import { FlatList, useWindowDimensions } from 'react-native';
 import React from 'react';
 import HomeCard from '../card/HomeCard';
 
-const HomeList = ({ data }) => {
+const HomeList = ({ data, typePremiere }) => {
     const { width, height, fontScale } = useWindowDimensions();
+
+    const filterTypePremiere = data.filter(
+        (item) => item.loaikc === typePremiere,
+    );
 
     return (
         <FlatList
             style={{
                 marginTop: 8,
             }}
-            data={data}
+            data={filterTypePremiere}
             extraData={(item) => item.id}
             horizontal={true}
             snapToInterval={width * 0.6 + 15}
