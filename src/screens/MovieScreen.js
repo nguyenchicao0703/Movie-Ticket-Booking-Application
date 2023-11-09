@@ -5,25 +5,37 @@ import {
     useWindowDimensions,
     StatusBar,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header, MovieList } from '../components';
-import {
-    Colors,
-    Fonts,
-    SelectMoviesFuture,
-    SelectMoviesPresent,
-    SelectMoviesSpecial,
-} from '../constants';
+import { Colors, Fonts } from '../constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { moviesRemainingSelector } from '../redux/selector.js/moviesSelector';
+import { fetchMovies } from '../redux/slice/moviesSlice';
 
 const TopTabsCategory = [
     { id: 1, category: 'Đang chiếu' },
     { id: 2, category: 'Sắp chiếu' },
-    { id: 3, category: 'Đặc biệt' },
 ];
+
+const moviesPresent = 1;
+const movieSpecial = 2;
 
 const MovieScreen = ({ navigation }) => {
     const { width, fontScale } = useWindowDimensions();
     const [clickTab, setClickTab] = useState(0);
+
+    const dispatch = useDispatch();
+    const movies = useSelector(moviesRemainingSelector);
+
+    const filterTypePremiere = movies.filter((item) =>
+        clickTab === 0
+            ? item.loaikc === moviesPresent
+            : item.loaikc === movieSpecial,
+    );
+
+    useEffect(() => {
+        dispatch(fetchMovies());
+    }, []);
 
     const handleClickTab = (index) => {
         setClickTab(index);
@@ -71,13 +83,7 @@ const MovieScreen = ({ navigation }) => {
                     </Pressable>
                 ))}
             </View>
-            {clickTab === 0 ? (
-                <MovieList data={SelectMoviesPresent} />
-            ) : clickTab === 1 ? (
-                <MovieList data={SelectMoviesFuture} />
-            ) : (
-                <MovieList data={SelectMoviesSpecial} />
-            )}
+            <MovieList data={filterTypePremiere} />
         </View>
     );
 };
