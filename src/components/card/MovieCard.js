@@ -18,6 +18,7 @@ const MovieCard = ({ data, listCase }) => {
 
     const handleButtonMovieCard = () => {
         navigation.navigate('Detail', { id: data.id_phim });
+        console.log(data.id_phim);
     };
 
     const navigateMovieToShowtimeMovie = () => {
