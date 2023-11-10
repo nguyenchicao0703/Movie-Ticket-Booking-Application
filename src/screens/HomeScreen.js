@@ -7,18 +7,15 @@ import {
     View,
     useWindowDimensions,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { BottomTabImage, DrawerImage, HeaderImage, Movies } from '../constants';
+import React, { useEffect } from 'react';
+import { BottomTabImage, DrawerImage, HeaderImage } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import LinearGradient from 'react-native-linear-gradient';
 import { HomeList } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchMovies } from '../redux/moviesSlice';
-import { moviesRemainingSelector } from '../redux/selectors';
-
-const moviesPresent = 1;
-const movieSpecial = 2;
+import { fetchMovies } from '../redux/slice/moviesSlice';
+import { moviesRemainingSelector } from '../redux/selector.js/moviesSelector';
 
 const bottomTabs = [
     { id: 1, image: 1, title: 'Phim', tab: 'Movie' },
@@ -27,6 +24,9 @@ const bottomTabs = [
     { id: 4, image: 2, title: 'Vé', tab: 'Ticket' },
     { id: 5, image: 3, title: 'Quản lí', tab: 'Profile' },
 ];
+
+const moviesPresent = 1;
+const movieSpecial = 2;
 
 const HomeScreen = ({ navigation }) => {
     const { height, fontScale } = useWindowDimensions();
@@ -46,26 +46,6 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         dispatch(fetchMovies());
     }, []);
-
-    // console.log('Get movies list to Home: ', movies);
-    // console.log('Status to Home: ', status);
-    // console.log('Error movies list to Home: ', error);
-
-    // useEffect(() => {
-    //     const getData = async () => {
-    //         try {
-    //             console.log('1');
-    //             const response = await axios.get(
-    //                 'http://10.0.2.2:1234/api/Danh-sach-phim.php',
-    //             );
-    //             const data = response.data.data;
-    //             return data;
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     };
-    //     return getData;
-    // }, []);
 
     return (
         <View

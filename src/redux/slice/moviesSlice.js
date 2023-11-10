@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { get } from '../../api/movieAPI';
 
 // Slice của reducer và actions
 const moviesSlice = createSlice({
@@ -32,10 +32,8 @@ export default moviesSlice;
 // Action thunk để lấy danh sách phim từ API
 export const fetchMovies = createAsyncThunk('movies/fetchMovies', async () => {
     try {
-        const response = await axios.get(
-            'http://10.0.2.2:1234/api/Danh-sach-phim.php',
-        );
-        const data = response.data.data;
+        const response = await get('/Danh-sach-phim.php');
+        const data = response.data;
         // console.log('Fetch movies successfully: ', response.data.data);
         return data;
     } catch (error) {

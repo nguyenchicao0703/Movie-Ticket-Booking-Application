@@ -1,4 +1,4 @@
-import { StyleSheet, Text, Image, Pressable } from 'react-native';
+import { StyleSheet, Text, Image, Pressable, View } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../../constants/index';
 import { useNavigation } from '@react-navigation/native';
@@ -16,7 +16,7 @@ const HomeCard = ({
     const navigation = useNavigation();
 
     const handleButtonClickItem = () => {
-        navigation.navigate('Detail');
+        navigation.navigate('Detail', { id: id_phim });
     };
 
     return (
@@ -38,8 +38,8 @@ const HomeCard = ({
             >
                 {data.ten_phim}
             </Text>
-            <Text style={[styles.time, { fontSize: timeScale }]}>
-                {data.ngaykhoichieu}
+            <Text style={[styles.time, { fontSize: timeScale, marginLeft: 3 }]}>
+                {data.thoiluong} phút {data.ngaykhoichieu}
             </Text>
         </Pressable>
     );

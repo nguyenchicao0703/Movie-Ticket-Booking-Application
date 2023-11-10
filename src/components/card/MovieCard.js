@@ -17,12 +17,12 @@ const MovieCard = ({ data, listCase }) => {
     const navigation = useNavigation();
 
     const handleButtonMovieCard = () => {
-        navigation.navigate('Detail');
+        navigation.navigate('Detail', { id: data.id_phim });
     };
 
     const navigateMovieToShowtimeMovie = () => {
         listCase !== 'TicketHistory'
-            ? navigation.navigate('ShowtimeMovie')
+            ? navigation.navigate('ShowtimeMovie', { id: data.id_phim })
             : null;
         console.log({ listCase });
     };
@@ -38,7 +38,7 @@ const MovieCard = ({ data, listCase }) => {
             onPress={handleButtonMovieCard}
         >
             <Image
-                source={data.image}
+                source={{ uri: data.hinhanh }}
                 style={{
                     marginLeft: width * 0.035,
                     width: width * 0.32,
@@ -54,17 +54,18 @@ const MovieCard = ({ data, listCase }) => {
                         fontFamily: Fonts.Bold,
                         maxWidth: width / 2 + 30,
                     }}
+                    numberOfLines={1}
                 >
-                    {data.name}
+                    {data.ten_phim}
                 </Text>
                 <Text style={[styles.text, { fontSize }]}>
-                    Thời lượng: {data.time}
+                    Thời lượng: {data.thoiluong}
                 </Text>
                 <Text style={[styles.text, { fontSize }]}>
-                    Khởi chiếu: {data.premiere}
+                    Khởi chiếu: {data.ngaykhoichieu}
                 </Text>
-                <Text style={[styles.text, { fontSize }]}>
-                    Thể loại: {data.category}
+                <Text style={[styles.text, { fontSize }]} numberOfLines={2}>
+                    Thể loại: {data.theloai}
                 </Text>
                 <LinearGradient
                     colors={
