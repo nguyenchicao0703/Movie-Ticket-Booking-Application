@@ -1,11 +1,14 @@
 import { StyleSheet } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header, InformationBottom } from '../components';
 import ComboList from '../components/list/ComboList';
 import { Colors, SelectCombo } from '../constants';
+import axiosClient from '../api/axiosClient';
+import axios from 'axios';
 
 const ComboScreen = ({ navigation }) => {
+    const [data1, setData1] = useState();
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -13,9 +16,24 @@ const ComboScreen = ({ navigation }) => {
     const handleButtonBack = () => {
         navigation.goBack(null);
     };
-
     const navigationComboToPayment = () => {
         navigation.navigate('Payment');
+    };
+
+    useEffect(() => {
+        ComboRepon();
+    }, []);
+
+    const ComboRepon = async () => {
+        try {
+            const response = await axios.get(
+                'http://127.0.0.1:1234/api/Danh-sach-combo.php',
+                { timeout: 3000 },
+            );
+            setData1(response.data.data);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -25,7 +43,7 @@ const ComboScreen = ({ navigation }) => {
                 onButtonBack={handleButtonBack}
                 onButtonMenu={handleButtonMenu}
             />
-            <ComboList data={SelectCombo} />
+            <ComboList data={data1} />
             <InformationBottom
                 nameMovie={'SIPDER-MAN NO WAY HOME'}
                 seat={'E09, E10'}
