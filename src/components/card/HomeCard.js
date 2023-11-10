@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
+import { StyleSheet, Text, Image, Pressable } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../../constants/index';
 import { useNavigation } from '@react-navigation/native';
@@ -30,16 +30,16 @@ const HomeCard = ({
         >
             <Image
                 style={[styles.image, { width: cardWidth, height: cardHeight }]}
-                source={data.image}
+                source={{ uri: data.hinhanh }}
             />
             <Text
                 style={[styles.title, { fontSize: nameScale }]}
                 numberOfLines={1}
             >
-                {data.name}
+                {data.ten_phim}
             </Text>
             <Text style={[styles.time, { fontSize: timeScale }]}>
-                {data.time}
+                {data.ngaykhoichieu}
             </Text>
         </Pressable>
     );

@@ -7,12 +7,18 @@ import {
     View,
     useWindowDimensions,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BottomTabImage, DrawerImage, HeaderImage, Movies } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import LinearGradient from 'react-native-linear-gradient';
 import { HomeList } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMovies } from '../redux/moviesSlice';
+import { moviesRemainingSelector } from '../redux/selectors';
+
+const moviesPresent = 1;
+const movieSpecial = 2;
 
 const bottomTabs = [
     { id: 1, image: 1, title: 'Phim', tab: 'Movie' },
@@ -23,8 +29,11 @@ const bottomTabs = [
 ];
 
 const HomeScreen = ({ navigation }) => {
-    const { width, height, scale, fontScale } = useWindowDimensions();
+    const { height, fontScale } = useWindowDimensions();
     const textTitle = fontScale * 22;
+
+    const dispatch = useDispatch();
+    const movies = useSelector(moviesRemainingSelector);
 
     const stackScreen = (router) => {
         navigation.navigate(router);
@@ -33,6 +42,30 @@ const HomeScreen = ({ navigation }) => {
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
+
+    useEffect(() => {
+        dispatch(fetchMovies());
+    }, []);
+
+    // console.log('Get movies list to Home: ', movies);
+    // console.log('Status to Home: ', status);
+    // console.log('Error movies list to Home: ', error);
+
+    // useEffect(() => {
+    //     const getData = async () => {
+    //         try {
+    //             console.log('1');
+    //             const response = await axios.get(
+    //                 'http://10.0.2.2:1234/api/Danh-sach-phim.php',
+    //             );
+    //             const data = response.data.data;
+    //             return data;
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     };
+    //     return getData;
+    // }, []);
 
     return (
         <View
@@ -105,7 +138,7 @@ const HomeScreen = ({ navigation }) => {
                 >
                     Phim đang chiếu
                 </Text>
-                <HomeList data={Movies} />
+                <HomeList data={movies} typePremiere={moviesPresent} />
                 <Text
                     style={[
                         styles.title,
@@ -114,7 +147,7 @@ const HomeScreen = ({ navigation }) => {
                 >
                     Phim sắp chiếu
                 </Text>
-                <HomeList data={Movies} />
+                <HomeList data={movies} typePremiere={movieSpecial} />
             </ScrollView>
             {/* bottom tab */}
             <LinearGradient

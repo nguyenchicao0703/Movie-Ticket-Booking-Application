@@ -10,12 +10,8 @@ import React, { useState, useEffect } from 'react';
 import { HeaderImage, Images, ProfileImage } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import { useNavigation } from '@react-navigation/native';
-import {
-    GoogleSignin,
-    GoogleSigninButton,
-    statusCodes,
-} from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
 const ProfileScreen = ({}) => {
     useEffect(() => {
         GoogleSignin.configure({

@@ -7,23 +7,18 @@ import {
     useWindowDimensions,
     Pressable,
     Image,
-    Button,
-    Alert,
     Modal,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Colors, Fonts, Images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthAccountButton, BackButton, Input, TextTitle } from '../components';
-import {
-    GoogleSignin,
-    GoogleSigninButton,
-    statusCodes,
-} from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
-import axios, { Axios } from 'axios';
+import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-const LoginScreen = ({}) => {
+
+const LoginScreen = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [userName, setUserName] = useState('');
     const [showModal, setShowModal] = useState(false);
@@ -36,33 +31,27 @@ const LoginScreen = ({}) => {
     const loginWithPhoneNumber = async () => {
         try {
             const apiUrl = 'http://10.0.2.2:1234/api/dang-nhap-sdt.php';
-
             const response = await axios.post(apiUrl, { phone });
-
             //handle the API response
             const { status, msg, data } = response.data;
-
-            if (status === true) {
+            if (status) {
                 //login successfuly
                 console.log('Đăng nhập thành công:', data);
                 navigation.navigate('Drawer');
             } else {
                 //faile login
-
                 if (phone.trim() === '') {
                     setError('Không được để trống số điện thoại.');
-                    return;
                 }
 
                 if (!phone.startsWith('0')) {
                     setError('Số điện thoại phải bắt đầu bằng 0.');
-                    return;
                 }
-                if (status === false) {
+                if (!status) {
                     setError('Tài khoản không tồn tại hoặc sai số điện thoại!');
-                    return;
                 }
                 console.log('Login faild', msg);
+                return;
             }
         } catch (error) {
             console.log('error logging in', error);
@@ -103,15 +92,15 @@ const LoginScreen = ({}) => {
             const data = await response.json();
 
             if (response.ok) {
-                if (data.status === true) {
+                if (data.status) {
                     if (data.data) {
                         const user = data.data;
                         console.log(user);
-                        console.log('đăng nhập thành công');
+                        console.log('Logged in successfully');
                         navigation.navigate('Drawer');
                     }
                     if (data.data === null) {
-                        console.log('xin hãy xác nhận email');
+                        console.log('Please confirm email');
                         setShowModal(true);
                         setModalTimer(
                             setTimeout(() => setShowModal(false), 3000),
@@ -125,9 +114,7 @@ const LoginScreen = ({}) => {
                 console.log(data.msg);
                 console.log(error);
             }
-        } catch (error) {
-            console.log('mất kết nói sever');
-        }
+        } catch (error) {}
     };
 
     const handleGoogleSignIn = async () => {
