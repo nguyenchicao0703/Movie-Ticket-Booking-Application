@@ -7,8 +7,8 @@ import {
     Pressable,
     Modal,
 } from 'react-native';
-import React, { useState } from 'react';
-import { Header } from '../components';
+import React, { useState, useEffect } from 'react';
+import { AuthAccountButton, Header } from '../components';
 import {
     Colors,
     DetailMovieImage,
@@ -18,13 +18,17 @@ import {
 } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
 import DropDownPicker from 'react-native-dropdown-picker';
+import axios from 'axios';
+import { Button } from 'react-native-paper';
 
-const DetailScreen = ({ navigation }) => {
+const DetailScreen = ({ navigation, route }) => {
     const fontSizeContent = height * 0.03;
+
     const { height, width, scale, fontScale } = useWindowDimensions();
     const [modalVisible, setModalVisible] = useState(false);
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState('ten');
+    const [movie, setMovie] = useState(null);
     const [items, setItems] = useState([
         { label: '10', value: 'ten' },
         { label: '9', value: 'nine' },
@@ -51,6 +55,30 @@ const DetailScreen = ({ navigation }) => {
             cinemaTitle: 'spider-man no way home',
         });
     };
+    const idPhim = route.params.id;
+
+    useEffect(() => {
+        const fetchMovieDetails = async () => {
+            try {
+                const response = await axios.get(
+                    `http://10.0.2.2:1234/api/Chi-tiet-phim.php?id=${idPhim}`,
+                );
+                const data = response.data.data;
+                setMovie(data);
+                console.log(data);
+            } catch (error) {
+                console.log('Error:', error);
+            }
+        };
+
+        fetchMovieDetails();
+    }, [idPhim]);
+
+    if (!movie) {
+        return null; // or render a loading indicator
+    }
+
+    const hinhanh = movie.hinhanh;
 
     return (
         <View style={styles.container}>
@@ -59,240 +87,239 @@ const DetailScreen = ({ navigation }) => {
                 onButtonBack={handleButtonBack}
                 onButtonMenu={handleButtonMenu}
             />
-            <ScrollView style={{ width: '100%' }}>
-                <View style={styles.groupPlayMovie}>
-                    <Image
-                        style={{ width: width, height: height * 0.28 }}
-                        source={DetailMovieImage[2].image}
-                    />
-                    <Image
-                        style={{ position: 'absolute' }}
-                        source={DetailMovieImage[0].image}
-                    />
-                </View>
+            {movie && (
+                <ScrollView style={{ width: '100%' }}>
+                    <View style={styles.groupPlayMovie}>
+                        <Image
+                            style={{ width: width, height: height * 0.28 }}
+                            source={DetailMovieImage[2].image}
+                        />
+                        <Image
+                            style={{ position: 'absolute' }}
+                            source={DetailMovieImage[0].image}
+                        />
+                    </View>
 
-                <Modal transparent={true} visible={modalVisible}>
-                    <View style={styles.centeredView}>
-                        <View
-                            style={[
-                                styles.modalView,
-                                { height: height * 0.25 },
-                            ]}
-                        >
+                    <Modal transparent={true} visible={modalVisible}>
+                        <View style={styles.centeredView}>
                             <View
-                                style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-end',
-                                    width: '95%',
-                                }}
-                            >
-                                <Pressable
-                                    onPress={() =>
-                                        setModalVisible(!modalVisible)
-                                    }
-                                >
-                                    <Image
-                                        style={{
-                                            width: width * 0.04,
-                                            height: height * 0.02,
-                                        }}
-                                        source={ModalRatingImage[0].image}
-                                    />
-                                </Pressable>
-                            </View>
-                            <Text
                                 style={[
-                                    styles.modalText,
-                                    { fontSize: height * 0.024 },
+                                    styles.modalView,
+                                    { height: height * 0.25 },
                                 ]}
                             >
-                                Đánh giá theo thang điểm 10
-                            </Text>
-                            <View style={{ width: '90%' }}>
-                                <DropDownPicker
-                                    open={open}
-                                    value={value}
-                                    items={items}
-                                    setOpen={setOpen}
-                                    setValue={setValue}
-                                    setItems={setItems}
-                                    disabledStyle={{
-                                        opacity: 0.5,
-                                    }}
-                                    mode="BADGE"
-                                    placeholder="Chọn điểm"
-                                    textStyle={{
-                                        fontFamily: Fonts.Regular,
-                                        fontSize: height * 0.018,
-                                    }}
-                                    labelStyle={{ fontFamily: Fonts.Regular }}
+                                <View
                                     style={{
-                                        backgroundColor: Colors.LIGHT_GRAY,
-                                        borderColor: 'transparent',
-                                        width: width * 0.81,
-                                        height: height * 0.07,
+                                        flexDirection: 'row',
+                                        justifyContent: 'flex-end',
+                                        width: '95%',
                                     }}
-                                />
-                            </View>
-                            <Pressable
-                                style={[
-                                    styles.button,
-                                    styles.buttonClose,
-                                    {
-                                        width: width * 0.51,
-                                        height: height * 0.06,
-                                    },
-                                ]}
-                                onPress={() => console.log(value)}
-                            >
+                                >
+                                    <Pressable
+                                        onPress={() =>
+                                            setModalVisible(!modalVisible)
+                                        }
+                                    >
+                                        <Image
+                                            style={{
+                                                width: width * 0.04,
+                                                height: height * 0.02,
+                                            }}
+                                            source={ModalRatingImage[0].image}
+                                        />
+                                    </Pressable>
+                                </View>
                                 <Text
                                     style={[
-                                        styles.textStyle,
-                                        { fontSize: height * 0.018 },
+                                        styles.modalText,
+                                        { fontSize: height * 0.024 },
                                     ]}
                                 >
-                                    Đánh giá
+                                    Đánh giá theo thang điểm 10
                                 </Text>
-                            </Pressable>
+                                <View style={{ width: '90%' }}>
+                                    <DropDownPicker
+                                        open={open}
+                                        value={value}
+                                        items={items}
+                                        setOpen={setOpen}
+                                        setValue={setValue}
+                                        setItems={setItems}
+                                        disabledStyle={{
+                                            opacity: 0.5,
+                                        }}
+                                        mode="BADGE"
+                                        placeholder="Chọn điểm"
+                                        textStyle={{
+                                            fontFamily: Fonts.Regular,
+                                            fontSize: height * 0.018,
+                                        }}
+                                        labelStyle={{
+                                            fontFamily: Fonts.Regular,
+                                        }}
+                                        style={{
+                                            backgroundColor: Colors.LIGHT_GRAY,
+                                            borderColor: 'transparent',
+                                            width: width * 0.81,
+                                            height: height * 0.07,
+                                        }}
+                                    />
+                                </View>
+                                <Pressable
+                                    style={[
+                                        styles.button,
+                                        styles.buttonClose,
+                                        {
+                                            width: width * 0.51,
+                                            height: height * 0.06,
+                                        },
+                                    ]}
+                                    onPress={() => console.log(value)}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.textStyle,
+                                            { fontSize: height * 0.018 },
+                                        ]}
+                                    >
+                                        Đánh giá
+                                    </Text>
+                                </Pressable>
+                            </View>
                         </View>
-                    </View>
-                </Modal>
-                <Pressable onPress={() => setModalVisible(true)}>
-                    <View style={styles.groupRate}>
+                    </Modal>
+                    <Pressable onPress={() => setModalVisible(true)}>
+                        <View style={styles.groupRate}>
+                            <Image
+                                style={{
+                                    width: width * 0.064,
+                                    height: height * 0.032,
+                                }}
+                                source={DetailMovieImage[1].image}
+                            />
+                            <Text
+                                style={{
+                                    color: Colors.DEFAULT_WHITE,
+                                    fontFamily: Fonts.Regular,
+                                    marginLeft: 15,
+                                    fontSize: height * 0.018,
+                                    marginTop: 5,
+                                }}
+                            >
+                                4.9/5
+                            </Text>
+                        </View>
+                    </Pressable>
+
+                    <View style={styles.titleMovieName}>
                         <Image
                             style={{
-                                width: width * 0.064,
-                                height: height * 0.032,
+                                width: width * 0.08,
+                                height: height * 0.04,
                             }}
-                            source={DetailMovieImage[1].image}
+                            source={Images[3].image}
                         />
                         <Text
                             style={{
+                                fontSize: height * 0.023,
+                                textTransform: 'uppercase',
                                 color: Colors.DEFAULT_WHITE,
-                                fontFamily: Fonts.Regular,
+                                fontFamily: Fonts.SemiBold,
                                 marginLeft: 15,
+                            }}
+                            numberOfLines={1}
+                        >
+                            {movie.ten_phim}
+                        </Text>
+                    </View>
+
+                    <View style={styles.groupMovie}>
+                        <Image
+                            style={{
+                                width: width * 0.26,
+                                height: height * 0.23,
+                                borderRadius: 5,
+                            }}
+                            source={{ uri: `${movie.hinhanh}` }}
+                        />
+                        <View style={styles.grouptextDetail}>
+                            <Text
+                                style={[
+                                    styles.textDetail,
+                                    { fontSize: height * 0.02 },
+                                ]}
+                            >
+                                Thời lượng: {movie.thoiluong}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.textDetail,
+                                    { fontSize: height * 0.02 },
+                                ]}
+                            >
+                                Khởi chiếu: {movie.ngaykhoichieu}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.textDetail,
+                                    { fontSize: height * 0.02 },
+                                ]}
+                            >
+                                Thể loại: {movie.theloai}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.textDetail,
+                                    { fontSize: height * 0.02 },
+                                ]}
+                            >
+                                Đạo diễn: {movie.daodien.ten_daodien}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.textDetail,
+                                    { fontSize: height * 0.02 },
+                                ]}
+                                numberOfLines={3}
+                            >
+                                Nhà sản xuất: {movie.nhasanxuat}
+                            </Text>
+                        </View>
+                    </View>
+                    <Text
+                        style={{
+                            fontSize: height * 0.024,
+                            fontFamily: Fonts.Medium,
+                            color: Colors.DEFAULT_WHITE,
+                            marginTop: 10,
+                            marginLeft: 10,
+                        }}
+                    >
+                        Tóm tắt phim
+                    </Text>
+                    <View style={styles.contentDetailMovie}>
+                        <Text
+                            style={{
                                 fontSize: height * 0.018,
-                                marginTop: 5,
+                                color: Colors.LIGHT_GRAY,
+                                fontFamily: Fonts.Light,
+                                lineHeight: 25,
+                                textAlign: 'justify',
                             }}
                         >
-                            4.9/5
+                            {movie.noidung}
                         </Text>
                     </View>
-                </Pressable>
-
-                <View style={styles.titleMovieName}>
-                    <Image
-                        style={{
-                            width: width * 0.08,
-                            height: height * 0.04,
-                        }}
-                        source={Images[3].image}
-                    />
-                    <Text
-                        style={{
-                            fontSize: height * 0.023,
-                            textTransform: 'uppercase',
-                            color: Colors.DEFAULT_WHITE,
-                            fontFamily: Fonts.SemiBold,
-                            marginLeft: 15,
-                        }}
-                        numberOfLines={1}
-                    >
-                        Spider-man No Way home
-                    </Text>
-                </View>
-
-                <View style={styles.groupMovie}>
-                    <Image
-                        style={{
-                            width: width * 0.26,
-                            height: height * 0.23,
-                            borderRadius: 5,
-                        }}
-                        source={DetailMovieImage[3].image}
-                    />
-                    <View style={styles.grouptextDetail}>
-                        <Text
-                            style={[
-                                styles.textDetail,
-                                { fontSize: height * 0.02 },
-                            ]}
-                        >
-                            Thời lượng: 120 phút
-                        </Text>
-                        <Text
-                            style={[
-                                styles.textDetail,
-                                { fontSize: height * 0.02 },
-                            ]}
-                        >
-                            Khởi chiếu: 15/08/2023
-                        </Text>
-                        <Text
-                            style={[
-                                styles.textDetail,
-                                { fontSize: height * 0.02 },
-                            ]}
-                        >
-                            Thể loại: Adventure/Superhero
-                        </Text>
-                        <Text
-                            style={[
-                                styles.textDetail,
-                                { fontSize: height * 0.02 },
-                            ]}
-                        >
-                            Đạo diễn: Jon Watts
-                        </Text>
-                        <Text
-                            style={[
-                                styles.textDetail,
-                                { fontSize: height * 0.02 },
-                            ]}
-                            numberOfLines={3}
-                        >
-                            Diễn viên: Tom Holland, Zendaya, Jacob Batalon,
-                            Cumberbatch, Marisa Tomei, Benedict...
-                        </Text>
-                    </View>
-                </View>
-                <Text
-                    style={{
-                        fontSize: height * 0.024,
-                        fontFamily: Fonts.Medium,
-                        color: Colors.DEFAULT_WHITE,
-                        marginTop: 10,
-                        marginLeft: 10,
-                    }}
-                >
-                    Tóm tắt phim
-                </Text>
-                <View style={styles.contentDetailMovie}>
-                    <Text
-                        style={{
-                            fontSize: height * 0.018,
-                            color: Colors.LIGHT_GRAY,
-                            fontFamily: Fonts.Light,
-                            lineHeight: 25,
-                            textAlign: 'justify',
-                        }}
-                    >
-                        “Spider-Man: No Way Home" (2021) kể về Peter
-                        Parker/Spider-Man khi anh phải đối mặt với việc tiết lộ
-                        danh tính và hậu quả không mong muốn. Anh tìm sự giúp đỡ
-                        từ Stephen Strange/Doctor Strange để khắc phục tình
-                        huống. Tuy nhiên, khi phép thuật được thực hiện, các
-                        Spider-Man từ các vũ trụ khác xuất hiện. Peter cố gắng
-                        đưa họ trở về và giải quyết hậu quả. Bộ phim mang đến
-                        nhiều hành động và sự xuất hiện bất ngờ.
-                    </Text>
-                </View>
-            </ScrollView>
+                </ScrollView>
+            )}
             <View style={styles.boxButton}>
                 <Pressable
                     style={[
                         styles.button1,
-                        { flex: 1, backgroundColor: Colors.DEFAULT_WHITE },
+                        {
+                            flex: 1,
+                            backgroundColor: Colors.DEFAULT_WHITE,
+                        },
                     ]}
                 >
                     <Text
@@ -311,7 +338,10 @@ const DetailScreen = ({ navigation }) => {
                     onPress={navigateDetailToCinema}
                     style={[
                         styles.button1,
-                        { flex: 1, backgroundColor: Colors.DARK_RED },
+                        {
+                            flex: 1,
+                            backgroundColor: Colors.DARK_RED,
+                        },
                     ]}
                 >
                     <Text
@@ -383,6 +413,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        marginBottom: 0,
     },
     button1: {
         borderRadius: 30,

@@ -39,6 +39,7 @@ const MovieScreen = ({ navigation }) => {
 
     const handleClickTab = (index) => {
         setClickTab(index);
+        console.log(index);
     };
 
     const handleButtonBack = () => {
