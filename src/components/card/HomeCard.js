@@ -16,7 +16,7 @@ const HomeCard = ({
     const navigation = useNavigation();
 
     const handleButtonClickItem = () => {
-        navigation.navigate('Detail', { id: id_phim });
+        navigation.navigate('Detail', { id: data.id_phim });
     };
 
     return (
@@ -39,7 +39,7 @@ const HomeCard = ({
                 {data.ten_phim}
             </Text>
             <Text style={[styles.time, { fontSize: timeScale, marginLeft: 3 }]}>
-                {data.thoiluong} phút {data.ngaykhoichieu}
+                {data.thoiluong} phút / {data.ngaykhoichieu}
             </Text>
         </Pressable>
     );

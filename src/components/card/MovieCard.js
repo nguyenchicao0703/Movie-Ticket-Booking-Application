@@ -30,17 +30,20 @@ const MovieCard = ({ data, listCase }) => {
     return (
         <Pressable
             style={{
-                flex: 1,
                 backgroundColor: Colors.DARK_BG,
                 marginTop: 25,
                 flexDirection: 'row',
+                borderBottomWidth: 1,
+                borderColor: Colors.OPACITY_MEDIUM_GRAY_LINE,
+                paddingBottom: 25,
+                width: '95%',
+                alignSelf: 'center',
             }}
             onPress={handleButtonMovieCard}
         >
             <Image
                 source={{ uri: data.hinhanh }}
                 style={{
-                    marginLeft: width * 0.035,
                     width: width * 0.32,
                     height: height * 0.28,
                     borderRadius: 5,
@@ -98,7 +101,7 @@ const MovieCard = ({ data, listCase }) => {
                     </Pressable>
                 </LinearGradient>
             </View>
-            <View
+            {/* <View
                 style={{
                     width: '95%',
                     marginTop: 20,
@@ -107,7 +110,7 @@ const MovieCard = ({ data, listCase }) => {
                     alignSelf: 'center',
                     opacity: 0.5,
                 }}
-            />
+            /> */}
         </Pressable>
     );
 };

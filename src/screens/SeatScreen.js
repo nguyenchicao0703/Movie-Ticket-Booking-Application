@@ -7,7 +7,7 @@ import {
     Pressable,
     Image,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
 import { Header, InformationBottom } from '../components';
 
@@ -41,10 +41,6 @@ const TypeSeat = ({ backgroundColor, text }) => {
     );
 };
 
-const STATUS_AVAILABLE = 1;
-const STATUS_BOOKED = 2;
-const STATUS_RESERVED = 3;
-
 const alphabetSeats = [
     'A',
     'B',
@@ -64,9 +60,6 @@ const alphabetSeats = [
     'P',
 ];
 
-const seatSize = 40;
-const seatGaping = 6;
-
 const SeatScreen = ({ navigation }) => {
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [seats, setSeats] = useState(
@@ -74,40 +67,38 @@ const SeatScreen = ({ navigation }) => {
             'AAAAAAA_AAAAAAA/' +
             'AAAAAAA_AAUUAAA/' +
             'AAAAAAA_AAAAAAA/' +
-            'AAAAARR_AAAAAAA/' +
+            'AAAAAAA_AAAAAAA/' +
             'AAAAAAA_AAUUUAA/' +
             'AAAAAAA_AAAAUUU/' +
             'AAUUAAU_AAAAAAA/' +
-            'UUAAAAA_AAUUURR/' +
+            'UUAAAAA_AAUUUAA/' +
             'AAAAAUU_AAAAAAA/' +
-            'AAAARRU_UUUAAAA/' +
+            'AAAAAAU_UUUAAAA/' +
             'AAUUAAA_AAAAAAA/' +
             'AAAAAAA_AUUUUAA/' +
             '________________',
     );
 
+    const STATUS_AVAILABLE = 1;
+    const STATUS_BOOKED = 2;
+    const STATUS_RESERVED = 3;
+
     let seatNumber = 1;
     let alphabetIndexNumber = 0;
+    let seatIndexNumber = 0;
 
-    const handleSeatPress = (seatId, seatIndex, status) => {
-        if (status === STATUS_AVAILABLE) {
-            if (selectedSeats.includes(seatId)) {
-                setSelectedSeats(
-                    selectedSeats.filter((seat) => seat !== seatId),
-                );
-            } else {
-                setSelectedSeats([...selectedSeats, seatId]);
-                const seatsArr = seats.split('');
-                seatsArr[seatIndex] = 'R';
-                const seatsStr = seatsArr.join('');
-                console.log({ seatsStr });
-                setSeats(seatsStr);
-            }
-        }
-    };
-
-    console.log({ selectedSeats });
-    console.log({ seats });
+    const handleSeatPress = useCallback((seatId, seatIndexNumber) => {
+        console.log({ seatIndexNumber });
+        const isSelected = selectedSeats.includes(seatId);
+        setSelectedSeats(
+            isSelected
+                ? selectedSeats.filter((seat) => seat !== seatId)
+                : [...selectedSeats, seatId],
+        );
+        const seatsArr = seats.split('');
+        seatsArr[seatIndexNumber] = isSelected ? 'A' : 'R';
+        setSeats(seatsArr.join(''));
+    });
 
     const navigationSeatToCombo = () => {
         navigation.navigate('Combo');
@@ -120,6 +111,18 @@ const SeatScreen = ({ navigation }) => {
     const handleButtonBack = () => {
         navigation.goBack(null);
     };
+
+    // seats.split(/(\/)/) (array)
+    // ["AAAAAAA_AAAAAAA", "/", "AAAAAAA_AAAAAAA", "/", "AAAAAAA_AAUUAAA", "/", "AAAAAAA_AAAAAAA", "/", "AAAAARR_AAAAAAA", "/", "AAAAAAA_AAUUUAA", "/", "AAAAAAA_AAAAUUU", "/", "AAUUAAU_AAAAAAA", "/", "UUAAAAA_AAUUURR", "/", "AAAAAUU_AAAAAAA", "/", "AAAARRU_UUUAAAA", "/", "AAUUAAA_AAAAAAA", "/", "AAAAAAA_AUUUUAA", "/", "________________"]
+
+    // row (string)
+    // "AAAAAAA_AUUUUAA"
+
+    // row.split('') (array)
+    // ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+
+    // seat (string)
+    // A, U, R, _, /
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
@@ -154,7 +157,7 @@ const SeatScreen = ({ navigation }) => {
                         Màn hình
                     </Text>
                     <View style={styles.layoutSeat}>
-                        {seats.split('/').map((row, rowIndex) => (
+                        {seats.split(/(\/)/).map((row, rowIndex) => (
                             <View key={rowIndex} style={styles.row}>
                                 {row.split('').map((seat, seatIndex) => {
                                     let status = null;
@@ -165,6 +168,7 @@ const SeatScreen = ({ navigation }) => {
                                     } else if (seat === 'R') {
                                         status = STATUS_RESERVED;
                                     } else if (seat === '_') {
+                                        seatIndexNumber++;
                                         return (
                                             <View
                                                 key={seatIndex}
@@ -174,13 +178,20 @@ const SeatScreen = ({ navigation }) => {
                                     } else if (seat === '/') {
                                         alphabetIndexNumber++;
                                         seatNumber = 1;
+                                        seatIndexNumber++;
                                         return;
                                     }
+
+                                    seatNumber < 10
+                                        ? (seatNumber = '0' + seatNumber)
+                                        : seatNumber;
 
                                     const seatId =
                                         alphabetSeats[alphabetIndexNumber] +
                                         seatNumber;
                                     seatNumber++;
+                                    const seatNumberId = seatIndexNumber;
+                                    seatIndexNumber++;
 
                                     return (
                                         <TouchableOpacity
@@ -197,13 +208,10 @@ const SeatScreen = ({ navigation }) => {
                                             onPress={() =>
                                                 handleSeatPress(
                                                     seatId,
-                                                    seatIndex,
-                                                    status,
+                                                    seatNumberId,
                                                 )
                                             }
-                                            disabled={
-                                                status !== STATUS_AVAILABLE
-                                            }
+                                            disabled={status === STATUS_BOOKED}
                                         >
                                             <Text style={styles.seatText}>
                                                 {seatId}
@@ -251,11 +259,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     seat: {
-        width: seatSize,
-        height: seatSize,
-        margin: seatGaping,
+        width: 40,
+        height: 40,
+        margin: 6,
         justifyContent: 'center',
         alignItems: 'center',
+        borderRadius: 0,
     },
     seatText: {
         fontSize: 14,
