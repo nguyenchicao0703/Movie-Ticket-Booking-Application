@@ -123,8 +123,11 @@ const LoginScreen = ({}) => {
             } else {
                 const errorMessage = data.msg || 'An error occurred.';
                 console.log(data.msg);
+                console.log(error);
             }
-        } catch (error) {}
+        } catch (error) {
+            console.log('mất kết nói sever');
+        }
     };
 
     const handleGoogleSignIn = async () => {
@@ -257,37 +260,33 @@ const LoginScreen = ({}) => {
                         </Pressable>
 
                         <View style={styles.groupLine}>
-                            <View style={styles.line} />
-                            <View>
+                            <Text
+                                style={[
+                                    styles.textLine,
+                                    { fontSize: height * 0.018 },
+                                ]}
+                            >
+                                bạn chưa có tài khoản?{' '}
+                            </Text>
+                            <Pressable
+                                onPress={clickRegister}
+                                style={{
+                                    alignItems: 'center',
+                                }}
+                            >
                                 <Text
                                     style={[
                                         styles.textLine,
-                                        { fontSize: height * 0.015 },
+                                        {
+                                            fontSize: height * 0.018,
+                                            color: Colors.LIGHT_RED,
+                                        },
                                     ]}
                                 >
-                                    hoặc
+                                    Đăng Ký
                                 </Text>
-                            </View>
-                            <View style={styles.line} />
+                            </Pressable>
                         </View>
-
-                        <Pressable
-                            onPress={() => clickRegister()}
-                            style={[
-                                styles.buttonRegister,
-                                { height: height * 0.06 },
-                            ]}
-                        >
-                            <Text
-                                style={{
-                                    color: Colors.LIGHT_GRAY,
-                                    fontSize: height * 0.02,
-                                    fontFamily: Fonts.Regular,
-                                }}
-                            >
-                                Đăng kí tài khoản
-                            </Text>
-                        </Pressable>
                     </View>
                 </View>
             </ImageBackground>
@@ -322,14 +321,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: Colors.LIGHT_GRAY,
         fontFamily: Fonts.Light,
-        fontSize: 12,
-        margin: 10,
     },
     groupLine: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 5,
         marginTop: 15,
+        justifyContent: 'center',
     },
     buttonRegister: {
         backgroundColor: 'transparent',
