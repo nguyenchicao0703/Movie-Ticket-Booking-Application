@@ -8,6 +8,8 @@ import {
     Pressable,
     Image,
     Modal,
+    Alert,
+    ToastAndroid,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Colors, Fonts, Images } from '../constants';
@@ -17,7 +19,10 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-
+import usersAPI from '../api/usersAPI';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUsers, fetchUsersMail } from '../redux/slice/usersSlice';
+import { usersSelector } from '../redux/selector.js/usersSelector';
 const LoginScreen = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [userName, setUserName] = useState('');
@@ -26,32 +31,41 @@ const LoginScreen = () => {
     const [phone, setPhone] = useState('');
     const navigation = useNavigation();
     const [error, setError] = useState('');
+    const dispatch = useDispatch();
 
-    //Login with Phone Number
+    const response = useSelector(usersSelector);
+    // console.log('selector user', response);
+    // Login with Phone Number
+    // console.log(response.users.status, response.users.msg, response);
+
     const loginWithPhoneNumber = async () => {
+        dispatch(fetchUsers(phone));
+        const status = response.users.status;
+        const msg = response.users.msg;
+        const data = response.users.data;
         try {
-            const apiUrl = 'http://10.0.2.2:1234/api/dang-nhap-sdt.php';
-            const response = await axios.post(apiUrl, { phone });
             //handle the API response
-            const { status, msg, data } = response.data;
             if (status) {
                 //login successfuly
                 console.log('Đăng nhập thành công:', data);
-                navigation.navigate('Drawer');
+                // navigation.navigate('Drawer');
+                ToastAndroid.show('đăng nhập thành công', ToastAndroid.LONG);
             } else {
                 //faile login
-                if (phone.trim() === '') {
+                if (String(phone).trim() === '') {
                     setError('Không được để trống số điện thoại.');
+                    return;
                 }
-
-                if (!phone.startsWith('0')) {
+                if (!String(phone).startsWith('0')) {
                     setError('Số điện thoại phải bắt đầu bằng 0.');
+                    return;
                 }
                 if (!status) {
-                    setError('Tài khoản không tồn tại hoặc sai số điện thoại!');
+                    setError('không tồn tại số điện thoại');
+
+                    return;
                 }
                 console.log('Login faild', msg);
-                return;
             }
         } catch (error) {
             console.log('error logging in', error);
@@ -59,7 +73,7 @@ const LoginScreen = () => {
     };
 
     const handleLoginWithPhoneNum = () => {
-        loginWithPhoneNumber();
+        loginWithPhoneNumber(phone);
     };
 
     //Login with Google Email
@@ -76,45 +90,33 @@ const LoginScreen = () => {
         });
     }, []);
 
-    const loginOrSendConfirmation = async (email) => {
+    const handleLoginWithEmail = async (email) => {
         try {
-            const response = await fetch(
-                'http://10.0.2.2:1234/api/dang-nhap-gmail.php',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email }),
-                },
-            );
+            dispatch(fetchUsersMail(email));
 
-            const data = await response.json();
-
-            if (response.ok) {
-                if (data.status) {
-                    if (data.data) {
-                        const user = data.data;
-                        console.log(user);
+            if (response) {
+                if (response.users.status) {
+                    if (response.users.data) {
+                        const user = response.users.data;
                         console.log('Logged in successfully');
-                        navigation.navigate('Drawer');
-                    }
-                    if (data.data === null) {
+                        console.log(user);
+
+                        // navigation.navigate('Drawer');
+                    } else {
                         console.log('Please confirm email');
                         setShowModal(true);
                         setModalTimer(
                             setTimeout(() => setShowModal(false), 3000),
                         );
-                        // Close the modal after 10 seconds
+                        // Close the modal after 3 seconds
                     }
-                    // Login successful, data contains user information
                 }
             } else {
-                const errorMessage = data.msg || 'An error occurred.';
-                console.log(data.msg);
-                console.log(error);
+                console.log('An error occurred.');
             }
-        } catch (error) {}
+        } catch (error) {
+            console.log('Error logging in with email:', error);
+        }
     };
 
     const handleGoogleSignIn = async () => {
@@ -126,10 +128,10 @@ const LoginScreen = () => {
             const { user } = await auth().signInWithCredential(
                 googleCredential,
             );
-            const mail = user.email;
+            const email = user.email;
             setUserInfo(user);
             setUserName(user.displayName);
-            await loginOrSendConfirmation(mail);
+            await handleLoginWithEmail(email);
         } catch (error) {
             // Handle Google Sign-In error
             // Display appropriate error message to the user
