@@ -4,8 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header, InformationBottom } from '../components';
 import ComboList from '../components/list/ComboList';
 import { Colors, SelectCombo } from '../constants';
-import axiosClient from '../api/axiosClient';
-import axios from 'axios';
+import comboAPI from '../api/comboAPI';
 
 const ComboScreen = ({ navigation }) => {
     const [data1, setData1] = useState();
@@ -21,16 +20,14 @@ const ComboScreen = ({ navigation }) => {
     };
 
     useEffect(() => {
-        ComboRepon();
+        fetchData();
     }, []);
 
-    const ComboRepon = async () => {
+    const fetchData = async () => {
         try {
-            const response = await axios.get(
-                'http://127.0.0.1:1234/api/Danh-sach-combo.php',
-                { timeout: 3000 },
-            );
-            setData1(response.data.data);
+            const response = await comboAPI.getAll();
+            console.log(response.data);
+            setData1(response.data);
         } catch (error) {
             console.error(error);
         }
