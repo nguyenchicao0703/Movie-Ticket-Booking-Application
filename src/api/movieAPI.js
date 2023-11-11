@@ -1,8 +1,10 @@
 import axiosClient from './axiosClient';
 
 // Hàm gửi yêu cầu GET
-export const get = (url) => {
-    return axiosClient('GET', url);
+const movieAPI = {
+    getAll: () => {
+        return axiosClient.get('/Danh-sach-phim.php');
+    },
 };
 
-export default { get };
+export default movieAPI;

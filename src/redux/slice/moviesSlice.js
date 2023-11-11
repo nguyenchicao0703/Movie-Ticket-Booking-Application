@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { get } from '../../api/movieAPI';
+import movieAPI, { getAllMovie } from '../../api/movieAPI';
 
 // Slice của reducer và actions
 const moviesSlice = createSlice({
@@ -32,7 +32,7 @@ export default moviesSlice;
 // Action thunk để lấy danh sách phim từ API
 export const fetchMovies = createAsyncThunk('movies/fetchMovies', async () => {
     try {
-        const response = await get('/Danh-sach-phim.php');
+        const response = await movieAPI.getAll();
         const data = response.data;
         // console.log('Fetch movies successfully: ', response.data.data);
         return data;
