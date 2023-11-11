@@ -10,8 +10,7 @@ import {
     ProfileScreen,
     RegisterScreen,
     SeatScreen,
-    ShowtimeCinemaScreen,
-    ShowtimeMovieScreen,
+    ShowtimesScreen,
     TicketScreen,
     WelcomeScreen,
     UpdateProfileScreen,
@@ -47,15 +46,7 @@ const AppDrawer = () => {
             <Drawer.Screen name="Discount" component={DiscountScreen} />
             <Drawer.Screen name="Bill" component={BillScreen} />
             <Drawer.Screen name="Profile" component={ProfileScreen} />
-
-            <Drawer.Screen
-                name="ShowtimeMovie"
-                component={ShowtimeMovieScreen}
-            />
-            <Drawer.Screen
-                name="ShowtimeCinema"
-                component={ShowtimeCinemaScreen}
-            />
+            <Drawer.Screen name="Showtimes" component={ShowtimesScreen} />
             <Drawer.Screen
                 name="UpdateProfile"
                 component={UpdateProfileScreen}
@@ -69,7 +60,7 @@ const Navigator = () => {
 
     return (
         <Stack.Navigator
-            initialRouteName="Login"
+            initialRouteName="Drawer"
             screenOptions={{ headerShown: false }}
         >
             <Stack.Screen name="Drawer" component={AppDrawer} />

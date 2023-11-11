@@ -1,5 +1,5 @@
 import { Text, View, Image } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Colors, Fonts, SelectShowTimeImage } from '../constants';
 import {
     CalendarList,
@@ -8,6 +8,7 @@ import {
     MovieTitle,
 } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
+import showtimesAPI from '../api/showtimesAPI';
 
 const Cinema = [
     { id: 1, cinema: 'MTP Gò Vấp' },
@@ -15,7 +16,10 @@ const Cinema = [
     { id: 3, cinema: 'MTP Tân Phú' },
 ];
 
-const ShowtimeMovieScreen = ({ navigation }) => {
+const ShowtimeMovieScreen = ({ navigation, route }) => {
+    const { idMovie, nameMovie } = route.params;
+    console.log('id movie', idMovie);
+
     const handleButtonBack = () => {
         navigation.goBack(null);
     };
@@ -23,6 +27,16 @@ const ShowtimeMovieScreen = ({ navigation }) => {
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
+
+    useEffect(() => {
+        const handleShowtimeMovies = async () => {
+            const response = await showtimesAPI.getAll(idMovie);
+            console.log('response data showtimes', response.data);
+            return response.data;
+        };
+
+        handleShowtimeMovies();
+    }, []);
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
@@ -45,7 +59,7 @@ const ShowtimeMovieScreen = ({ navigation }) => {
                     Chọn ngày
                 </Text>
                 <CalendarList />
-                <MovieTitle title={'SPIDER-MAN No Way Home'} />
+                <MovieTitle title={nameMovie} />
                 {Cinema.map((value, index) => (
                     <View key={index}>
                         <View

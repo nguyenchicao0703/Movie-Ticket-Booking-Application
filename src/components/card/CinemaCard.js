@@ -7,20 +7,17 @@ import {
 } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../../constants';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const CinemaCard = ({ data }) => {
     const navigation = useNavigation();
-    const route = useRoute();
-    // const { caseItem } = route.params;
-    const { width, height, fontScale } = useWindowDimensions();
+    const { height, fontScale } = useWindowDimensions();
     const fontSize = fontScale * 18;
 
     const handleCinemaItemClick = () => {
-        // console.log(caseItem);
-        navigation.navigate('ShowtimeCinema', {
-            cinemaId: data.id,
-            cinemaTitle: data.name,
+        navigation.navigate('Showtimes', {
+            idCinema: data.id_rap,
+            idTitle: data.ten_rap,
         });
     };
 
@@ -29,7 +26,7 @@ const CinemaCard = ({ data }) => {
             <View style={[styles.container, { height: height * 0.08 }]}>
                 <Text style={[styles.brandMTB, { fontSize }]}>MTB</Text>
                 <Text style={[styles.cinemaName, { fontSize }]}>
-                    {data.name}
+                    {data.ten_rap}
                 </Text>
             </View>
         </Pressable>

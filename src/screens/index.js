@@ -12,6 +12,7 @@ import DiscountScreen from './DiscountScreen';
 import DetailScreen from './DetailScreen';
 import ShowtimeMovieScreen from './ShowtimeMovieScreen';
 import ShowtimeCinemaScreen from './ShowtimeCinemaScreen';
+import ShowtimesScreen from './ShowtimesScreen';
 import SeatScreen from './SeatScreen';
 import UpdateProfileScreen from './UpdateProfileScreen';
 import PaymentScreen from './PaymentScreen';
@@ -33,6 +34,7 @@ export {
     DetailScreen,
     ShowtimeMovieScreen,
     ShowtimeCinemaScreen,
+    ShowtimesScreen,
     SeatScreen,
     UpdateProfileScreen,
     PaymentScreen,

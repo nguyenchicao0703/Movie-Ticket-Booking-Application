@@ -1,12 +1,13 @@
 import { StyleSheet, View, Text } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CinemaList, Header } from '../components';
 import { Colors, Fonts } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
-import Cinemas from '../constants/Cinemas';
-import { CinemaAPI } from '../api';
+import cinemaAPI from '../api/cinemaAPI';
 
 const CinemaScreen = ({ navigation }) => {
+    const [data, setData] = useState([]);
+
     const handleButtonBack = () => {
         navigation.goBack(null);
     };
@@ -15,6 +16,19 @@ const CinemaScreen = ({ navigation }) => {
         navigation.openDrawer();
     };
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await cinemaAPI.getAll();
+                setData(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <View style={styles.container}>
             <Header
@@ -22,15 +36,11 @@ const CinemaScreen = ({ navigation }) => {
                 onButtonBack={handleButtonBack}
                 onButtonMenu={handleButtonMenu}
             />
+            <View style={styles.tabBottomText}>
+                <Text style={styles.text}>KHU VỰC TP.HCM</Text>
+            </View>
             <ScrollView>
-                <View style={styles.tabBottomText}>
-                    <Text style={styles.text}>GỢI Ý CHO BẠN</Text>
-                </View>
-                <CinemaAPI />
-                <View style={styles.tabBottomText}>
-                    <Text style={styles.text}>KHU VỰC TP.HCM</Text>
-                </View>
-                <CinemaAPI />
+                <CinemaList data={data} />
             </ScrollView>
         </View>
     );

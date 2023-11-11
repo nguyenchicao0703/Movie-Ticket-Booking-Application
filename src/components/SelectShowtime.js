@@ -12,17 +12,6 @@ const SelectShowtime = ({ marginTop }) => {
 
     return (
         <>
-            <Text
-                style={{
-                    color: Colors.DEFAULT_WHITE,
-                    fontSize: 15,
-                    fontFamily: Fonts.SemiBold,
-                    marginLeft: 15,
-                    marginTop,
-                }}
-            >
-                Chọn thời gian
-            </Text>
             <FlatList
                 style={{ alignSelf: 'center' }}
                 data={ShowtimeMovie}
