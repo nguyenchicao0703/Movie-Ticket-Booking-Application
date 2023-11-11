@@ -7,7 +7,7 @@ const ComboList = ({ data }) => {
     return (
         <FlatList
             data={data}
-            extraData={(item) => item.id}
+            extraData={(item) => item.id_combo}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => <ComboCard data={item} />}
         />

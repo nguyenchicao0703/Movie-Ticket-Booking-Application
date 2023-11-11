@@ -33,7 +33,7 @@ const ComboCard = ({ data }) => {
                     borderRadius: 10,
                     marginTop: 15,
                 }}
-                source={ComboImage[0].image}
+                source={{ uri: data.hinhanh }}
             />
             <View
                 style={{
@@ -44,17 +44,27 @@ const ComboCard = ({ data }) => {
                 }}
             >
                 <Text style={[styles.comboName, { fontSize: fontScale * 15 }]}>
-                    {data.name}
+                    {data.tensanpham}
                 </Text>
                 <Text
                     style={[
                         styles.comboContent,
                         { fontSize: textSizeComboContent },
                     ]}
-                    numberOfLines={5}
+                    numberOfLines={1}
                 >
-                    {data.content}
+                    {data.giasanpham}
                 </Text>
+                <Text
+                    style={[
+                        styles.comboContent,
+                        { fontSize: textSizeComboContent },
+                    ]}
+                    numberOfLines={3}
+                >
+                    {data.mota}
+                </Text>
+
                 <View
                     style={{
                         flexDirection: 'row',

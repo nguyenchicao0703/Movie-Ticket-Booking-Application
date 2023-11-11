@@ -1,61 +1,27 @@
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Colors, Fonts } from '../constants';
 import { Header } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
-
-const discount = [
-    {
-        id: 1,
-        idDiscount: 'qoecakfwyfnfa',
-        outOfDateDiscount: '30/12/2024',
-        amountDiscount: '20.000',
-    },
-    {
-        id: 2,
-        idDiscount: 'qoecakfwyfnfa',
-        outOfDateDiscount: '30/12/2024',
-        amountDiscount: '20.000',
-    },
-    {
-        id: 3,
-        idDiscount: 'qoecakfwyfnfa',
-        outOfDateDiscount: '30/12/2024',
-        amountDiscount: '20.000',
-    },
-    {
-        id: 4,
-        idDiscount: 'qoecakfwyfnfa',
-        outOfDateDiscount: '30/12/2024',
-        amountDiscount: '20.000',
-    },
-    {
-        id: 5,
-        idDiscount: 'qoecakfwyfnfa',
-        outOfDateDiscount: '30/12/2024',
-        amountDiscount: '20.000',
-    },
-    {
-        id: 6,
-        idDiscount: 'qoecakfwyfnfa',
-        outOfDateDiscount: '30/12/2024',
-        amountDiscount: '20.000',
-    },
-    {
-        id: 7,
-        idDiscount: 'qoecakfwyfnfa',
-        outOfDateDiscount: '30/12/2024',
-        amountDiscount: '20.000',
-    },
-];
+import axiosClient from '../api/axiosClient';
+import discountAPI from '../api/discountAPI';
 
 const DiscountScreen = ({ navigation }) => {
+    const [data, setData] = useState();
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
 
     const handleButtonBack = () => {
         navigation.goBack(null);
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);
+    const fetchData = async () => {
+        const response = await discountAPI.getbyID('2');
+        console.log(response.data);
+        setData(response.data);
     };
 
     return (
@@ -76,8 +42,8 @@ const DiscountScreen = ({ navigation }) => {
                 </Text>
 
                 <ScrollView style={styles.scroll}>
-                    {discount.map((value, index) => (
-                        <View key={index} style={styles.detail}>
+                    {data.map((item) => (
+                        <View key={item.id_giamgia} style={styles.detail}>
                             <View style={styles.detailLeft}>
                                 <Text style={styles.detailTextTitle}>
                                     Mã giảm giá:
@@ -94,19 +60,19 @@ const DiscountScreen = ({ navigation }) => {
                                     style={styles.detailText}
                                     numberOfLines={1}
                                 >
-                                    {value.idDiscount}
+                                    {item.magiamgia}
                                 </Text>
                                 <Text
                                     style={styles.detailText}
                                     numberOfLines={1}
                                 >
-                                    {value.outOfDateDiscount}
+                                    {item.ngayhethan}
                                 </Text>
                                 <Text
                                     style={styles.detailText}
                                     numberOfLines={1}
                                 >
-                                    {value.amountDiscount} đ
+                                    {item.sotiengiam} đ
                                 </Text>
                             </View>
                         </View>
