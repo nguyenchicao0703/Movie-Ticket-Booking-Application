@@ -23,7 +23,7 @@ const MovieCard = ({ data, listCase }) => {
 
     const navigateMovieToShowtimeMovie = () => {
         listCase !== 'TicketHistory'
-            ? navigation.navigate('Showtimes', {
+            ? navigation.navigate('ShowtimeMovie', {
                   idMovie: data.id_phim,
                   nameMovie: data.ten_phim,
               })

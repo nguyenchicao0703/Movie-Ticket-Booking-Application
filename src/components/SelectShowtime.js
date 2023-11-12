@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View, Pressable, FlatList } from 'react-native';
+import { Text, View, Pressable, FlatList } from 'react-native';
 import React from 'react';
-import { Colors, Fonts, ShowtimeMovie } from '../constants';
+import { Colors, Fonts } from '../constants';
 import { useNavigation } from '@react-navigation/native';
 
-const SelectShowtime = ({ marginTop }) => {
+const SelectShowtime = ({ marginTop, data }) => {
     const navigation = useNavigation();
 
     const handleButtonClickItem = () => {
@@ -12,9 +12,19 @@ const SelectShowtime = ({ marginTop }) => {
 
     return (
         <>
+            <Text
+                style={{
+                    color: Colors.DEFAULT_WHITE,
+                    fontSize: 15,
+                    fontFamily: Fonts.SemiBold,
+                    marginLeft: 15,
+                    marginTop,
+                }}
+            >
+                Chọn thời gian
+            </Text>
             <FlatList
-                style={{ alignSelf: 'center' }}
-                data={ShowtimeMovie}
+                data={data}
                 extraData={(item) => item.id}
                 numColumns={3}
                 renderItem={({ item }) => (
@@ -45,7 +55,7 @@ const SelectShowtime = ({ marginTop }) => {
                                     textAlign: 'center',
                                 }}
                             >
-                                {item.time}
+                                {data[0].giochieu}
                             </Text>
                         </Pressable>
                     </View>
@@ -56,5 +66,3 @@ const SelectShowtime = ({ marginTop }) => {
 };
 
 export default SelectShowtime;
-
-const styles = StyleSheet.create({});

@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { Header, MovieList } from '../components';
 import { Colors, Fonts } from '../constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { moviesRemainingSelector } from '../redux/selector.js/moviesSelector';
+import { moviesListSelector } from '../redux/selectors';
 import { fetchMovies } from '../redux/slice/moviesSlice';
 
 const TopTabsCategory = [
@@ -25,7 +25,7 @@ const MovieScreen = ({ navigation }) => {
     const [clickTab, setClickTab] = useState(0);
 
     const dispatch = useDispatch();
-    const movies = useSelector(moviesRemainingSelector);
+    const movies = useSelector(moviesListSelector);
 
     const filterTypePremiere = movies.filter((item) =>
         clickTab === 0
@@ -39,7 +39,6 @@ const MovieScreen = ({ navigation }) => {
 
     const handleClickTab = (index) => {
         setClickTab(index);
-        console.log(index);
     };
 
     const handleButtonBack = () => {

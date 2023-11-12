@@ -1,5 +1,5 @@
 import { Text, View, Image } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Colors, Fonts, SelectShowTimeImage } from '../constants';
 import {
     CalendarList,
@@ -10,15 +10,11 @@ import {
 import { ScrollView } from 'react-native-virtualized-view';
 import showtimesAPI from '../api/showtimesAPI';
 
-const Cinema = [
-    { id: 1, cinema: 'MTP Gò Vấp' },
-    { id: 2, cinema: 'MTP Quận 1' },
-    { id: 3, cinema: 'MTP Tân Phú' },
-];
-
 const ShowtimeMovieScreen = ({ navigation, route }) => {
     const { idMovie, nameMovie } = route.params;
     console.log('id movie', idMovie);
+    const [cinema, setCinema] = useState('');
+    const [dataShowtimes, setDataShowtimes] = useState([]);
 
     const handleButtonBack = () => {
         navigation.goBack(null);
@@ -30,7 +26,15 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
 
     useEffect(() => {
         const handleShowtimeMovies = async () => {
-            const response = await showtimesAPI.getAll(idMovie);
+            const responseCinema = await showtimesAPI.getIdCinema(idMovie);
+            console.log('idCinema', responseCinema);
+            setCinema(responseCinema.data[0].ten_rap);
+            const response = await showtimesAPI.getAll(
+                idMovie,
+                responseCinema.data[0].id_rap,
+                2023,
+            );
+            setDataShowtimes(response.data);
             console.log('response data showtimes', response.data);
             return response.data;
         };
@@ -60,32 +64,30 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                 </Text>
                 <CalendarList />
                 <MovieTitle title={nameMovie} />
-                {Cinema.map((value, index) => (
-                    <View key={index}>
-                        <View
+                <View>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            marginLeft: 15,
+                            marginTop: 12,
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Image source={SelectShowTimeImage[0].image} />
+                        <Text
                             style={{
-                                flexDirection: 'row',
-                                marginLeft: 15,
-                                marginTop: 12,
-                                alignItems: 'center',
+                                color: Colors.DEFAULT_WHITE,
+                                fontSize: 18,
+                                fontFamily: Fonts.Regular,
+                                marginLeft: 10,
+                                marginTop: 3,
                             }}
                         >
-                            <Image source={SelectShowTimeImage[0].image} />
-                            <Text
-                                style={{
-                                    color: Colors.DEFAULT_WHITE,
-                                    fontSize: 18,
-                                    fontFamily: Fonts.Regular,
-                                    marginLeft: 10,
-                                    marginTop: 3,
-                                }}
-                            >
-                                {value.cinema}
-                            </Text>
-                        </View>
-                        <SelectShowtime marginTop={3} />
+                            {cinema}
+                        </Text>
                     </View>
-                ))}
+                    <SelectShowtime marginTop={3} data={dataShowtimes} />
+                </View>
             </ScrollView>
         </View>
     );

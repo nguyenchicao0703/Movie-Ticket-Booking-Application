@@ -38,6 +38,7 @@ const RegisterScreen = ({ navigation }) => {
                 if (!response.ok) {
                     throw new Error('Registration failed');
                 }
+                console.log(response);
                 return response.json();
             })
             .catch((error) => {

@@ -16,6 +16,8 @@ import {
     UpdateProfileScreen,
     ComboScreen,
     PaymentScreen,
+    ShowtimeCinemaScreen,
+    ShowtimeMovieScreen,
 } from '../screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -47,6 +49,14 @@ const AppDrawer = () => {
             <Drawer.Screen name="Bill" component={BillScreen} />
             <Drawer.Screen name="Profile" component={ProfileScreen} />
             <Drawer.Screen name="Showtimes" component={ShowtimesScreen} />
+            <Drawer.Screen
+                name="ShowtimeCinema"
+                component={ShowtimeCinemaScreen}
+            />
+            <Drawer.Screen
+                name="ShowtimeMovie"
+                component={ShowtimeMovieScreen}
+            />
             <Drawer.Screen
                 name="UpdateProfile"
                 component={UpdateProfileScreen}

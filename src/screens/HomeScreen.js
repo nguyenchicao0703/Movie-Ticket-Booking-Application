@@ -15,7 +15,7 @@ import { HomeList } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovies } from '../redux/slice/moviesSlice';
-import { moviesRemainingSelector } from '../redux/selector.js/moviesSelector';
+import { moviesListSelector } from '../redux/selectors';
 
 const bottomTabs = [
     { id: 1, image: 1, title: 'Phim', tab: 'Movie' },
@@ -25,15 +25,13 @@ const bottomTabs = [
     { id: 5, image: 3, title: 'Quản lí', tab: 'Profile' },
 ];
 
-const moviesPresent = 1;
-const movieSpecial = 2;
-
 const HomeScreen = ({ navigation }) => {
     const { height, fontScale } = useWindowDimensions();
     const textTitle = fontScale * 22;
 
     const dispatch = useDispatch();
-    const movies = useSelector(moviesRemainingSelector);
+    const movies = useSelector(moviesListSelector);
+    // console.log({ movies });
 
     const stackScreen = (router) => {
         navigation.navigate(router);
@@ -42,6 +40,9 @@ const HomeScreen = ({ navigation }) => {
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
+
+    const dataMoviePresent = movies.filter((item) => item.loaikc === 1);
+    const dataMovieSpecial = movies.filter((item) => item.loaikc === 2);
 
     useEffect(() => {
         dispatch(fetchMovies());
@@ -118,7 +119,7 @@ const HomeScreen = ({ navigation }) => {
                 >
                     Phim đang chiếu
                 </Text>
-                <HomeList data={movies} typePremiere={moviesPresent} />
+                <HomeList data={dataMoviePresent} />
                 <Text
                     style={[
                         styles.title,
@@ -127,7 +128,7 @@ const HomeScreen = ({ navigation }) => {
                 >
                     Phim sắp chiếu
                 </Text>
-                <HomeList data={movies} typePremiere={movieSpecial} />
+                <HomeList data={dataMovieSpecial} />
             </ScrollView>
             {/* bottom tab */}
             <LinearGradient

@@ -15,7 +15,7 @@ const CinemaCard = ({ data }) => {
     const fontSize = fontScale * 18;
 
     const handleCinemaItemClick = () => {
-        navigation.navigate('Showtimes', {
+        navigation.navigate('ShowtimeCinema', {
             idCinema: data.id_rap,
             idTitle: data.ten_rap,
         });

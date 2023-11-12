@@ -52,7 +52,7 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
                 {Movie.map((value, index) => (
                     <View key={index}>
                         <MovieTitle title={'SPIDER-MAN No Way Home'} />
-                        <SelectShowtime marginTop={15} />
+                        <SelectShowtime marginTop={3} />
                     </View>
                 ))}
             </ScrollView>
