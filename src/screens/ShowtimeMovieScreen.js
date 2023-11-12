@@ -12,7 +12,6 @@ import showtimesAPI from '../api/showtimesAPI';
 
 const ShowtimeMovieScreen = ({ navigation, route }) => {
     const { idMovie, nameMovie } = route.params;
-    console.log('id movie', idMovie);
     const [cinema, setCinema] = useState('');
     const [dataShowtimes, setDataShowtimes] = useState([]);
 

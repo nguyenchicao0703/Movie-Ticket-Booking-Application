@@ -2,8 +2,19 @@ import { Text, Pressable } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../../constants';
 
+const caseDay = {
+    Monday: 'Th 2',
+    Tuesday: 'Th 3',
+    Wednesday: 'Th 4',
+    Thursday: 'Th 5',
+    Friday: 'Th 6',
+    Saturday: 'Th 7',
+    Sunday: 'CN',
+};
+
 const CalendarCard = ({
-    data,
+    day,
+    date,
     isFirst,
     index,
     selectedDate,
@@ -15,6 +26,8 @@ const CalendarCard = ({
     const handleSelectDate = (index) => {
         onSelectedDate(index);
     };
+
+    const _day = caseDay[day] || '';
 
     return (
         <Pressable
@@ -50,7 +63,7 @@ const CalendarCard = ({
                     fontFamily: Fonts.Bold,
                 }}
             >
-                {data.date}
+                {_day}
             </Text>
             <Text
                 style={{
@@ -59,7 +72,7 @@ const CalendarCard = ({
                     fontFamily: Fonts.Bold,
                 }}
             >
-                {data.day}
+                {date}
             </Text>
         </Pressable>
     );
