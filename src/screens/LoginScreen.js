@@ -8,7 +8,6 @@ import {
     Pressable,
     Image,
     Modal,
-    Alert,
     ToastAndroid,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
@@ -17,27 +16,23 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthAccountButton, BackButton, Input, TextTitle } from '../components';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
-import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import usersAPI from '../api/usersAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, fetchUsersMail } from '../redux/slice/usersSlice';
-import { usersSelector } from '../redux/selector.js/usersSelector';
+import { usersSelector } from '../redux/selectors';
+
 const LoginScreen = () => {
-    const [userInfo, setUserInfo] = useState(null);
     const [userName, setUserName] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [modalTimer, setModalTimer] = useState(null);
     const [phone, setPhone] = useState('');
     const navigation = useNavigation();
     const [error, setError] = useState('');
+
     const dispatch = useDispatch();
-
     const response = useSelector(usersSelector);
-    // console.log('selector user', response);
-    // Login with Phone Number
-    // console.log(response.users.status, response.users.msg, response);
 
+    // Login with Phone Number
     const loginWithPhoneNumber = async () => {
         dispatch(fetchUsers(phone));
         const status = response.users.status;
@@ -48,7 +43,7 @@ const LoginScreen = () => {
             if (status) {
                 //login successfuly
                 console.log('Đăng nhập thành công:', data);
-                // navigation.navigate('Drawer');
+                navigation.navigate('Drawer');
                 ToastAndroid.show('đăng nhập thành công', ToastAndroid.LONG);
             } else {
                 //faile login
@@ -100,8 +95,7 @@ const LoginScreen = () => {
                         const user = response.users.data;
                         console.log('Logged in successfully');
                         console.log(user);
-
-                        // navigation.navigate('Drawer');
+                        navigation.navigate('Drawer');
                     } else {
                         console.log('Please confirm email');
                         setShowModal(true);
@@ -129,7 +123,6 @@ const LoginScreen = () => {
                 googleCredential,
             );
             const email = user.email;
-            setUserInfo(user);
             setUserName(user.displayName);
             await handleLoginWithEmail(email);
         } catch (error) {
@@ -190,14 +183,6 @@ const LoginScreen = () => {
                 <TextTitle text={'Đăng nhập'} />
                 <View style={styles.container}>
                     <View style={styles.formLogin}>
-                        {/* <View style={{ flexDirection: 'row', width: '95%' }}>
-                            <Input label={'Email'} />
-                        </View> */}
-
-                        {/* <AuthAccountButton
-                            text="Đăng nhập"
-                            onPress={clickLogin}
-                        /> */}
                         <View
                             style={{
                                 flexDirection: 'column',

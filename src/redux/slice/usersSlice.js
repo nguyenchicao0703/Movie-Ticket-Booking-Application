@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import loginAPI from '../../api/usersAPI';
 import usersAPI from '../../api/usersAPI';
+
 // Slice của reducer và actions
 const usersSlice = createSlice({
     name: 'users',
@@ -20,7 +20,7 @@ const usersSlice = createSlice({
     },
 });
 
-export default usersSlice;
+export default usersSlice.reducer;
 
 // Action thunk để lấy danh sách phim từ API
 export const fetchUsers = createAsyncThunk('users/fetchUser', async (phone) => {
@@ -28,8 +28,6 @@ export const fetchUsers = createAsyncThunk('users/fetchUser', async (phone) => {
         const response = await usersAPI.postUserWithPhoneNumber(phone);
         const user = response;
         // console.log(user);
-
-        // console.log('Fetch movies successfully: ', response.data.data);
         return user;
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -44,8 +42,6 @@ export const fetchUsersMail = createAsyncThunk(
             const response = await usersAPI.postUserWithMail(email);
             const user = response;
             // console.log(user);
-
-            // console.log('Fetch movies successfully: ', response.data.data);
             return user;
         } catch (error) {
             console.error('Error fetching users:', error);
