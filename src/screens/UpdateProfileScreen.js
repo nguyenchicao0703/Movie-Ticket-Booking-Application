@@ -8,7 +8,7 @@ import {
     useWindowDimensions,
     Modal,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Colors,
     DrawerImage,
@@ -26,10 +26,12 @@ import {
 } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { useSelector } from 'react-redux';
+import { usersSelector } from '../redux/selectors';
 
 const UpdateProfileScreen = () => {
     const navigation = useNavigation();
-
+    const responseUser = useSelector(usersSelector);
     const { width, height } = useWindowDimensions();
     const [date, setDate] = useState(new Date());
     const [showPicker, setshowPicker] = useState(false);
@@ -37,10 +39,13 @@ const UpdateProfileScreen = () => {
     const toggleDatepicker = () => {
         setshowPicker(!showPicker);
     };
-
+    const data = responseUser.users.data;
+    console.log(data);
+    const [first, setfirst] = useState();
+    // console.log(responseUser);
     const onChange = ({ type }, selectedDate) => {
         if (type == 'set') {
-            const currentDate = selectedDate;
+            const currentDate = data.bod;
             setDate(currentDate);
 
             if (Platform.OS === 'android') {
@@ -86,6 +91,7 @@ const UpdateProfileScreen = () => {
         });
     };
     const [modalVisible, setModalVisible] = useState(false);
+
     return (
         <View
             style={{
@@ -203,16 +209,20 @@ const UpdateProfileScreen = () => {
                         marginTop: 15,
                     }}
                 >
-                    Nguyễn Chí Cao
+                    {data.name}
                 </Text>
             </View>
 
             <View style={styles.groupInput}>
                 <View style={styles.containerInput}>
-                    <Input label={'Họ và tên'} />
+                    <Input label={'Họ và tên'} value={data.name} onChangeText />
                 </View>
                 <View style={styles.containerInput}>
-                    <Input keyboardType={'numeric'} label={'Số điện thoại'} />
+                    <Input
+                        keyboardType={'numeric'}
+                        label={'Số điện thoại'}
+                        value={data.phone}
+                    />
                 </View>
                 <View style={styles.containerInput}>
                     <Input label={'Email'} />

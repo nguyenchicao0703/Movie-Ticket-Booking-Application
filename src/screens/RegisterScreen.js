@@ -25,8 +25,8 @@ const RegisterScreen = ({ navigation }) => {
     };
 
     const registerUser = async (phone) => {
-        const url = 'http://10.0.2.2:1234/api/Dang-ky-tai-khoan-sdt.php'; // Replace with your actual API endpoint
-
+        // const url = 'http://10.0.2.2:1234/api/Dang-ky-tai-khoan-sdt.php'; // Replace with your actual API endpoint
+        const url = 'http://192.168.100.4:1234/api/Dang-ky-tai-khoan-sdt.php';
         return fetch(url, {
             method: 'POST',
             headers: {

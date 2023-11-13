@@ -11,6 +11,8 @@ import { HeaderImage, Images, ProfileImage } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import { useNavigation } from '@react-navigation/native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { useSelector } from 'react-redux';
+import { usersSelector } from '../redux/selectors';
 
 const ProfileScreen = ({}) => {
     useEffect(() => {
