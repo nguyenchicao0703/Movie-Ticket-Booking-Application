@@ -1,6 +1,8 @@
 import { Text, Pressable } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../../constants';
+import { useDispatch } from 'react-redux';
+import { selectDate } from '../../redux/slice/calendarsSlice';
 
 const caseDay = {
     Monday: 'Th 2',
@@ -13,6 +15,7 @@ const caseDay = {
 };
 
 const CalendarCard = ({
+    data,
     day,
     date,
     isFirst,
@@ -23,15 +26,22 @@ const CalendarCard = ({
     const isSelected = selectedDate === index;
     const colorDate = isSelected ? Colors.DEFAULT_WHITE : Colors.DARK_BG;
 
-    const handleSelectDate = (index) => {
+    const dispatch = useDispatch();
+
+    const handleSelectDateCard = (index) => {
         onSelectedDate(index);
+        // dispatch(selectDate(data));
     };
 
     const _day = caseDay[day] || '';
 
+    // console.log({ day }, { date });
+    // console.log({ selectedDate });
+    // console.log({ data });
+
     return (
         <Pressable
-            onPress={handleSelectDate}
+            onPress={() => handleSelectDateCard(index)}
             style={[
                 {
                     flex: 1,

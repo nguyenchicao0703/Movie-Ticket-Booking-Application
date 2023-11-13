@@ -1,12 +1,12 @@
-import { Text, View, Pressable, FlatList } from 'react-native';
+import { Text, Pressable, FlatList } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../constants';
 import { useNavigation } from '@react-navigation/native';
 
-const SelectShowtime = ({ marginTop, data }) => {
+const SelectShowtime = ({ data }) => {
     const navigation = useNavigation();
 
-    const handleButtonClickItem = () => {
+    const navigationShowtimeMovieToSeat = () => {
         navigation.navigate('Seat');
     };
 
@@ -18,47 +18,45 @@ const SelectShowtime = ({ marginTop, data }) => {
                     fontSize: 15,
                     fontFamily: Fonts.SemiBold,
                     marginLeft: 15,
-                    marginTop,
+                    marginTop: 3,
                 }}
             >
                 Chọn thời gian
             </Text>
             <FlatList
+                style={{
+                    marginLeft: 12,
+                }}
                 data={data}
                 extraData={(item) => item.id}
                 numColumns={3}
                 renderItem={({ item }) => (
-                    <View
+                    <Pressable
+                        onPress={navigationShowtimeMovieToSeat}
                         style={{
-                            flexDirection: 'row',
+                            width: '30%',
+                            height: 45,
+                            paddingHorizontal: 8,
+                            borderWidth: 1,
+                            borderRadius: 5,
+                            borderColor: Colors.LIGHT_SILVER,
+                            justifyContent: 'center',
+                            marginTop: 5,
+                            marginBottom: 5,
+                            marginRight: 12,
                         }}
                     >
-                        <Pressable
-                            onPress={handleButtonClickItem}
+                        <Text
                             style={{
-                                height: 45,
-                                paddingHorizontal: 8,
-                                borderWidth: 1,
-                                borderRadius: 5,
-                                borderColor: Colors.LIGHT_SILVER,
-                                justifyContent: 'center',
-                                marginTop: 5,
-                                marginHorizontal: 12,
-                                marginBottom: 5,
+                                color: Colors.LIGHT_SILVER,
+                                fontSize: 14,
+                                fontFamily: Fonts.Bold,
+                                textAlign: 'center',
                             }}
                         >
-                            <Text
-                                style={{
-                                    color: Colors.LIGHT_SILVER,
-                                    fontSize: 14,
-                                    fontFamily: Fonts.Bold,
-                                    textAlign: 'center',
-                                }}
-                            >
-                                {data[0].giochieu}
-                            </Text>
-                        </Pressable>
-                    </View>
+                            {item}
+                        </Text>
+                    </Pressable>
                 )}
             />
         </>

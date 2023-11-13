@@ -9,10 +9,12 @@ import {
 } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import showtimesAPI from '../api/showtimesAPI';
+import { useSelector } from 'react-redux';
 
 const ShowtimeMovieScreen = ({ navigation, route }) => {
     const { idMovie, nameMovie } = route.params;
-    const [cinema, setCinema] = useState('');
+    // console.log({ idMovie });
+    const [nameCinema, setNameCinema] = useState('');
     const [dataShowtimes, setDataShowtimes] = useState([]);
 
     const handleButtonBack = () => {
@@ -23,22 +25,28 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
         navigation.openDrawer();
     };
 
+    const date = useSelector((state) => state.calendar);
+    console.log('ahahi', date);
+
     useEffect(() => {
-        const handleShowtimeMovies = async () => {
-            const responseCinema = await showtimesAPI.getIdCinema(idMovie);
-            console.log('idCinema', responseCinema);
-            setCinema(responseCinema.data[0].ten_rap);
-            const response = await showtimesAPI.getAll(
-                idMovie,
-                responseCinema.data[0].id_rap,
-                2023,
-            );
-            setDataShowtimes(response.data);
-            console.log('response data showtimes', response.data);
-            return response.data;
+        const fetchingShowtimeMovies = async () => {
+            try {
+                const response = await showtimesAPI.getAll(idMovie, 2023);
+                const allShowtimes = response.data[0].phong.flatMap((phong) =>
+                    phong.suat.map((suat) => {
+                        const showtimes = suat.giochieu.split(' ')[1]; // Chỉ lấy phần giờ từ giá trị 'giochieu'
+                        return showtimes;
+                    }),
+                );
+                setDataShowtimes(allShowtimes);
+                setNameCinema(response.data[0].ten_rap);
+                console.log('response data showtimes', allShowtimes);
+            } catch (error) {
+                console.log('Error fetching showtime movies', error);
+            }
         };
 
-        handleShowtimeMovies();
+        fetchingShowtimeMovies();
     }, []);
 
     return (
@@ -82,10 +90,10 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                                 marginTop: 3,
                             }}
                         >
-                            {cinema}
+                            {nameCinema}
                         </Text>
                     </View>
-                    <SelectShowtime marginTop={3} data={dataShowtimes} />
+                    <SelectShowtime data={dataShowtimes} />
                 </View>
             </ScrollView>
         </View>

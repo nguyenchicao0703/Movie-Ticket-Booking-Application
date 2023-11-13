@@ -2,12 +2,9 @@ import axiosClient from './axiosClient';
 
 // Hàm gửi yêu cầu GET
 const showtimesAPI = {
-    getIdCinema: (idMovie) => {
-        return axiosClient.get(`/Danh-sach-rap-theo-phim.php?id=${idMovie}`);
-    },
-    getAll: (idMovie, idCinema, dateMovie) => {
+    getAll: (idMovie, dateMovie) => {
         return axiosClient.get(
-            `/Danh-sach-suat-chieu.php?id_phim=${idMovie}&id_rap=${idCinema}&ngay=${dateMovie}`,
+            `/Danh-sach-suat-chieu-phim.php?id_phim=${idMovie}&ngay=2023-12-30`,
         );
     },
 };
