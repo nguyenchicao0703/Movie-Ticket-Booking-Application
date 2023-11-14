@@ -8,7 +8,7 @@ import {
     Modal,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { AuthAccountButton, Header } from '../components';
+import { Header } from '../components';
 import {
     Colors,
     DetailMovieImage,
@@ -19,7 +19,7 @@ import {
 import { ScrollView } from 'react-native-virtualized-view';
 import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
-import { Button } from 'react-native-paper';
+import movieAPI from '../api/movieAPI';
 
 const DetailScreen = ({ navigation, route }) => {
     const fontSizeContent = height * 0.03;
@@ -41,6 +41,9 @@ const DetailScreen = ({ navigation, route }) => {
         { label: '2', value: 'two' },
         { label: '1', value: 'one' },
     ]);
+    const idPhim = route.params.id;
+    const [idMovie, setIdMovie] = useState(1);
+    const [nameMovie, setNameMovie] = useState('');
 
     const handleButtonBack = () => {
         navigation.goBack(null);
@@ -51,23 +54,22 @@ const DetailScreen = ({ navigation, route }) => {
 
     const navigateDetailToCinema = () => {
         navigation.navigate('ShowtimeMovie', {
-            cinemaId: 1,
-            cinemaTitle: 'spider-man no way home',
+            idMovie,
+            nameMovie,
         });
     };
-    const idPhim = route.params.id;
 
     useEffect(() => {
         const fetchMovieDetails = async () => {
             try {
-                const response = await axios.get(
-                    `http://10.0.2.2:1234/api/Chi-tiet-phim.php?id=${idPhim}`,
-                );
-                const data = response.data.data;
+                const response = await movieAPI.getMovieDetails(idPhim);
+                const data = response.data;
                 setMovie(data);
-                console.log(data);
+                setIdMovie(data.id_phim);
+                setNameMovie(data.ten_phim);
+                console.log('Data detail movie', data);
             } catch (error) {
-                console.log('Error:', error);
+                console.log('Error fetching response Movie Detail:', error);
             }
         };
 
@@ -77,8 +79,6 @@ const DetailScreen = ({ navigation, route }) => {
     if (!movie) {
         return null; // or render a loading indicator
     }
-
-    const hinhanh = movie.hinhanh;
 
     return (
         <View style={styles.container}>

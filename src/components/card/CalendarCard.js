@@ -22,7 +22,6 @@ const CalendarCard = ({
     index,
     selectedDate,
 }) => {
-    console.log({ selectedDate });
     const isSelected = selectedDate === index;
     const colorDate = isSelected ? Colors.DEFAULT_WHITE : Colors.DARK_BG;
 

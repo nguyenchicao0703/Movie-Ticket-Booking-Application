@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Colors, Fonts } from '../constants';
 import {
     CalendarList,
@@ -8,17 +8,16 @@ import {
     MovieTitle,
 } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
-
-const Movie = [
-    { id: 1, movie: 'spider-man no way home' },
-    { id: 2, movie: 'spider-man no way home' },
-    { id: 3, movie: 'spider-man no way home' },
-];
+import showtimesAPI from '../api/showtimesAPI';
+import { useSelector } from 'react-redux';
+import { datesSelector } from '../redux/selectors';
+import NoShowtimeMessage from '../components/NoShowtimeMessage';
 
 const ShowtimeCinemaScreen = ({ navigation, route }) => {
-    const { cinemaId, cinemaTitle } = route.params;
-
-    console.log({ cinemaTitle });
+    const { idCinema, nameCinema } = route.params;
+    const [data, setData] = useState([]);
+    const [dataShowtimes, setDataShowtimes] = useState([]);
+    const [statusGetAPI, setSatusGetAPI] = useState(false);
 
     const handleButtonBack = () => {
         navigation.goBack(null);
@@ -28,10 +27,38 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
         navigation.openDrawer();
     };
 
+    const date = useSelector(datesSelector);
+
+    useEffect(() => {
+        const fetchingShowtimeCinemas = async () => {
+            try {
+                console.log('Selected dates', date);
+                const response = await showtimesAPI.getAllCinemas(
+                    idCinema,
+                    date,
+                );
+                setData(response.data);
+                setSatusGetAPI(response.status);
+                const allShowtimes = response.data[0].phong.flatMap((phong) =>
+                    phong.suat.map((suat) => {
+                        const showtimes = suat.giochieu.split(' ')[1]; // Chỉ lấy phần giờ từ giá trị 'giochieu'
+                        return showtimes;
+                    }),
+                );
+                setDataShowtimes(allShowtimes);
+                console.log('Response showtime cinemas', response.data);
+                console.log('Showtimes', allShowtimes);
+            } catch (error) {
+                console.log('Error fetching showtime cinemas', error);
+            }
+        };
+        fetchingShowtimeCinemas();
+    }, [date]);
+
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
             <Header
-                titleHeader={cinemaTitle}
+                titleHeader={nameCinema}
                 onButtonBack={handleButtonBack}
                 onButtonMenu={handleButtonMenu}
             />
@@ -49,12 +76,16 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
                     Chọn ngày
                 </Text>
                 <CalendarList />
-                {Movie.map((value, index) => (
-                    <View key={index}>
-                        <MovieTitle title={'SPIDER-MAN No Way Home'} />
-                        <SelectShowtime marginTop={3} />
-                    </View>
-                ))}
+                {statusGetAPI ? (
+                    data.map((value) => (
+                        <View key={value.id_phim}>
+                            <MovieTitle title={value.ten_phim} />
+                            <SelectShowtime data={dataShowtimes} />
+                        </View>
+                    ))
+                ) : (
+                    <NoShowtimeMessage />
+                )}
             </ScrollView>
         </View>
     );

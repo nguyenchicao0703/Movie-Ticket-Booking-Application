@@ -17,7 +17,7 @@ const CinemaCard = ({ data }) => {
     const handleCinemaItemClick = () => {
         navigation.navigate('ShowtimeCinema', {
             idCinema: data.id_rap,
-            idTitle: data.ten_rap,
+            nameCinema: data.ten_rap,
         });
     };
 

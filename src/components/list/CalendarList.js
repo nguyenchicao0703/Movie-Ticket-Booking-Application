@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { CalendarCard } from '../card';
 import { format, addDays } from 'date-fns';
 import { useSelector } from 'react-redux';
+import { selectedDateSelector } from '../../redux/selectors';
 
 const CalendarList = () => {
     const [weekSchedule, setWeekSchedule] = useState([]);
 
-    const isSelected = useSelector((state) => state.calendar.isSelect);
-    console.log(isSelected);
+    const isSelected = useSelector(selectedDateSelector);
 
     useEffect(() => {
         const updateWeekSchedule = () => {
