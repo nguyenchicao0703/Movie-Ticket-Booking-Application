@@ -3,14 +3,20 @@ import { createSlice } from '@reduxjs/toolkit';
 // Slice của reducer và actions
 const calendarsSlice = createSlice({
     name: 'calendar',
-    initialState: {},
+    initialState: {
+        dates: '',
+        isSelect: 0,
+    },
     reducers: {
-        selectDate: (state, action) => {
+        getDate: (state, action) => {
             state.dates = action.payload;
+        },
+        isSelect: (state, action) => {
+            state.isSelect = action.payload;
         },
     },
 });
 
-export const { selectDate } = calendarsSlice.actions;
+export const { getDate, isSelect } = calendarsSlice.actions;
 
 export default calendarsSlice.reducer;

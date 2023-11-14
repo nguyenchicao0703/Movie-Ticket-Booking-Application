@@ -218,6 +218,9 @@ const UpdateProfileScreen = () => {
                     <Input label={'Email'} />
                 </View>
                 <View style={styles.containerInput}>
+                    <Input label={'Địa chỉ'} />
+                </View>
+                <View style={styles.containerInput}>
                     {showPicker && (
                         <DateTimePicker
                             mode="date"
@@ -294,7 +297,6 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'space-around',
-        height: '30%',
         width: '90%',
     },
     button: {

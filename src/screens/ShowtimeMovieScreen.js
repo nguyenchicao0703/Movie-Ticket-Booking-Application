@@ -13,7 +13,6 @@ import { useSelector } from 'react-redux';
 
 const ShowtimeMovieScreen = ({ navigation, route }) => {
     const { idMovie, nameMovie } = route.params;
-    // console.log({ idMovie });
     const [nameCinema, setNameCinema] = useState('');
     const [dataShowtimes, setDataShowtimes] = useState([]);
 
@@ -25,13 +24,12 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
         navigation.openDrawer();
     };
 
-    const date = useSelector((state) => state.calendar);
-    console.log('ahahi', date);
+    const date = useSelector((state) => state.calendar.dates);
 
     useEffect(() => {
         const fetchingShowtimeMovies = async () => {
             try {
-                const response = await showtimesAPI.getAll(idMovie, 2023);
+                const response = await showtimesAPI.getAll(idMovie, date);
                 const allShowtimes = response.data[0].phong.flatMap((phong) =>
                     phong.suat.map((suat) => {
                         const showtimes = suat.giochieu.split(' ')[1]; // Chỉ lấy phần giờ từ giá trị 'giochieu'
