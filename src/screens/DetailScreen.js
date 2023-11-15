@@ -6,9 +6,10 @@ import {
     useWindowDimensions,
     Pressable,
     Modal,
+    TouchableOpacity,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { AuthAccountButton, Header } from '../components';
+import React, { useState, useEffect, useRef } from 'react';
+import { AuthAccountButton, Header, VideoView } from '../components';
 import {
     Colors,
     DetailMovieImage,
@@ -20,10 +21,13 @@ import { ScrollView } from 'react-native-virtualized-view';
 import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
 import { Button } from 'react-native-paper';
+import Video from 'react-native-video';
+import VideoPlayer from 'react-native-video-controls';
 
 const DetailScreen = ({ navigation, route }) => {
     const fontSizeContent = height * 0.03;
-
+    const videoRef = useRef(null);
+    const [isVideoPlaying, setIsVideoPlaying] = useState(true);
     const { height, width, scale, fontScale } = useWindowDimensions();
     const [modalVisible, setModalVisible] = useState(false);
     const [open, setOpen] = useState(false);
@@ -41,10 +45,37 @@ const DetailScreen = ({ navigation, route }) => {
         { label: '2', value: 'two' },
         { label: '1', value: 'one' },
     ]);
-
-    const handleButtonBack = () => {
-        navigation.goBack(null);
+    const handleOpenModal = () => {
+        // Khi mở modal, thiết lập modalVisible thành true và isVideoPlaying thành false
+        setModalVisible(true);
+        setIsVideoPlaying(false);
     };
+    const handleCloseModal = () => {
+        // Khi đóng modal, thiết lập modalVisible thành false và isVideoPlaying thành true
+        setModalVisible(false);
+        setIsVideoPlaying(true);
+    };
+    const handleButtonBack = () => {
+        if (videoRef.current) {
+            // Tạm dừng video
+            if (videoRef.current.pause) {
+                videoRef.current.pause();
+            } else if (videoRef.current.pauseAsync) {
+                videoRef.current.pauseAsync();
+            }
+
+            // Giải phóng tài nguyên video
+            if (videoRef.current.release) {
+                videoRef.current.release();
+            } else if (videoRef.current.releaseAsync) {
+                videoRef.current.releaseAsync();
+            }
+            navigation.goBack();
+        } else {
+            console.log(error);
+        }
+    };
+
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -90,13 +121,16 @@ const DetailScreen = ({ navigation, route }) => {
             {movie && (
                 <ScrollView style={{ width: '100%' }}>
                     <View style={styles.groupPlayMovie}>
-                        <Image
-                            style={{ width: width, height: height * 0.28 }}
-                            source={DetailMovieImage[2].image}
-                        />
-                        <Image
-                            style={{ position: 'absolute' }}
-                            source={DetailMovieImage[0].image}
+                        <VideoPlayer
+                            source={{
+                                uri: `${movie.doangioithieu}`,
+                            }}
+                            style={styles.video}
+                            resizeMode="cover"
+                            ref={videoRef}
+                            paused={!isVideoPlaying}
+                            disableBack={true}
+                            fullscreen
                         />
                     </View>
 
@@ -115,11 +149,7 @@ const DetailScreen = ({ navigation, route }) => {
                                         width: '95%',
                                     }}
                                 >
-                                    <Pressable
-                                        onPress={() =>
-                                            setModalVisible(!modalVisible)
-                                        }
-                                    >
+                                    <Pressable onPress={handleCloseModal}>
                                         <Image
                                             style={{
                                                 width: width * 0.04,
@@ -188,7 +218,7 @@ const DetailScreen = ({ navigation, route }) => {
                             </View>
                         </View>
                     </Modal>
-                    <Pressable onPress={() => setModalVisible(true)}>
+                    <Pressable>
                         <View style={styles.groupRate}>
                             <Image
                                 style={{
@@ -321,6 +351,7 @@ const DetailScreen = ({ navigation, route }) => {
                             backgroundColor: Colors.DEFAULT_WHITE,
                         },
                     ]}
+                    onPress={handleOpenModal}
                 >
                     <Text
                         style={[
@@ -376,6 +407,12 @@ const styles = StyleSheet.create({
         width: '100%',
         borderBottomWidth: 1,
         borderBottomColor: Colors.OPACITY_MEDIUM_GRAY_LINE,
+        height: 250,
+    },
+
+    image: {
+        width: '100%',
+        height: '72%',
     },
     groupRate: {
         flexDirection: 'row',
@@ -394,6 +431,13 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: Colors.OPACITY_MEDIUM_GRAY_LINE,
     },
+    playIcon: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        width: 50,
+        height: 50,
+    },
     textDetail: {
         color: Colors.DEFAULT_WHITE,
         fontFamily: Fonts.Light,
@@ -407,6 +451,13 @@ const styles = StyleSheet.create({
     },
     contentDetailMovie: {
         paddingHorizontal: 15,
+    },
+    video: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
     },
     boxButton: {
         height: '6%',
