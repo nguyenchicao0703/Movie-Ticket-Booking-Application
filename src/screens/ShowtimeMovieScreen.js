@@ -15,9 +15,12 @@ import NoShowtimeMessage from '../components/NoShowtimeMessage';
 
 const ShowtimeMovieScreen = ({ navigation, route }) => {
     const { idMovie, nameMovie } = route.params;
+    console.log({ idMovie });
     const [nameCinema, setNameCinema] = useState('');
-    const [dataShowtimes, setDataShowtimes] = useState([]);
+    const [data, setData] = useState([]);
+    // const [dataShowtimes, setDataShowtimes] = useState([]);
     const [statusGetAPI, setSatusGetAPI] = useState(false);
+    const [stringSeats, setStringSeats] = useState('');
 
     const handleButtonBack = () => {
         navigation.goBack(null);
@@ -34,17 +37,33 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
             try {
                 console.log('Selected dates', date);
                 const response = await showtimesAPI.getAllMovies(idMovie, date);
+                setData(response.data);
                 setSatusGetAPI(response.status);
-                const allShowtimes = response.data[0].phong.flatMap((phong) =>
-                    phong.suat.map((suat) => {
-                        const showtimes = suat.giochieu.split(' ')[1]; // Chỉ lấy phần giờ từ giá trị 'giochieu'
-                        return showtimes;
-                    }),
-                );
-                setDataShowtimes(allShowtimes);
+                console.log(statusGetAPI);
+                // const allShowtimes = response.data[0].phong.flatMap((phong) =>
+                //     phong.suat.map((suat) => {
+                //         const showtimes = suat.giochieu.split(' ')[1]; // Chỉ lấy phần giờ từ giá trị 'giochieu'
+                //         return showtimes;
+                //     }),
+                // );
+                // setDataShowtimes(allShowtimes);
+                // const allCinemas = response.data.map((value) => {
+                //     setNameCinema(value.ten_rap);
+                //     value.phong.map((phong) => {
+                //         phong.suat.map((suat) => {
+                //             setStringSeats(suat.chuoighe);
+                //         })
+                //     })
+                // });
+                // console.log({ allCinemas });
                 setNameCinema(response.data[0].ten_rap);
-                console.log('Response data showtime movies', response.data);
-                console.log('Showtimes', allShowtimes);
+                console.log('Response data showtime movies', data);
+                // console.log('Name Cinema', response.data[0].ten_rap);
+                // console.log(
+                //     'Price showtimes',
+                //     response.data[0].phong[0].suat[0].giaxuatchieu,
+                // );
+                // console.log('Showtimes', allShowtimes);
             } catch (error) {
                 console.log('Error fetching showtime movies', error);
             }
@@ -74,32 +93,38 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                     Chọn ngày
                 </Text>
                 <CalendarList />
-                <MovieTitle title={nameMovie} />
+                <MovieTitle title={nameCinema} />
                 {statusGetAPI ? (
-                    <View>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                marginLeft: 15,
-                                marginTop: 12,
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Image source={SelectShowTimeImage[0].image} />
-                            <Text
-                                style={{
-                                    color: Colors.DEFAULT_WHITE,
-                                    fontSize: 18,
-                                    fontFamily: Fonts.Regular,
-                                    marginLeft: 10,
-                                    marginTop: 3,
-                                }}
-                            >
-                                {nameCinema}
-                            </Text>
+                    data.map((_data) => (
+                        <View key={_data.id_rap}>
+                            <View>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        marginLeft: 15,
+                                        marginTop: 12,
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Image
+                                        source={SelectShowTimeImage[0].image}
+                                    />
+                                    <Text
+                                        style={{
+                                            color: Colors.DEFAULT_WHITE,
+                                            fontSize: 18,
+                                            fontFamily: Fonts.Regular,
+                                            marginLeft: 10,
+                                            marginTop: 3,
+                                        }}
+                                    >
+                                        {nameCinema}
+                                    </Text>
+                                </View>
+                                <SelectShowtime data={_data.phong} />
+                            </View>
                         </View>
-                        <SelectShowtime data={dataShowtimes} />
-                    </View>
+                    ))
                 ) : (
                     <NoShowtimeMessage />
                 )}

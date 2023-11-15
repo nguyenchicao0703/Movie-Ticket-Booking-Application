@@ -16,7 +16,7 @@ import NoShowtimeMessage from '../components/NoShowtimeMessage';
 const ShowtimeCinemaScreen = ({ navigation, route }) => {
     const { idCinema, nameCinema } = route.params;
     const [data, setData] = useState([]);
-    const [dataShowtimes, setDataShowtimes] = useState([]);
+    // const [dataShowtimes, setDataShowtimes] = useState([]);
     const [statusGetAPI, setSatusGetAPI] = useState(false);
 
     const handleButtonBack = () => {
@@ -39,15 +39,15 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
                 );
                 setData(response.data);
                 setSatusGetAPI(response.status);
-                const allShowtimes = response.data[0].phong.flatMap((phong) =>
-                    phong.suat.map((suat) => {
-                        const showtimes = suat.giochieu.split(' ')[1]; // Chỉ lấy phần giờ từ giá trị 'giochieu'
-                        return showtimes;
-                    }),
-                );
-                setDataShowtimes(allShowtimes);
-                console.log('Response showtime cinemas', response.data);
-                console.log('Showtimes', allShowtimes);
+                // const allShowtimes = response.data[0].phong.flatMap((phong) =>
+                //     phong.suat.map((suat) => {
+                //         const showtimes = suat.giochieu.split(' ')[1]; // Chỉ lấy phần giờ từ giá trị 'giochieu'
+                //         return showtimes;
+                //     }),
+                // );
+                // setDataShowtimes(allShowtimes);
+                console.log('Response showtime cinemas', data);
+                // console.log('Showtimes', allShowtimes);
             } catch (error) {
                 console.log('Error fetching showtime cinemas', error);
             }
@@ -77,10 +77,10 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
                 </Text>
                 <CalendarList />
                 {statusGetAPI ? (
-                    data.map((value) => (
-                        <View key={value.id_phim}>
-                            <MovieTitle title={value.ten_phim} />
-                            <SelectShowtime data={dataShowtimes} />
+                    data.map((_data) => (
+                        <View key={_data.id_phim}>
+                            <MovieTitle title={_data.ten_phim} />
+                            <SelectShowtime data={_data.phong} />
                         </View>
                     ))
                 ) : (

@@ -1,14 +1,26 @@
 import { Text, Pressable, FlatList } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Colors, Fonts } from '../constants';
 import { useNavigation } from '@react-navigation/native';
 
-const SelectShowtime = ({ data }) => {
+const SelectShowtime = ({ data, nameMovie }) => {
     const navigation = useNavigation();
+    const [dataShowtimes, setDataShowtimes] = useState([]);
 
     const navigationShowtimeMovieToSeat = () => {
         navigation.navigate('Seat');
     };
+
+    useEffect(() => {
+        const allShowtimes = data.flatMap((phong) =>
+            phong.suat.map((suat) => {
+                const showtimes = suat.giochieu.split(' ')[1]; // Chỉ lấy phần giờ từ giá trị 'giochieu'
+                return showtimes;
+            }),
+        );
+        setDataShowtimes(allShowtimes);
+        console.log('Showtimes', allShowtimes);
+    }, []);
 
     return (
         <>
@@ -27,7 +39,7 @@ const SelectShowtime = ({ data }) => {
                 style={{
                     marginLeft: 12,
                 }}
-                data={data}
+                data={dataShowtimes}
                 extraData={(item) => item.id}
                 numColumns={3}
                 renderItem={({ item }) => (
