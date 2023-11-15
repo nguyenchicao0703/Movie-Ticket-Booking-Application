@@ -15,12 +15,10 @@ import NoShowtimeMessage from '../components/NoShowtimeMessage';
 
 const ShowtimeMovieScreen = ({ navigation, route }) => {
     const { idMovie, nameMovie } = route.params;
-    console.log({ idMovie });
+    // console.log({ idMovie });
     const [nameCinema, setNameCinema] = useState('');
     const [data, setData] = useState([]);
-    // const [dataShowtimes, setDataShowtimes] = useState([]);
     const [statusGetAPI, setSatusGetAPI] = useState(false);
-    const [stringSeats, setStringSeats] = useState('');
 
     const handleButtonBack = () => {
         navigation.goBack(null);
@@ -35,34 +33,11 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
     useEffect(() => {
         const fetchingShowtimeMovies = async () => {
             try {
-                console.log('Selected dates', date);
                 const response = await showtimesAPI.getAllMovies(idMovie, date);
                 setData(response.data);
                 setSatusGetAPI(response.status);
-                console.log(statusGetAPI);
-                // const allShowtimes = response.data[0].phong.flatMap((phong) =>
-                //     phong.suat.map((suat) => {
-                //         const showtimes = suat.giochieu.split(' ')[1]; // Chỉ lấy phần giờ từ giá trị 'giochieu'
-                //         return showtimes;
-                //     }),
-                // );
-                // setDataShowtimes(allShowtimes);
-                // const allCinemas = response.data.map((value) => {
-                //     setNameCinema(value.ten_rap);
-                //     value.phong.map((phong) => {
-                //         phong.suat.map((suat) => {
-                //             setStringSeats(suat.chuoighe);
-                //         })
-                //     })
-                // });
-                // console.log({ allCinemas });
                 setNameCinema(response.data[0].ten_rap);
-                console.log('Response data showtime movies', data);
-                // console.log('Name Cinema', response.data[0].ten_rap);
-                // console.log(
-                //     'Price showtimes',
-                //     response.data[0].phong[0].suat[0].giaxuatchieu,
-                // );
+                // console.log('Response data showtime movies', data);
                 // console.log('Showtimes', allShowtimes);
             } catch (error) {
                 console.log('Error fetching showtime movies', error);
@@ -121,7 +96,11 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                                         {nameCinema}
                                     </Text>
                                 </View>
-                                <SelectShowtime data={_data.phong} />
+                                <SelectShowtime
+                                    data={_data.phong}
+                                    nameMovie={nameMovie}
+                                    nameCinema={nameCinema}
+                                />
                             </View>
                         </View>
                     ))

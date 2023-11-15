@@ -3,15 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { Colors, Fonts } from '../constants';
 import { useNavigation } from '@react-navigation/native';
 
-const SelectShowtime = ({ data, nameMovie }) => {
+const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
     const navigation = useNavigation();
     const [dataShowtimes, setDataShowtimes] = useState([]);
+    const [stringSeats, setStringSeats] = useState('');
+    const [priceShowitmes, setPriceShowitmes] = useState('');
 
     const navigationShowtimeMovieToSeat = () => {
-        navigation.navigate('Seat');
+        navigation.navigate('Seat', {
+            nameMovie,
+            nameCinema,
+            stringSeats,
+            priceShowitmes: +priceShowitmes, // Biến chuỗi thành số
+        });
     };
 
     useEffect(() => {
+        // console.log('Data response select showtimes', data);
+        // Lấy giờ chiếu
         const allShowtimes = data.flatMap((phong) =>
             phong.suat.map((suat) => {
                 const showtimes = suat.giochieu.split(' ')[1]; // Chỉ lấy phần giờ từ giá trị 'giochieu'
@@ -19,7 +28,15 @@ const SelectShowtime = ({ data, nameMovie }) => {
             }),
         );
         setDataShowtimes(allShowtimes);
-        console.log('Showtimes', allShowtimes);
+        // console.log('Showtimes', allShowtimes);
+        data.flatMap((phong) =>
+            phong.suat.map((suat) => {
+                setStringSeats(suat.chuoighe); // Lấy giá trị chuỗi ghế
+                setPriceShowitmes(suat.giaxuatchieu); // Lấy giá tị giá xuất chiếu
+            }),
+        );
+        // console.log('String seat:', stringSeats);
+        // console.log('Price showtimes:', priceShowitmes);
     }, []);
 
     return (
