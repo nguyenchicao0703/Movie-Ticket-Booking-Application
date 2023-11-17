@@ -26,19 +26,27 @@ import {
 } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { ScrollView } from 'react-native-virtualized-view';
+import { useSelector } from 'react-redux';
+import { usersSelector } from '../redux/selectors';
 
 const UpdateProfileScreen = () => {
+    const dataUser = useSelector(usersSelector);
+    const userProfile = dataUser.users.data;
+    const diachi = `${userProfile.diachi}  ${userProfile.quan}  ${userProfile.tinh}`;
     const navigation = useNavigation();
-
+    const [modalVisible, setModalVisible] = useState(false);
     const { width, height } = useWindowDimensions();
     const [date, setDate] = useState(new Date());
     const [showPicker, setshowPicker] = useState(false);
-    const [dayOfBirth, setDayOfBirth] = useState('');
+    const [dayOfBirth, setDayOfBirth] = useState(userProfile.bod);
+
+    //Day Of Birth
     const toggleDatepicker = () => {
         setshowPicker(!showPicker);
     };
 
-    const onChange = ({ type }, selectedDate) => {
+    const onChangeDateOfBirth = ({ type }, selectedDate) => {
         if (type == 'set') {
             const currentDate = selectedDate;
             setDate(currentDate);
@@ -61,7 +69,8 @@ const UpdateProfileScreen = () => {
         return `${day}-${month}-${year}`;
     };
 
-    const [selectImage, setSelectImage] = useState('');
+    //Handle Avatar User
+    const [selectedImage, setSelectedImage] = useState(null);
     const ImagePicker = () => {
         let options = {
             storageOptions: {
@@ -69,9 +78,13 @@ const UpdateProfileScreen = () => {
             },
         };
 
-        launchImageLibrary(options, (reponse) => {
-            setSelectImage();
-            console.log(reponse);
+        launchImageLibrary(options, (response) => {
+            if (response && response.assets && response.assets.length > 0) {
+                const selectedUri = response.assets[0].uri;
+                setSelectedImage(selectedUri);
+
+                console.log(selectedUri);
+            }
         });
     };
     const LaunchCamera = () => {
@@ -80,12 +93,17 @@ const UpdateProfileScreen = () => {
                 path: 'image',
             },
         };
-        launchCamera(options, (reponse) => {
-            setSelectImage;
-            console.log(reponse);
+        launchCamera(options, (response) => {
+            if (response && response.assets && response.assets.length > 0) {
+                const selectedUri = response.assets[0].uri;
+                setSelectedImage(selectedUri);
+                console.log(selectedUri);
+            }
         });
     };
-    const [modalVisible, setModalVisible] = useState(false);
+
+    const handleUpdateProfile = () => {};
+
     return (
         <View
             style={{
@@ -99,167 +117,181 @@ const UpdateProfileScreen = () => {
                 titleHeader={'Thông tin cá nhân'}
                 onButtonBack={() => navigation.goBack()}
             />
-
-            <View style={styles.groupAvatar}>
-                <Modal transparent={true} visible={modalVisible}>
-                    <View style={styles.centeredView}>
-                        <View style={[styles.modalView, { height: '30%' }]}>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-end',
-                                    width: '95%',
-                                }}
-                            >
-                                <Pressable
-                                    onPress={() =>
-                                        setModalVisible(!modalVisible)
-                                    }
+            <ScrollView style={{ width: '100%' }}>
+                <View style={styles.groupAvatar}>
+                    <Modal transparent={true} visible={modalVisible}>
+                        <View style={styles.centeredView}>
+                            <View style={[styles.modalView, { height: '30%' }]}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'flex-end',
+                                        width: '95%',
+                                    }}
                                 >
-                                    <Image
-                                        style={{
-                                            width: width * 0.04,
-                                            height: height * 0.02,
-                                        }}
-                                        source={ModalRatingImage[0].image}
-                                    />
+                                    <Pressable
+                                        onPress={() =>
+                                            setModalVisible(!modalVisible)
+                                        }
+                                    >
+                                        <Image
+                                            style={{
+                                                width: width * 0.04,
+                                                height: height * 0.02,
+                                            }}
+                                            source={ModalRatingImage[0].image}
+                                        />
+                                    </Pressable>
+                                </View>
+                                <Text
+                                    style={[
+                                        styles.modalText,
+                                        { fontSize: height * 0.024 },
+                                    ]}
+                                >
+                                    Cập nhật avatar
+                                </Text>
+                                <Pressable
+                                    style={[
+                                        styles.button,
+                                        { width: '80%', height: height * 0.06 },
+                                    ]}
+                                    onPress={() => ImagePicker()}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.textStyle,
+                                            { fontSize: height * 0.02 },
+                                        ]}
+                                    >
+                                        Chọn ảnh từ thư viện
+                                    </Text>
+                                </Pressable>
+                                <Pressable
+                                    style={[
+                                        styles.button,
+                                        {
+                                            width: '80%',
+                                            height: height * 0.06,
+                                            margin: 10,
+                                        },
+                                    ]}
+                                    onPress={() => LaunchCamera()}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.textStyle,
+                                            { fontSize: height * 0.02 },
+                                        ]}
+                                    >
+                                        Chụp từ camera
+                                    </Text>
                                 </Pressable>
                             </View>
-                            <Text
-                                style={[
-                                    styles.modalText,
-                                    { fontSize: height * 0.024 },
-                                ]}
-                            >
-                                Cập nhật avatar
-                            </Text>
-                            <Pressable
-                                style={[
-                                    styles.button,
-                                    { width: '80%', height: height * 0.06 },
-                                ]}
-                                onPress={() => ImagePicker()}
-                            >
-                                <Text
-                                    style={[
-                                        styles.textStyle,
-                                        { fontSize: height * 0.02 },
-                                    ]}
-                                >
-                                    Chọn ảnh từ thư viện
-                                </Text>
-                            </Pressable>
-                            <Pressable
-                                style={[
-                                    styles.button,
-                                    {
-                                        width: '80%',
-                                        height: height * 0.06,
-                                        margin: 10,
-                                    },
-                                ]}
-                                onPress={() => LaunchCamera()}
-                            >
-                                <Text
-                                    style={[
-                                        styles.textStyle,
-                                        { fontSize: height * 0.02 },
-                                    ]}
-                                >
-                                    Chụp từ camera
-                                </Text>
-                            </Pressable>
                         </View>
-                    </View>
-                </Modal>
+                    </Modal>
 
-                <View style={styles.avatar}>
-                    <Image
-                        style={{
-                            width: width * 0.32,
-                            height: height * 0.16,
-                            borderRadius: 500,
-                        }}
-                        source={DrawerImage[5].image}
-                    />
-                    <Pressable onPress={() => setModalVisible(!modalVisible)}>
+                    <View style={styles.avatar}>
                         <Image
                             style={{
-                                marginLeft: -15,
-                                width: width * 0.06,
-                                height: height * 0.026,
+                                width: width * 0.32,
+                                height: height * 0.16,
+                                borderRadius: 500,
                             }}
-                            source={UpdateProfileImage[0].image}
+                            source={
+                                selectedImage
+                                    ? { uri: selectedImage }
+                                    : { uri: `${userProfile.avatar}` }
+                            }
                         />
-                    </Pressable>
-                </View>
-
-                <Text
-                    style={{
-                        color: Colors.DEFAULT_WHITE,
-                        marginLeft: -10,
-                        fontSize: height * 0.026,
-                        fontFamily: Fonts.Medium,
-                        marginTop: 15,
-                    }}
-                >
-                    Nguyễn Chí Cao
-                </Text>
-            </View>
-
-            <View style={styles.groupInput}>
-                <View style={styles.containerInput}>
-                    <Input label={'Họ và tên'} />
-                </View>
-                <View style={styles.containerInput}>
-                    <Input keyboardType={'numeric'} label={'Số điện thoại'} />
-                </View>
-                <View style={styles.containerInput}>
-                    <Input label={'Email'} />
-                </View>
-                <View style={styles.containerInput}>
-                    <Input label={'Địa chỉ'} />
-                </View>
-                <View style={styles.containerInput}>
-                    {showPicker && (
-                        <DateTimePicker
-                            mode="date"
-                            display="spinner"
-                            value={date}
-                            onChange={onChange}
-                        />
-                    )}
-                    {!showPicker && (
                         <Pressable
-                            style={{
-                                flexDirection: 'row',
-                                width: '100%',
-                                alignItems: 'center',
-                                color: Colors.DEFAULT_WHITE,
-                                justifyContent: 'flex-end',
-                            }}
-                            onPress={toggleDatepicker}
+                            onPress={() => setModalVisible(!modalVisible)}
                         >
-                            <Input
-                                value={dayOfBirth}
-                                editable={false}
-                                onChangeText={setDayOfBirth}
-                                label={'Ngày sinh'}
-                            />
                             <Image
                                 style={{
-                                    position: 'absolute',
-                                    width: width * 0.05,
-                                    right: 15,
+                                    marginLeft: -15,
+                                    width: width * 0.06,
+                                    height: height * 0.026,
                                 }}
-                                source={BottomTabImage[6].image}
+                                source={UpdateProfileImage[0].image}
                             />
                         </Pressable>
-                    )}
+                    </View>
+
+                    <Text
+                        style={{
+                            color: Colors.DEFAULT_WHITE,
+                            marginLeft: -10,
+                            fontSize: height * 0.026,
+                            fontFamily: Fonts.Medium,
+                            marginTop: 15,
+                        }}
+                    >
+                        {userProfile.name}
+                    </Text>
                 </View>
-                <GenderSelectionBox marginLeft={30} />
-                <AuthAccountButton text={'Cập nhật'} />
-            </View>
+
+                <View style={styles.groupInput}>
+                    <View style={styles.containerInput}>
+                        <Input value={userProfile.name} label={'Họ và tên'} />
+                    </View>
+                    <View style={styles.containerInput}>
+                        <Input
+                            keyboardType={'numeric'}
+                            label={'Số điện thoại'}
+                            value={userProfile.phone}
+                        />
+                    </View>
+                    <View style={styles.containerInput}>
+                        <Input label={'Email'} value={userProfile.email} />
+                    </View>
+                    <View style={styles.containerInput}>
+                        <Input label={'Địa chỉ'} value={diachi} />
+                    </View>
+                    <View style={styles.containerInput}>
+                        {showPicker && (
+                            <DateTimePicker
+                                mode="date"
+                                display="spinner"
+                                value={date}
+                                onChange={onChangeDateOfBirth}
+                            />
+                        )}
+                        {!showPicker && (
+                            <Pressable
+                                style={{
+                                    flexDirection: 'row',
+                                    width: '100%',
+                                    alignItems: 'center',
+                                    color: Colors.DEFAULT_WHITE,
+                                    justifyContent: 'flex-end',
+                                }}
+                                onPress={toggleDatepicker}
+                            >
+                                <Input
+                                    value={dayOfBirth}
+                                    editable={false}
+                                    onChangeText={setDayOfBirth}
+                                    label={'Ngày sinh'}
+                                />
+                                <Image
+                                    style={{
+                                        position: 'absolute',
+                                        width: width * 0.05,
+                                        right: 15,
+                                    }}
+                                    source={BottomTabImage[6].image}
+                                />
+                            </Pressable>
+                        )}
+                    </View>
+                    <GenderSelectionBox marginLeft={30} />
+                    <AuthAccountButton
+                        text={'Cập nhật'}
+                        onPress={handleUpdateProfile}
+                    />
+                </View>
+            </ScrollView>
         </View>
     );
 };
@@ -281,10 +313,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     groupInput: {
-        width: '95%',
+        width: '100%',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        padding: 15,
     },
     centeredView: {
         flex: 1,
