@@ -26,6 +26,7 @@ import InformationBottom from './InformationBottom';
 import PaymentCombo from './PaymentCombo';
 import PaymentContentBar from './PaymentContentBar';
 import PaymentTitleBar from './PaymentTitleBar';
+import NoShowtimeMessage from './NoShowtimeMessage';
 import VideoView from './VideoView';
 
 export {
@@ -53,5 +54,6 @@ export {
     PaymentCombo,
     PaymentContentBar,
     PaymentTitleBar,
+    NoShowtimeMessage,
     VideoView,
 };

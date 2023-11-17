@@ -6,14 +6,18 @@ import {
     Header,
     SelectShowtime,
     MovieTitle,
+    NoShowtimeMessage,
 } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import showtimesAPI from '../api/showtimesAPI';
+import { useSelector } from 'react-redux';
+import { datesSelector } from '../redux/selectors';
 
 const ShowtimeMovieScreen = ({ navigation, route }) => {
     const { idMovie, nameMovie } = route.params;
-    const [cinema, setCinema] = useState('');
-    const [dataShowtimes, setDataShowtimes] = useState([]);
+    // console.log({ idMovie });
+    const [data, setData] = useState([]);
+    const [statusGetAPI, setSatusGetAPI] = useState(false);
 
     const handleButtonBack = () => {
         navigation.goBack(null);
@@ -23,23 +27,22 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
         navigation.openDrawer();
     };
 
+    const date = useSelector(datesSelector);
+
     useEffect(() => {
-        const handleShowtimeMovies = async () => {
-            const responseCinema = await showtimesAPI.getIdCinema(idMovie);
-            console.log('idCinema', responseCinema);
-            setCinema(responseCinema.data[0].ten_rap);
-            const response = await showtimesAPI.getAll(
-                idMovie,
-                responseCinema.data[0].id_rap,
-                2023,
-            );
-            setDataShowtimes(response.data);
-            console.log('response data showtimes', response.data);
-            return response.data;
+        const fetchingShowtimeMovies = async () => {
+            try {
+                const response = await showtimesAPI.getAllMovies(idMovie, date);
+                setData(response.data);
+                setSatusGetAPI(response.status);
+                // console.log('Response data showtime movies', data);
+            } catch (error) {
+                console.log('Error fetching showtime movies', error);
+            }
         };
 
-        handleShowtimeMovies();
-    }, []);
+        fetchingShowtimeMovies();
+    }, [date]);
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
@@ -63,30 +66,44 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                 </Text>
                 <CalendarList />
                 <MovieTitle title={nameMovie} />
-                <View>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            marginLeft: 15,
-                            marginTop: 12,
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Image source={SelectShowTimeImage[0].image} />
-                        <Text
-                            style={{
-                                color: Colors.DEFAULT_WHITE,
-                                fontSize: 18,
-                                fontFamily: Fonts.Regular,
-                                marginLeft: 10,
-                                marginTop: 3,
-                            }}
-                        >
-                            {cinema}
-                        </Text>
-                    </View>
-                    <SelectShowtime marginTop={3} data={dataShowtimes} />
-                </View>
+                {statusGetAPI ? (
+                    data.map((_data, index) => (
+                        <View key={_data.id_rap}>
+                            <View>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        marginLeft: 15,
+                                        marginTop: 12,
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Image
+                                        source={SelectShowTimeImage[0].image}
+                                    />
+                                    <Text
+                                        style={{
+                                            color: Colors.DEFAULT_WHITE,
+                                            fontSize: 18,
+                                            fontFamily: Fonts.Regular,
+                                            marginLeft: 10,
+                                            marginTop: 3,
+                                        }}
+                                    >
+                                        {_data.ten_rap}
+                                    </Text>
+                                </View>
+                                <SelectShowtime
+                                    data={_data.phong}
+                                    nameMovie={nameMovie}
+                                    nameCinema={_data.ten_rap}
+                                />
+                            </View>
+                        </View>
+                    ))
+                ) : (
+                    <NoShowtimeMessage />
+                )}
             </ScrollView>
         </View>
     );

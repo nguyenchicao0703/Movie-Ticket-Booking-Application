@@ -10,6 +10,7 @@ const axiosClient = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
+    timeout: 5000,
 });
 
 // Return response.data -> tránh lập lại code

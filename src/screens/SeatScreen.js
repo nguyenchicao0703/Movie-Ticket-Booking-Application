@@ -4,10 +4,9 @@ import {
     Text,
     TouchableOpacity,
     StyleSheet,
-    Pressable,
     Image,
 } from 'react-native';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
 import { Header, InformationBottom } from '../components';
 
@@ -60,24 +59,14 @@ const alphabetSeats = [
     'P',
 ];
 
-const SeatScreen = ({ navigation }) => {
+const SeatScreen = ({ navigation, route }) => {
+    const { nameMovie, nameCinema, stringSeats, priceShowitmes } = route.params;
+    // console.log({ stringSeats });
+    // console.log({ priceShowitmes });
     const [selectedSeats, setSelectedSeats] = useState([]);
-    const [seats, setSeats] = useState(
-        'AAAAAAA_AAAAAAA/' +
-            'AAAAAAA_AAAAAAA/' +
-            'AAAAAAA_AAUUAAA/' +
-            'AAAAAAA_AAAAAAA/' +
-            'AAAAAAA_AAAAAAA/' +
-            'AAAAAAA_AAUUUAA/' +
-            'AAAAAAA_AAAAUUU/' +
-            'AAUUAAU_AAAAAAA/' +
-            'UUAAAAA_AAUUUAA/' +
-            'AAAAAUU_AAAAAAA/' +
-            'AAAAAAU_UUUAAAA/' +
-            'AAUUAAA_AAAAAAA/' +
-            'AAAAAAA_AUUUUAA/' +
-            '________________',
-    );
+    const [seats, setSeats] = useState(stringSeats);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [storageSeats, setStorageSeats] = useState('');
 
     const STATUS_AVAILABLE = 1;
     const STATUS_BOOKED = 2;
@@ -87,17 +76,38 @@ const SeatScreen = ({ navigation }) => {
     let alphabetIndexNumber = 0;
     let seatIndexNumber = 0;
 
+    // Cập nhật lại chuỗi khi dữ liệu chuỗi ghế (stringSeats) thay đổi
+    useEffect(() => {
+        setSeats(stringSeats);
+
+        // Đặt lại giá trị mặc định giá trị khi điều hướng sang màn hình khác
+        return () => {
+            setSelectedSeats([]);
+            setSeats('');
+            setTotalPrice(0);
+            setStorageSeats('');
+        };
+    }, [stringSeats]);
+
     const handleSeatPress = useCallback((seatId, seatIndexNumber) => {
-        console.log({ seatIndexNumber });
+        // console.log({ seatIndexNumber });
         const isSelected = selectedSeats.includes(seatId);
-        setSelectedSeats(
-            isSelected
-                ? selectedSeats.filter((seat) => seat !== seatId)
-                : [...selectedSeats, seatId],
-        );
-        const seatsArr = seats.split('');
-        seatsArr[seatIndexNumber] = isSelected ? 'A' : 'R';
-        setSeats(seatsArr.join(''));
+        let updatedSeats;
+        if (isSelected) {
+            updatedSeats = selectedSeats.filter((seat) => seat !== seatId); // Hủy bỏ chọn ghế
+            setTotalPrice(totalPrice - priceShowitmes);
+        } else {
+            updatedSeats = [...selectedSeats, seatId]; // Chọn ghế
+            setTotalPrice(totalPrice + priceShowitmes);
+        }
+        setSelectedSeats(updatedSeats);
+        setStorageSeats(updatedSeats.join(', '));
+        isSelected
+            ? selectedSeats.filter((seat) => seat !== seatId)
+            : [...selectedSeats, seatId];
+        const seatsArr = seats.split(''); // ['A', 'A', 'U', 'R', ...]
+        seatsArr[seatIndexNumber] = isSelected ? 'A' : 'R'; // Tìm vị trí của phần tử trong mảng sau đó thay thế ký tự
+        setSeats(seatsArr.join('')); // Chuyển lại thành chuỗi để render components
     });
 
     const navigationSeatToCombo = () => {
@@ -127,7 +137,7 @@ const SeatScreen = ({ navigation }) => {
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
             <Header
-                titleHeader={'MTP Gò Vấp'}
+                titleHeader={nameCinema}
                 onButtonBack={handleButtonBack}
                 onButtonMenu={handleButtonMenu}
             />
@@ -189,6 +199,7 @@ const SeatScreen = ({ navigation }) => {
                                     const seatId =
                                         alphabetSeats[alphabetIndexNumber] +
                                         seatNumber;
+
                                     seatNumber++;
                                     const seatNumberId = seatIndexNumber;
                                     seatIndexNumber++;
@@ -239,9 +250,9 @@ const SeatScreen = ({ navigation }) => {
                 </ScrollView>
             </ScrollView>
             <InformationBottom
-                nameMovie={'SIPDER-MAN NO WAY HOME'}
-                seat={'E09, E10'}
-                totalPayment={'220.000'}
+                nameMovie={nameMovie}
+                seat={storageSeats}
+                totalPayment={totalPrice}
                 onPress={navigationSeatToCombo}
             />
         </View>
