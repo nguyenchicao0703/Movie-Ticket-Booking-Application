@@ -9,6 +9,15 @@ import {
 import React, { useState, useCallback, useEffect } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
 import { Header, InformationBottom } from '../components';
+import { useDispatch } from 'react-redux';
+import {
+    getCinema,
+    getMovie,
+    getPrice,
+    getSeats,
+    getDate,
+    getShowtimes,
+} from '../redux/slice/informationShowtimesSlice';
 
 const TypeSeat = ({ backgroundColor, text }) => {
     return (
@@ -110,7 +119,15 @@ const SeatScreen = ({ navigation, route }) => {
         setSeats(seatsArr.join('')); // Chuyển lại thành chuỗi để render components
     });
 
+    const dispatch = useDispatch();
+
     const navigationSeatToCombo = () => {
+        dispatch(getMovie(nameMovie));
+        dispatch(getCinema(nameCinema));
+        dispatch(getPrice(totalPrice));
+        dispatch(getSeats(storageSeats));
+        dispatch(getShowtimes('00:00:00'));
+        dispatch(getDate('20/11/2023'));
         navigation.navigate('Combo');
     };
 

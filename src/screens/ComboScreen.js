@@ -3,11 +3,17 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header, InformationBottom } from '../components';
 import ComboList from '../components/list/ComboList';
-import { Colors, SelectCombo } from '../constants';
+import { Colors } from '../constants';
 import comboAPI from '../api/comboAPI';
+import { useSelector } from 'react-redux';
 
 const ComboScreen = ({ navigation }) => {
     const [data1, setData1] = useState();
+    const dataInfomationShowtimes = useSelector(
+        (state) => state.informationShowtimes,
+    );
+    console.log({ dataInfomationShowtimes });
+
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
