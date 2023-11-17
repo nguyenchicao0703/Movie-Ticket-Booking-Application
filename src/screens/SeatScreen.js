@@ -6,7 +6,7 @@ import {
     StyleSheet,
     Image,
 } from 'react-native';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
 import { Header, InformationBottom } from '../components';
 
@@ -62,6 +62,7 @@ const alphabetSeats = [
 const SeatScreen = ({ navigation, route }) => {
     const { nameMovie, nameCinema, stringSeats, priceShowitmes } = route.params;
     // console.log({ stringSeats });
+    // console.log({ priceShowitmes });
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [seats, setSeats] = useState(stringSeats);
     const [totalPrice, setTotalPrice] = useState(0);
@@ -74,6 +75,19 @@ const SeatScreen = ({ navigation, route }) => {
     let seatNumber = 1;
     let alphabetIndexNumber = 0;
     let seatIndexNumber = 0;
+
+    // Cập nhật lại chuỗi khi dữ liệu chuỗi ghế (stringSeats) thay đổi
+    useEffect(() => {
+        setSeats(stringSeats);
+
+        // Đặt lại giá trị mặc định giá trị khi điều hướng sang màn hình khác
+        return () => {
+            setSelectedSeats([]);
+            setSeats('');
+            setTotalPrice(0);
+            setStorageSeats('');
+        };
+    }, [stringSeats]);
 
     const handleSeatPress = useCallback((seatId, seatIndexNumber) => {
         // console.log({ seatIndexNumber });

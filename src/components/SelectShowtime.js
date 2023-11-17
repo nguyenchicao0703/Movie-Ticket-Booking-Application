@@ -6,10 +6,21 @@ import { useNavigation } from '@react-navigation/native';
 const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
     const navigation = useNavigation();
     const [dataShowtimes, setDataShowtimes] = useState([]);
-    const [stringSeats, setStringSeats] = useState('');
-    const [priceShowitmes, setPriceShowitmes] = useState('');
 
-    const navigationShowtimeMovieToSeat = () => {
+    const navigationShowtimeMovieToSeat = (item, index) => {
+        // console.log({ item }, { index });
+        const getSeatAndPriceData = data.flatMap((phong) =>
+            phong.suat.map((suat) => {
+                const seats = suat.chuoighe; // Lấy giá trị chuỗi ghế
+                const price = suat.giaxuatchieu; // Lấy giá trị giá xuất chiếu
+                return { seats, price };
+            }),
+        );
+        let stringSeats = getSeatAndPriceData[index].seats;
+        let priceShowitmes = getSeatAndPriceData[index].price;
+        // console.log('String seat:', stringSeats);
+        // console.log('Price showtimes:', priceShowitmes);
+
         navigation.navigate('Seat', {
             nameMovie,
             nameCinema,
@@ -29,14 +40,6 @@ const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
         );
         setDataShowtimes(allShowtimes);
         // console.log('Showtimes', allShowtimes);
-        data.flatMap((phong) =>
-            phong.suat.map((suat) => {
-                setStringSeats(suat.chuoighe); // Lấy giá trị chuỗi ghế
-                setPriceShowitmes(suat.giaxuatchieu); // Lấy giá tị giá xuất chiếu
-            }),
-        );
-        // console.log('String seat:', stringSeats);
-        // console.log('Price showtimes:', priceShowitmes);
     }, []);
 
     return (
@@ -59,9 +62,11 @@ const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
                 data={dataShowtimes}
                 extraData={(item) => item.id}
                 numColumns={3}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                     <Pressable
-                        onPress={navigationShowtimeMovieToSeat}
+                        onPress={() =>
+                            navigationShowtimeMovieToSeat(item, index)
+                        }
                         style={{
                             width: '30%',
                             height: 45,

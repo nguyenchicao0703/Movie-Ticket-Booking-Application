@@ -33,7 +33,7 @@ export default moviesSlice.reducer;
 export const fetchMovies = createAsyncThunk('movies/fetchMovies', async () => {
     try {
         const response = await movieAPI.getAll();
-        console.log('Fetch movies successfully: ', response.data);
+        // console.log('Fetch movies successfully: ', response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching movies:', error);

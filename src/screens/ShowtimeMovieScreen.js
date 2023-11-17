@@ -6,17 +6,16 @@ import {
     Header,
     SelectShowtime,
     MovieTitle,
+    NoShowtimeMessage,
 } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import showtimesAPI from '../api/showtimesAPI';
 import { useSelector } from 'react-redux';
 import { datesSelector } from '../redux/selectors';
-import NoShowtimeMessage from '../components/NoShowtimeMessage';
 
 const ShowtimeMovieScreen = ({ navigation, route }) => {
     const { idMovie, nameMovie } = route.params;
     // console.log({ idMovie });
-    const [nameCinema, setNameCinema] = useState('');
     const [data, setData] = useState([]);
     const [statusGetAPI, setSatusGetAPI] = useState(false);
 
@@ -36,9 +35,7 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                 const response = await showtimesAPI.getAllMovies(idMovie, date);
                 setData(response.data);
                 setSatusGetAPI(response.status);
-                setNameCinema(response.data[0].ten_rap);
                 // console.log('Response data showtime movies', data);
-                // console.log('Showtimes', allShowtimes);
             } catch (error) {
                 console.log('Error fetching showtime movies', error);
             }
@@ -68,9 +65,9 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                     Chọn ngày
                 </Text>
                 <CalendarList />
-                <MovieTitle title={nameCinema} />
+                <MovieTitle title={nameMovie} />
                 {statusGetAPI ? (
-                    data.map((_data) => (
+                    data.map((_data, index) => (
                         <View key={_data.id_rap}>
                             <View>
                                 <View
@@ -93,13 +90,13 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                                             marginTop: 3,
                                         }}
                                     >
-                                        {nameCinema}
+                                        {_data.ten_rap}
                                     </Text>
                                 </View>
                                 <SelectShowtime
                                     data={_data.phong}
                                     nameMovie={nameMovie}
-                                    nameCinema={nameCinema}
+                                    nameCinema={_data.ten_rap}
                                 />
                             </View>
                         </View>
