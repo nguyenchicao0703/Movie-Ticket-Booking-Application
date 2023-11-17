@@ -6,12 +6,11 @@ import ComboList from '../components/list/ComboList';
 import { Colors } from '../constants';
 import comboAPI from '../api/comboAPI';
 import { useSelector } from 'react-redux';
+import { informationShowtimesSelector } from '../redux/selectors';
 
 const ComboScreen = ({ navigation }) => {
-    const [data1, setData1] = useState();
-    const dataInfomationShowtimes = useSelector(
-        (state) => state.informationShowtimes,
-    );
+    const [data, setData] = useState();
+    const dataInfomationShowtimes = useSelector(informationShowtimesSelector);
     console.log({ dataInfomationShowtimes });
 
     const handleButtonMenu = () => {
@@ -32,8 +31,8 @@ const ComboScreen = ({ navigation }) => {
     const fetchData = async () => {
         try {
             const response = await comboAPI.getAll();
-            console.log(response.data);
-            setData1(response.data);
+            // console.log(response.data);
+            setData(response.data);
         } catch (error) {
             console.error(error);
         }
@@ -42,11 +41,11 @@ const ComboScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
             <Header
-                titleHeader={'Combo bắp  & nước'}
+                titleHeader={'Combo bắp & nước'}
                 onButtonBack={handleButtonBack}
                 onButtonMenu={handleButtonMenu}
             />
-            <ComboList data={data1} />
+            <ComboList data={data} />
             <InformationBottom
                 nameMovie={'SIPDER-MAN NO WAY HOME'}
                 seat={'E09, E10'}

@@ -28,7 +28,7 @@ const MovieCard = ({ data, listCase }) => {
                   nameMovie: data.ten_phim,
               })
             : null;
-        console.log({ listCase });
+        // console.log({ listCase });
     };
 
     return (
@@ -44,6 +44,7 @@ const MovieCard = ({ data, listCase }) => {
                 alignSelf: 'center',
             }}
             onPress={handleButtonMovieCard}
+            disabled={listCase === 'TicketHistory' ? true : false}
         >
             <Image
                 source={{ uri: data.hinhanh }}

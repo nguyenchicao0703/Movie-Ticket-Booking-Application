@@ -11,12 +11,12 @@ import { Colors, Fonts, SeatImage } from '../constants';
 import { Header, InformationBottom } from '../components';
 import { useDispatch } from 'react-redux';
 import {
-    getCinema,
-    getMovie,
-    getPrice,
-    getSeats,
-    getDate,
-    getShowtimes,
+    setCinema,
+    setMovie,
+    setPrice,
+    setPositionSeating,
+    setDate,
+    setShowtimes,
 } from '../redux/slice/informationShowtimesSlice';
 
 const TypeSeat = ({ backgroundColor, text }) => {
@@ -122,12 +122,12 @@ const SeatScreen = ({ navigation, route }) => {
     const dispatch = useDispatch();
 
     const navigationSeatToCombo = () => {
-        dispatch(getMovie(nameMovie));
-        dispatch(getCinema(nameCinema));
-        dispatch(getPrice(totalPrice));
-        dispatch(getSeats(storageSeats));
-        dispatch(getShowtimes('00:00:00'));
-        dispatch(getDate('20/11/2023'));
+        dispatch(setMovie(nameMovie));
+        dispatch(setCinema(nameCinema));
+        dispatch(setPrice(totalPrice));
+        dispatch(setPositionSeating(storageSeats));
+        dispatch(setShowtimes('00:00:00'));
+        dispatch(setDate('20/11/2023'));
         navigation.navigate('Combo');
     };
 

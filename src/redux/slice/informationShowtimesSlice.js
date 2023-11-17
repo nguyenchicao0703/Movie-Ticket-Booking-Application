@@ -7,39 +7,39 @@ const informationShowtimesSlice = createSlice({
         movie: '',
         cinema: '',
         price: 0,
-        seats: '',
+        positionSeating: '',
         showtime: '',
         date: '',
     },
     reducers: {
-        getMovie: (state, action) => {
+        setMovie: (state, action) => {
             state.movie = action.payload;
         },
-        getCinema: (state, action) => {
+        setCinema: (state, action) => {
             state.cinema = action.payload;
         },
-        getPrice: (state, action) => {
+        setPrice: (state, action) => {
             state.price = action.payload;
         },
-        getSeats: (state, action) => {
-            state.seats = action.payload;
+        setPositionSeating: (state, action) => {
+            state.positionSeating = action.payload;
         },
-        getShowtimes: (state, action) => {
+        setShowtimes: (state, action) => {
             state.showtime = action.payload;
         },
-        getDate: (state, action) => {
+        setDate: (state, action) => {
             state.date = action.payload;
         },
     },
 });
 
 export const {
-    getMovie,
-    getCinema,
-    getPrice,
-    getSeats,
-    getShowtimes,
-    getDate,
+    setMovie,
+    setCinema,
+    setPrice,
+    setPositionSeating,
+    setShowtimes,
+    setDate,
 } = informationShowtimesSlice.actions;
 
 export default informationShowtimesSlice.reducer;

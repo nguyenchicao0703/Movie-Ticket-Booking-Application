@@ -6,9 +6,12 @@ import {
     View,
     useWindowDimensions,
 } from 'react-native';
-import React, { useState } from 'react';
-import { Colors, Fonts, TicketFuture, TicketHistory } from '../constants';
-import { Header, MovieList } from '../components';
+import React, { useEffect, useState } from 'react';
+import { Colors, Fonts } from '../constants';
+import { Header, MovieList, NoShowtimeMessage } from '../components';
+import ticketAPI from '../api/ticketAPI';
+import { useSelector } from 'react-redux';
+import { idUsersSelector } from '../redux/selectors';
 
 const TopTabsTicketHistory = [
     { id: 1, category: 'Phim sắp xem' },
@@ -17,10 +20,15 @@ const TopTabsTicketHistory = [
 
 const TicketScreen = ({ navigation }) => {
     const { width, height, fontScale } = useWindowDimensions();
-    const [clickButton, setClickButton] = useState(0);
+    const [clickTab, setClickTab] = useState(0);
+    const [data, setData] = useState([]);
+    const [currentDate, setCurrentDate] = useState('');
+    const [movie, setMovie] = useState([]);
+
+    const idUser = useSelector(idUsersSelector);
 
     const handleClickTopTab = (index) => {
-        setClickButton(index);
+        setClickTab(index);
     };
 
     const handleButtonBack = () => {
@@ -30,6 +38,49 @@ const TicketScreen = ({ navigation }) => {
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
+
+    useEffect(() => {
+        const fetchTickets = async () => {
+            try {
+                const response = await ticketAPI.getAll(idUser);
+                // console.log(response.data);
+                setData(response.data);
+            } catch (error) {
+                console.log('Error fetching tickets', error);
+            }
+        };
+        fetchTickets();
+
+        const updateCurrentDate = () => {
+            var current = new Date();
+            var day = current.getDate();
+            var month = current.getMonth() + 1; // Tháng bắt đầu từ 0, nên cộng thêm 1
+            var year = current.getFullYear();
+            setCurrentDate(`${year}-${month}-${day}`);
+        };
+
+        updateCurrentDate();
+
+        // Cập nhật lịch sau mỗi 5 phút
+        const interval = setInterval(() => {
+            updateCurrentDate();
+            console.log('1');
+        }, 300000); // 5 phút
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
+    useEffect(() => {
+        const filterTypeTicket = data.filter((item) =>
+            clickTab === 0
+                ? item.ngaykhoichieu >= currentDate
+                : item.ngaykhoichieu < currentDate,
+        );
+        setMovie(filterTypeTicket);
+        console.log({ movie });
+    }, [clickTab]);
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
@@ -42,6 +93,7 @@ const TicketScreen = ({ navigation }) => {
                 {TopTabsTicketHistory.map((value, index) => (
                     <Pressable
                         key={index}
+                        onPress={() => handleClickTopTab(index)}
                         style={[
                             {
                                 width: '50%',
@@ -50,20 +102,19 @@ const TicketScreen = ({ navigation }) => {
                                     Colors.DARK_INDIGO_TICKET_HISTORY,
                                 justifyContent: 'center',
                             },
-                            clickButton === index
+                            clickTab === index
                                 ? {
                                       borderBottomWidth: 1.5,
                                       borderBottomColor: Colors.DARK_RED,
                                   }
                                 : null,
                         ]}
-                        onPress={() => handleClickTopTab(index)}
                     >
                         <Text
                             style={{
                                 fontSize: fontScale * 20,
                                 color:
-                                    clickButton === index
+                                    clickTab === index
                                         ? Colors.DARK_RED
                                         : Colors.LIGHT_GRAY,
                                 fontFamily: Fonts.Medium,
@@ -75,88 +126,94 @@ const TicketScreen = ({ navigation }) => {
                     </Pressable>
                 ))}
             </View>
-            {clickButton === 0 ? (
-                <FlatList
-                    style={{ marginHorizontal: 10 }}
-                    data={TicketFuture}
-                    extraData={(item) => item.id}
-                    showsHorizontalScrollIndicator={false}
-                    renderItem={({ item }) => (
-                        <Pressable
-                            style={{
-                                width: '100%',
-                                height: height * 0.32,
-                                marginTop: 20,
-                                borderBottomWidth: 1,
-                                borderBottomColor:
-                                    Colors.OPACITY_MEDIUM_GRAY_LINE,
-                            }}
-                        >
-                            <View style={{ flexDirection: 'row' }}>
-                                <Image
-                                    source={item.image}
-                                    style={{
-                                        width: width * 0.32,
-                                        height: height * 0.28 + 10,
-                                        borderRadius: 5,
-                                        marginRight: 10,
-                                    }}
-                                />
-                                <View
-                                    style={{
-                                        flexDirection: 'column',
-                                    }}
-                                >
+            {clickTab === 0 ? (
+                movie.length === 0 ? (
+                    <NoShowtimeMessage />
+                ) : (
+                    <FlatList
+                        style={{ marginHorizontal: 10 }}
+                        data={movie}
+                        extraData={(item) => item.id}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item }) => (
+                            <Pressable
+                                style={{
+                                    width: '100%',
+                                    height: height * 0.32,
+                                    marginTop: 20,
+                                    borderBottomWidth: 1,
+                                    borderBottomColor:
+                                        Colors.OPACITY_MEDIUM_GRAY_LINE,
+                                }}
+                            >
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Image
+                                        source={{ uri: item.hinhanh }}
+                                        style={{
+                                            width: width * 0.32,
+                                            height: height * 0.28 + 10,
+                                            borderRadius: 5,
+                                            marginRight: 10,
+                                        }}
+                                    />
                                     <View
                                         style={{
-                                            width: width * 0.35,
-                                            paddingVertical: 5,
-                                            backgroundColor:
-                                                Colors.MEDIUM_GREEN,
-                                            borderRadius: 5,
-                                            justifyContent: 'center',
+                                            flexDirection: 'column',
                                         }}
                                     >
+                                        <View
+                                            style={{
+                                                width: width * 0.35,
+                                                paddingVertical: 5,
+                                                backgroundColor:
+                                                    Colors.MEDIUM_GREEN,
+                                                borderRadius: 5,
+                                                justifyContent: 'center',
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: Colors.DEFAULT_WHITE,
+                                                    fontSize: fontScale * 16,
+                                                    fontFamily: Fonts.Bold,
+                                                    textAlign: 'center',
+                                                }}
+                                            >
+                                                Mã vé: {item.id_ve}
+                                            </Text>
+                                        </View>
                                         <Text
                                             style={{
                                                 color: Colors.DEFAULT_WHITE,
                                                 fontSize: fontScale * 16,
                                                 fontFamily: Fonts.Bold,
-                                                textAlign: 'center',
+                                                maxWidth: 230,
+                                                marginTop: 10,
                                             }}
                                         >
-                                            Mã vé: {item.id}
+                                            {item.ten_phim}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: Colors.DARK_RED,
+                                                fontSize: fontScale * 16,
+                                                fontFamily: Fonts.SemiBold,
+                                                maxWidth: 230,
+                                                marginTop: 10,
+                                            }}
+                                        >
+                                            {item.giaxuatchieu} đ
                                         </Text>
                                     </View>
-                                    <Text
-                                        style={{
-                                            color: Colors.DEFAULT_WHITE,
-                                            fontSize: fontScale * 16,
-                                            fontFamily: Fonts.Bold,
-                                            maxWidth: 230,
-                                            marginTop: 10,
-                                        }}
-                                    >
-                                        {item.name}
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            color: Colors.DARK_RED,
-                                            fontSize: fontScale * 16,
-                                            fontFamily: Fonts.SemiBold,
-                                            maxWidth: 230,
-                                            marginTop: 10,
-                                        }}
-                                    >
-                                        {item.price} đ
-                                    </Text>
                                 </View>
-                            </View>
-                        </Pressable>
-                    )}
-                />
+                            </Pressable>
+                        )}
+                    />
+                )
+            ) : movie.length === 0 ? (
+                <NoShowtimeMessage />
             ) : (
-                <MovieList data={TicketHistory} listCase={'TicketHistory'} />
+                <MovieList data={movie} listCase={'TicketHistory'} />
             )}
         </View>
     );
