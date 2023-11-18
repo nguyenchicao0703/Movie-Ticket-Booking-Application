@@ -9,15 +9,9 @@ import {
 import React, { useState, useCallback, useEffect } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
 import { Header, InformationBottom } from '../components';
-import { useDispatch } from 'react-redux';
-import {
-    setCinema,
-    setMovie,
-    setPrice,
-    setPositionSeating,
-    setDate,
-    setShowtimes,
-} from '../redux/slice/informationShowtimesSlice';
+import ticketAPI from '../api/ticketAPI';
+import { useSelector } from 'react-redux';
+import { datesSelector, idUsersSelector } from '../redux/selectors';
 
 const TypeSeat = ({ backgroundColor, text }) => {
     return (
@@ -68,22 +62,30 @@ const alphabetSeats = [
     'P',
 ];
 
+const STATUS_AVAILABLE = 1;
+const STATUS_BOOKED = 2;
+const STATUS_RESERVED = 3;
+
 const SeatScreen = ({ navigation, route }) => {
-    const { nameMovie, nameCinema, stringSeats, priceShowitmes } = route.params;
-    // console.log({ stringSeats });
-    // console.log({ priceShowitmes });
+    const {
+        nameMovie,
+        nameCinema,
+        stringSeats,
+        priceShowitmes,
+        idShowtimes,
+        headerShowtimes,
+    } = route.params;
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [seats, setSeats] = useState(stringSeats);
     const [totalPrice, setTotalPrice] = useState(0);
     const [storageSeats, setStorageSeats] = useState('');
 
-    const STATUS_AVAILABLE = 1;
-    const STATUS_BOOKED = 2;
-    const STATUS_RESERVED = 3;
-
     let seatNumber = 1;
     let alphabetIndexNumber = 0;
     let seatIndexNumber = 0;
+
+    const idUser = useSelector(idUsersSelector);
+    const headerDate = useSelector(datesSelector); // Chỉ dùng để gửi đến header
 
     // Cập nhật lại chuỗi khi dữ liệu chuỗi ghế (stringSeats) thay đổi
     useEffect(() => {
@@ -99,7 +101,6 @@ const SeatScreen = ({ navigation, route }) => {
     }, [stringSeats]);
 
     const handleSeatPress = useCallback((seatId, seatIndexNumber) => {
-        // console.log({ seatIndexNumber });
         const isSelected = selectedSeats.includes(seatId);
         let updatedSeats;
         if (isSelected) {
@@ -119,16 +120,17 @@ const SeatScreen = ({ navigation, route }) => {
         setSeats(seatsArr.join('')); // Chuyển lại thành chuỗi để render components
     });
 
-    const dispatch = useDispatch();
-
-    const navigationSeatToCombo = () => {
-        dispatch(setMovie(nameMovie));
-        dispatch(setCinema(nameCinema));
-        dispatch(setPrice(totalPrice));
-        dispatch(setPositionSeating(storageSeats));
-        dispatch(setShowtimes('00:00:00'));
-        dispatch(setDate('20/11/2023'));
-        navigation.navigate('Combo');
+    const navigationSeatToCombo = async () => {
+        try {
+            await ticketAPI.postBookTicket(idUser, idShowtimes, storageSeats);
+            navigation.navigate('Combo', {
+                nameMovie,
+                storageSeats,
+                totalPrice,
+            });
+        } catch (error) {
+            console.log('Error fetch seats', error);
+        }
     };
 
     const handleButtonMenu = () => {
@@ -157,6 +159,9 @@ const SeatScreen = ({ navigation, route }) => {
                 titleHeader={nameCinema}
                 onButtonBack={handleButtonBack}
                 onButtonMenu={handleButtonMenu}
+                activatedTitleSeats
+                dateShowtime={headerDate}
+                showtimes={headerShowtimes}
             />
             <ScrollView>
                 <ScrollView
@@ -270,7 +275,7 @@ const SeatScreen = ({ navigation, route }) => {
                 nameMovie={nameMovie}
                 seat={storageSeats}
                 totalPayment={totalPrice}
-                onPress={navigationSeatToCombo}
+                onPress={storageSeats !== '' ? navigationSeatToCombo : null}
             />
         </View>
     );

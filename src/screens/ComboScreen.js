@@ -5,13 +5,9 @@ import { Header, InformationBottom } from '../components';
 import ComboList from '../components/list/ComboList';
 import { Colors } from '../constants';
 import comboAPI from '../api/comboAPI';
-import { useSelector } from 'react-redux';
-import { informationShowtimesSelector } from '../redux/selectors';
 
 const ComboScreen = ({ navigation }) => {
     const [data, setData] = useState();
-    const dataInfomationShowtimes = useSelector(informationShowtimesSelector);
-    console.log({ dataInfomationShowtimes });
 
     const handleButtonMenu = () => {
         navigation.openDrawer();

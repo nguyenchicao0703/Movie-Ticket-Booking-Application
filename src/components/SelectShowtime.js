@@ -26,6 +26,10 @@ const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
             nameCinema,
             stringSeats,
             priceShowitmes: +priceShowitmes, // Biến chuỗi thành số
+            idShowtimes: data.map((phong) =>
+                phong.suat.map((suat) => suat.id_suatchieu),
+            ),
+            headerShowtimes: item, // Chỉ dùng gửi đến header seat
         });
     };
 
