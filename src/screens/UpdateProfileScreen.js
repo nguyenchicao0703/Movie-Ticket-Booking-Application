@@ -27,20 +27,31 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { ScrollView } from 'react-native-virtualized-view';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
+import { resetUsers } from '../redux/slice/usersSlice';
 
 const UpdateProfileScreen = () => {
     const dataUser = useSelector(usersSelector);
     const userProfile = dataUser.users.data;
-    const diachi = `${userProfile.diachi}  ${userProfile.quan}  ${userProfile.tinh}`;
+    const dispatch = useDispatch();
+    const [name, setName] = useState(userProfile ? userProfile.name : '');
+    const [phone, setPhone] = useState(userProfile ? userProfile.phone : '');
+    const [email, setEmail] = useState(userProfile ? userProfile.email : '');
+    const [avatar, setAvatar] = useState(userProfile ? userProfile.avatar : '');
+    const [diachi, setDiachi] = useState(
+        userProfile
+            ? `${userProfile.diachi}  ${userProfile.quan}  ${userProfile.tinh}`
+            : '',
+    );
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
     const { width, height } = useWindowDimensions();
     const [date, setDate] = useState(new Date());
     const [showPicker, setshowPicker] = useState(false);
-    const [dayOfBirth, setDayOfBirth] = useState(userProfile.bod);
-
+    const [dayOfBirth, setDayOfBirth] = useState(
+        userProfile ? userProfile.bod : '',
+    );
     //Day Of Birth
     const toggleDatepicker = () => {
         setshowPicker(!showPicker);
@@ -70,7 +81,9 @@ const UpdateProfileScreen = () => {
     };
 
     //Handle Avatar User
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(
+        userProfile ? avatar : null,
+    );
     const ImagePicker = () => {
         let options = {
             storageOptions: {
@@ -101,9 +114,17 @@ const UpdateProfileScreen = () => {
             }
         });
     };
+    const clearInputFields = () => {
+        dispatch(resetUsers());
+        // Dispatch action để xóa dữ liệu người dùng từ Redux
+        // Đặt các trường nhập liệu khác về giá trị mặc định tương ứng
+    };
 
     const handleUpdateProfile = () => {};
-
+    const handleGoBack = () => {
+        // dispatch(resetUsers());
+        navigation.goBack();
+    };
     return (
         <View
             style={{
@@ -115,7 +136,7 @@ const UpdateProfileScreen = () => {
         >
             <Header
                 titleHeader={'Thông tin cá nhân'}
-                onButtonBack={() => navigation.goBack()}
+                onButtonBack={() => handleGoBack()}
             />
             <ScrollView style={{ width: '100%' }}>
                 <View style={styles.groupAvatar}>
@@ -227,23 +248,23 @@ const UpdateProfileScreen = () => {
                             marginTop: 15,
                         }}
                     >
-                        {userProfile.name}
+                        {name}
                     </Text>
                 </View>
 
                 <View style={styles.groupInput}>
                     <View style={styles.containerInput}>
-                        <Input value={userProfile.name} label={'Họ và tên'} />
+                        <Input value={name} label={'Họ và tên'} />
                     </View>
                     <View style={styles.containerInput}>
                         <Input
                             keyboardType={'numeric'}
                             label={'Số điện thoại'}
-                            value={userProfile.phone}
+                            value={phone}
                         />
                     </View>
                     <View style={styles.containerInput}>
-                        <Input label={'Email'} value={userProfile.email} />
+                        <Input label={'Email'} value={email} />
                     </View>
                     <View style={styles.containerInput}>
                         <Input label={'Địa chỉ'} value={diachi} />
