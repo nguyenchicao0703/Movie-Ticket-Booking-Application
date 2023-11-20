@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import usersAPI from '../../api/usersAPI';
+import { State } from 'react-native-gesture-handler';
 
 // Slice của reducer và actions
 const usersSlice = createSlice({
@@ -16,8 +17,14 @@ const usersSlice = createSlice({
             })
             .addCase(fetchUsers.rejected, (state, action) => {
                 state.error = action.error.message;
+            })
+            .addCase('users/resetUsers', (state) => {
+                state.users = [];
             });
     },
+});
+export const resetUsers = () => ({
+    type: 'users/resetUsers',
 });
 
 export default usersSlice.reducer;

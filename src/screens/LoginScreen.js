@@ -20,6 +20,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, fetchUsersMail } from '../redux/slice/usersSlice';
 import { usersSelector } from '../redux/selectors';
+import { tr } from 'date-fns/locale';
 
 const LoginScreen = () => {
     const [userName, setUserName] = useState('');
@@ -28,23 +29,45 @@ const LoginScreen = () => {
     const [phone, setPhone] = useState('');
     const navigation = useNavigation();
     const [error, setError] = useState('');
+    const clearState = () => {
+        setUserName('');
+        setShowModal(false);
+        setModalTimer(null);
+        setPhone('');
+        setError('');
+    };
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const dispatch = useDispatch();
     const response = useSelector(usersSelector);
 
     // Login with Phone Number
+    useEffect(() => {
+        if (response.users.status) {
+            // Đăng nhập thành công
+            console.log('Đăng nhập thành công:', response.users.data);
+            navigation.navigate('Drawer');
+            clearState();
+            setIsLoggedIn(true);
+        } else if (response.users.msg) {
+            // Đăng nhập thất bại
+            console.log('Đăng nhập thất bại:', response.users.msg);
+        }
+    }, [response.users]);
     const loginWithPhoneNumber = async () => {
-        dispatch(fetchUsers(phone));
-        const status = response.users.status;
-        const msg = response.users.msg;
-        const data = response.users.data;
         try {
+            await dispatch(fetchUsers(phone));
+            const status = response.users.status;
+            const msg = response.users.msg;
+            const data = response.users.data;
             //handle the API response
             if (status) {
                 //login successfuly
                 console.log('Đăng nhập thành công:', data);
                 navigation.navigate('Drawer');
                 ToastAndroid.show('đăng nhập thành công', ToastAndroid.LONG);
+                clearState();
+                setIsLoggedIn(true);
             } else {
                 //faile login
                 if (String(phone).trim() === '') {
@@ -56,14 +79,14 @@ const LoginScreen = () => {
                     return;
                 }
                 if (!status) {
-                    setError('không tồn tại số điện thoại');
-
+                    setError('Không tồn tại số điện thoại');
                     return;
                 }
                 console.log('Login faild', msg);
             }
         } catch (error) {
             console.log('error logging in', error);
+            setError('Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.');
         }
     };
 
@@ -96,12 +119,15 @@ const LoginScreen = () => {
                         console.log('Logged in successfully');
                         console.log(user);
                         navigation.navigate('Drawer');
+                        clearState();
+                        setIsLoggedIn(true);
                     } else {
                         console.log('Please confirm email');
                         setShowModal(true);
                         setModalTimer(
                             setTimeout(() => setShowModal(false), 3000),
                         );
+                        setIsLoggedIn(true);
                         // Close the modal after 3 seconds
                     }
                 }
@@ -123,6 +149,7 @@ const LoginScreen = () => {
                 googleCredential,
             );
             const email = user.email;
+            clearState();
             setUserName(user.displayName);
             await handleLoginWithEmail(email);
         } catch (error) {
