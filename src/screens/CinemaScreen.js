@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { CinemaList, Header } from '../components';
 import { Colors, Fonts } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
-import cinemaAPI from '../api/cinemaAPI';
-
+import cinemaAPI from '../api/CinemaAPI';
 const CinemaScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
 

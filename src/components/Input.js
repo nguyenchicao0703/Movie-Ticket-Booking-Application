@@ -16,12 +16,14 @@ const Input = ({
     onChangeText,
     keyboardType,
     style,
+    placeholder,
 }) => {
     const { height, width, scale, fontScale } = useWindowDimensions();
 
     return (
         <View style={[styles.groupEmailInput, {}]}>
             <TextInput
+                placeholder={placeholder}
                 style={[
                     {
                         backgroundColor: 'transparent',

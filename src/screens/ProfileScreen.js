@@ -11,7 +11,8 @@ import { HeaderImage, Images, ProfileImage } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import { useNavigation } from '@react-navigation/native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-
+import { resetUsers } from '../redux/slice/usersSlice';
+import { useDispatch } from 'react-redux';
 const ProfileScreen = ({}) => {
     useEffect(() => {
         GoogleSignin.configure({
@@ -20,6 +21,7 @@ const ProfileScreen = ({}) => {
         });
     }, []);
     const [userInfo, setUserInfo] = useState(null);
+    const dispatch = useDispatch();
 
     const handleSignOut = async () => {
         try {
@@ -31,8 +33,9 @@ const ProfileScreen = ({}) => {
 
             // Clear any relevant authentication state in your app
             setUserInfo(null);
+            dispatch(resetUsers());
             console.log('Sign out');
-            navigation.navigate('Login');
+            navigation.navigate('Login', { isSignedIn: false });
         } catch (error) {
             console.log('Sign out error:', error.message);
         }
