@@ -11,6 +11,10 @@ import com.facebook.soloader.SoLoader;
 import java.util.List;
 import com.oblador.vectoricons.VectorIconsPackage;
 
+import com.movie_ticket_booking_application.zalopaymodule.ZaloPayBridge;
+import vn.zalopay.sdk.ZaloPaySDK;
+import vn.zalopay.sdk.Environment;
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
@@ -27,6 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+            packages.add(new ZaloPayBridge());
           return packages;
         }
 
@@ -60,5 +65,6 @@ public class MainApplication extends Application implements ReactApplication {
       DefaultNewArchitectureEntryPoint.load();
     }
     ReactNativeFlipper.initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    ZaloPaySDK.init(1214,Environment.SANDBOX);
   }
 }
