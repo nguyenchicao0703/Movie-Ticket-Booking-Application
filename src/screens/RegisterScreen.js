@@ -11,6 +11,7 @@ import {
 import React, { useState } from 'react';
 import { Images, Fonts, Colors } from '../constants';
 import { AuthAccountButton, BackButton, Input, TextTitle } from '../components';
+import usersAPI from '../api/usersAPI';
 
 const RegisterScreen = ({ navigation }) => {
     const [unTickedRule, setUnTickedRule] = useState(true);
@@ -25,25 +26,15 @@ const RegisterScreen = ({ navigation }) => {
     };
 
     const registerUser = async (phone) => {
-        const url = 'http://10.0.2.2:1234/api/Dang-ky-tai-khoan-sdt.php'; // Replace with your actual API endpoint
-
-        return fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ phone }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Registration failed');
-                }
-                console.log(response);
-                return response.json();
-            })
-            .catch((error) => {
-                throw error;
-            });
+        try {
+            const response = await usersAPI.postRegisterUserWithPhoneNumber(
+                phone,
+            );
+            console.log({ response });
+            return response;
+        } catch (error) {
+            console.log('Error fetching register', error);
+        }
     };
 
     const handlePhoneChange = (text) => {

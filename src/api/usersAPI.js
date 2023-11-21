@@ -1,11 +1,15 @@
 import axiosClient from './axiosClient';
 
 const usersAPI = {
-    postUserWithMail: (email) => {
-        return axiosClient.post('/dang-nhap-gmail.php', { email });
+    postRegisterUserWithPhoneNumber: (phone) => {
+        console.log({ phone });
+        return axiosClient.post('/Dang-ky-tai-khoan-sdt.php', { phone });
     },
     postUserWithPhoneNumber: (phone) => {
-        return axiosClient.post('/dang-nhap-sdt.php', { phone });
+        return axiosClient.post('/Dang-nhap-sdt.php', { phone });
+    },
+    postUserWithMail: (email) => {
+        return axiosClient.post('/Dang-nhap-gmail.php', { email });
     },
 };
 export default usersAPI;
