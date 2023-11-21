@@ -42,47 +42,35 @@ const LoginScreen = () => {
     const response = useSelector(usersSelector);
 
     // Login with Phone Number
-    useEffect(() => {
-        if (response.users.status) {
-            // Đăng nhập thành công
-            console.log('Đăng nhập thành công:', response.users.data);
-            navigation.navigate('Drawer');
-            clearState();
-            setIsLoggedIn(true);
-        } else if (response.users.msg) {
-            // Đăng nhập thất bại
-            console.log('Đăng nhập thất bại:', response.users.msg);
-        }
-    }, [response.users]);
+
     const loginWithPhoneNumber = async () => {
         try {
-            await dispatch(fetchUsers(phone));
-            const status = response.users.status;
-            const msg = response.users.msg;
-            const data = response.users.data;
+            const response = await dispatch(fetchUsers(phone));
+            const status = response.payload.status;
+            const msg = response.payload.msg;
             //handle the API response
             if (status) {
                 //login successfuly
-                console.log('Đăng nhập thành công:', data);
+                console.log('Đăng nhập thành công:', response);
                 navigation.navigate('Drawer');
                 ToastAndroid.show('đăng nhập thành công', ToastAndroid.LONG);
                 clearState();
                 setIsLoggedIn(true);
             } else {
-                //faile login
-                if (String(phone).trim() === '') {
+                const phones = phone;
+                // Failed login
+                if (phones.trim() === '') {
+                    console.log('Không được để trống số điện thoại.');
                     setError('Không được để trống số điện thoại.');
-                    return;
-                }
-                if (!String(phone).startsWith('0')) {
+                } else if (!phones.startsWith('0')) {
+                    console.log('Số điện thoại phải bắt đầu bằng 0.');
                     setError('Số điện thoại phải bắt đầu bằng 0.');
-                    return;
-                }
-                if (!status) {
+                } else if (!status) {
+                    console.log('Không tồn tại số điện thoại');
                     setError('Không tồn tại số điện thoại');
-                    return;
+                } else {
+                    console.log('Login failed', msg);
                 }
-                console.log('Login faild', msg);
             }
         } catch (error) {
             console.log('error logging in', error);
@@ -110,26 +98,24 @@ const LoginScreen = () => {
 
     const handleLoginWithEmail = async (email) => {
         try {
-            dispatch(fetchUsersMail(email));
-
-            if (response) {
-                if (response.users.status) {
-                    if (response.users.data) {
-                        const user = response.users.data;
-                        console.log('Logged in successfully');
-                        console.log(user);
-                        navigation.navigate('Drawer');
-                        clearState();
-                        setIsLoggedIn(true);
-                    } else {
-                        console.log('Please confirm email');
-                        setShowModal(true);
-                        setModalTimer(
-                            setTimeout(() => setShowModal(false), 3000),
-                        );
-                        setIsLoggedIn(true);
-                        // Close the modal after 3 seconds
-                    }
+            const response = await dispatch(fetchUsersMail(email));
+            if (response.payload.status) {
+                if (response.payload.data) {
+                    console.log('Logged in successfully');
+                    console.log(
+                        'thong tin nguoi dung :',
+                        response.payload.data,
+                    );
+                    navigation.navigate('Drawer');
+                    clearState();
+                    setIsLoggedIn(true);
+                } else if (response.payload.data === null) {
+                    console.log('du lieu ', response.payload.data);
+                    setShowModal(true);
+                    setModalTimer(setTimeout(() => setShowModal(false), 3000));
+                    setIsLoggedIn(true);
+                    console.log(response.payload.msg);
+                    // Close the modal after 3 seconds
                 }
             } else {
                 console.log('An error occurred.');
@@ -162,7 +148,18 @@ const LoginScreen = () => {
     const clickRegister = () => {
         navigation.navigate('Register');
     };
+    // useEffect(() => {
+    //     if (response.users.data) {
+    //         // Đăng nhập thành công
+    //         console.log('Đăng nhập thành công:', response.users.data);
+    //         navigation.navigate('Drawer');
+    //         clearState();
+    //         setIsLoggedIn(true);
+    //     } else if (response.users.data === null) {
+    //         // Đăng nhập thất bại
 
+    //     }
+    // }, [response.users]);
     const { width, height, scale, fontScale } = useWindowDimensions();
 
     return (

@@ -30,7 +30,6 @@ const RegisterScreen = ({ navigation }) => {
             const response = await usersAPI.postRegisterUserWithPhoneNumber(
                 phone,
             );
-            console.log({ response });
             return response;
         } catch (error) {
             console.log('Error fetching register', error);
@@ -57,25 +56,48 @@ const RegisterScreen = ({ navigation }) => {
             setError('Số điện thoại phải bắt đầu bằng số 0');
             return;
         }
+        if (phone.length > 12 || phone.length < 10) {
+            setError('Số điện thoại phải có độ dài từ 10 đến 12 chữ số');
+            return;
+        }
 
-        registerUser(phone)
-            .then((response) => {
-                // Handle successful registration
-                console.log('Success:', response);
-                setIsModalVisible(true); // Show the modal after successful registration
-                const interval = setInterval(() => {
-                    setCountdown((prevCountdown) => prevCountdown - 1);
-                }, 1000);
+        usersAPI
+            .postCheckPhoneNumber(phone)
+            .then((Response) => {
+                // Handle successful phone number check
+                console.log('Phone number check success:', Response);
 
-                setTimeout(() => {
-                    setIsModalVisible(false);
-                    clearInterval(interval);
-                    navigation.navigate('Login'); // Navigate to the next screen after 5 seconds
-                }, 5000);
+                if (Response.status) {
+                    registerUser(phone)
+                        .then((Response) => {
+                            // Handle successful registration
+                            console.log('Success:', Response);
+
+                            setIsModalVisible(true);
+                            const interval = setInterval(() => {
+                                setCountdown(
+                                    (prevCountdown) => prevCountdown - 1,
+                                );
+                            }, 1000);
+
+                            setTimeout(() => {
+                                setIsModalVisible(false);
+                                clearInterval(interval);
+                                navigation.navigate('Login');
+                            }, 5000);
+                        })
+                        .catch((registerError) => {
+                            // Handle registration error
+                            console.error('Registration error:', registerError);
+                        });
+                } else if (Response.status === false) {
+                    // Số điện thoại chưa tồn tại
+                    setError('Số điện thoại đã tồn tại!');
+                }
             })
-            .catch((error) => {
-                // Handle registration error
-                console.error('Error:', error.message);
+            .catch((checkError) => {
+                // Handle phone number check error
+                console.error('Phone number check error:', checkError);
             });
     };
     return (

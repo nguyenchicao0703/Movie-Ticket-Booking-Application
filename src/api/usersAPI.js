@@ -11,5 +11,8 @@ const usersAPI = {
     postUserWithMail: (email) => {
         return axiosClient.post('/Dang-nhap-gmail.php', { email });
     },
+    postCheckPhoneNumber: (phone) => {
+        return axiosClient.post(`/Check-sdt.php?sdt=${phone}`);
+    },
 };
 export default usersAPI;

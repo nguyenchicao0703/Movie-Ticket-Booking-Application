@@ -131,7 +131,7 @@ const DetailScreen = ({ navigation, route }) => {
                             style={styles.video}
                             resizeMode="cover"
                             ref={videoRef}
-                            paused={!isVideoPlaying}
+                            paused={isVideoPlaying}
                             disableBack={true}
                             fullscreen
                         />
