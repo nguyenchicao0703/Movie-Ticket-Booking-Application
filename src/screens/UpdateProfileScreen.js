@@ -8,7 +8,7 @@ import {
     useWindowDimensions,
     Modal,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Colors,
     DrawerImage,
@@ -59,7 +59,7 @@ const UpdateProfileScreen = () => {
 
     const onChangeDateOfBirth = ({ type }, selectedDate) => {
         if (type == 'set') {
-            const currentDate = selectedDate;
+            const currentDate = data.bod;
             setDate(currentDate);
 
             if (Platform.OS === 'android') {
