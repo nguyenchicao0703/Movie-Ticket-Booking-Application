@@ -14,5 +14,8 @@ const usersAPI = {
     postCheckPhoneNumber: (phone) => {
         return axiosClient.post(`/Check-sdt.php?sdt=${phone}`);
     },
+    postUpdateProfile: (data) => {
+        return axiosClient.post('/Cap-nhat-thong-tin.php', data);
+    },
 };
 export default usersAPI;

@@ -7,6 +7,7 @@ import {
     Pressable,
     useWindowDimensions,
     Modal,
+    ScrollView,
 } from 'react-native';
 import React, { useState } from 'react';
 import {
@@ -23,14 +24,15 @@ import {
     GenderSelectionBox,
     Input,
     Header,
+    InputAddress,
 } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { ScrollView } from 'react-native-virtualized-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
 import { resetUsers } from '../redux/slice/usersSlice';
-
+import axios from 'axios';
+import usersAPI from '../api/usersAPI';
 const UpdateProfileScreen = () => {
     const dataUser = useSelector(usersSelector);
     const userProfile = dataUser.users.data;
@@ -39,11 +41,11 @@ const UpdateProfileScreen = () => {
     const [phone, setPhone] = useState(userProfile ? userProfile.phone : '');
     const [email, setEmail] = useState(userProfile ? userProfile.email : '');
     const [avatar, setAvatar] = useState(userProfile ? userProfile.avatar : '');
-    const [diachi, setDiachi] = useState(
-        userProfile
-            ? `${userProfile.diachi}  ${userProfile.quan}  ${userProfile.tinh}`
-            : '',
-    );
+    const [diachi, setDiachi] = useState(userProfile ? userProfile.diachi : '');
+    const [tinh, setTinh] = useState(userProfile ? userProfile.tinh : '');
+
+    const [quan, setQuan] = useState(userProfile ? userProfile.quan : '');
+
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
     const { width, height } = useWindowDimensions();
@@ -77,7 +79,7 @@ const UpdateProfileScreen = () => {
         let month = date.getMonth() + 1;
         let day = date.getDate();
 
-        return `${day}-${month}-${year}`;
+        return `${year}-${month}-${day}`;
     };
 
     //Handle Avatar User
@@ -120,10 +122,74 @@ const UpdateProfileScreen = () => {
         // Đặt các trường nhập liệu khác về giá trị mặc định tương ứng
     };
 
-    const handleUpdateProfile = () => {};
     const handleGoBack = () => {
         // dispatch(resetUsers());
         navigation.goBack();
+    };
+    const handleNameChange = (newName) => {
+        setName(newName);
+    };
+
+    const handlePhoneChange = (newPhone) => {
+        setPhone(newPhone);
+    };
+    const handleEmailChange = (newEmail) => {
+        setEmail(newEmail);
+    };
+    const handleTinhChange = (newTinh) => {
+        setTinh(newTinh);
+    };
+    const handleQuanChange = (newQuan) => {
+        setQuan(newQuan);
+    };
+    const handleDiaChiChange = (newDiachi) => {
+        setDiachi(newDiachi);
+    };
+    const handleUpdateProfile = () => {
+        // Kiểm tra xem các trường thông tin đã được điền đầy đủ chưa
+        if (
+            !name ||
+            !phone ||
+            !email ||
+            !dayOfBirth ||
+            !tinh ||
+            !quan ||
+            !diachi
+        ) {
+            // Xử lý lỗi nếu các trường thông tin bị thiếu
+            console.log('ko được để trống thông tin');
+            // Ví dụ: hiển thị thông báo lỗi cho người dùng
+            return;
+        }
+
+        // Tạo một đối tượng mới chứa thông tin người dùng đã cập nhật
+        const data = {
+            id: userProfile.id_user,
+            name: name,
+            phone: phone,
+            email: email,
+            avatar: selectedImage, // Cập nhật avatar nếu người dùng đã chọn ảnh mới
+            diachi: diachi,
+            tinh: tinh,
+            quan: quan,
+            bod: dayOfBirth,
+            gender: 1,
+        };
+        console.log(name);
+        // Gọi API để cập nhật thông tin người dùng
+        usersAPI
+            .postUpdateProfile(data)
+            .then((response) => {
+                console.log('cập nhật thành công');
+                console.log(response);
+                // Xử lý thành công sau khi cập nhật thông tin
+                // Ví dụ: hiển thị thông báo thành công cho người dùng
+            })
+            .catch((error) => {
+                console.log('lỗi rồi', error);
+                // Xử lý lỗi nếu gặp lỗi khi cập nhật thông tin
+                // Ví dụ: hiển thị thông báo lỗi cho người dùng
+            });
     };
     return (
         <View
@@ -254,21 +320,29 @@ const UpdateProfileScreen = () => {
 
                 <View style={styles.groupInput}>
                     <View style={styles.containerInput}>
-                        <Input value={name} label={'Họ và tên'} />
+                        <Input
+                            value={name}
+                            label={'Họ và tên'}
+                            onChangeText={handleNameChange}
+                        />
                     </View>
                     <View style={styles.containerInput}>
                         <Input
                             keyboardType={'numeric'}
                             label={'Số điện thoại'}
                             value={phone}
+                            onChangeText={handlePhoneChange}
+                            editable={false}
                         />
                     </View>
                     <View style={styles.containerInput}>
-                        <Input label={'Email'} value={email} />
+                        <Input
+                            label={'Email'}
+                            value={email}
+                            onChangeText={handleEmailChange}
+                        />
                     </View>
-                    <View style={styles.containerInput}>
-                        <Input label={'Địa chỉ'} value={diachi} />
-                    </View>
+
                     <View style={styles.containerInput}>
                         {showPicker && (
                             <DateTimePicker
@@ -306,6 +380,27 @@ const UpdateProfileScreen = () => {
                             </Pressable>
                         )}
                     </View>
+                    <View style={styles.containerInput}>
+                        <InputAddress
+                            style={{}}
+                            label={'Tỉnh/Thành phố'}
+                            value={tinh}
+                            onChangeText={(text) => setTinh(text)}
+                        />
+                        <InputAddress
+                            style={{}}
+                            label={'Quận huyện'}
+                            value={quan}
+                            onChangeText={(text) => setQuan(text)}
+                        />
+                    </View>
+                    <View style={styles.containerInput}>
+                        <Input
+                            label={'Địa chỉ'}
+                            value={diachi}
+                            onChangeText={(text) => setDiachi(text)}
+                        />
+                    </View>
                     <GenderSelectionBox marginLeft={30} />
                     <AuthAccountButton
                         text={'Cập nhật'}
@@ -332,6 +427,8 @@ const styles = StyleSheet.create({
     containerInput: {
         marginTop: 19,
         flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
     },
     groupInput: {
         width: '100%',

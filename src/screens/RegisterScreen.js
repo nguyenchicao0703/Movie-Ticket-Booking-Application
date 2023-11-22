@@ -17,7 +17,7 @@ const RegisterScreen = ({ navigation }) => {
     const [unTickedRule, setUnTickedRule] = useState(true);
     const [phone, setPhone] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [countdown, setCountdown] = useState(5);
+    const [countdown, setCountdown] = useState(4);
     const [error, setError] = useState('');
     const { height, width, scale, fontScale } = useWindowDimensions();
 
@@ -288,6 +288,8 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         alignItems: 'center',
+        justifyContent: 'center',
+        height: '70%',
     },
 
     ButtonCheckBoxRule: {
