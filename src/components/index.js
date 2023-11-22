@@ -28,7 +28,7 @@ import PaymentContentBar from './PaymentContentBar';
 import PaymentTitleBar from './PaymentTitleBar';
 import NoShowtimeMessage from './NoShowtimeMessage';
 import VideoView from './VideoView';
-
+import InputAddress from './InputAddress';
 export {
     Input,
     CustomDrawerContent,
@@ -56,4 +56,5 @@ export {
     PaymentTitleBar,
     NoShowtimeMessage,
     VideoView,
+    InputAddress,
 };

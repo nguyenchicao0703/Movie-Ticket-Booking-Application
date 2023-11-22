@@ -101,7 +101,7 @@ const DetailScreen = ({ navigation, route }) => {
                 setMovie(data);
                 setIdMovie(data.id_phim);
                 setNameMovie(data.ten_phim);
-                console.log('Data detail movie', data);
+                console.log('Data detail movie', data.diemdanhgia);
             } catch (error) {
                 console.log('Error fetching response Movie Detail:', error);
             }

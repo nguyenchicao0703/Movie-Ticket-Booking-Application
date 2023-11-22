@@ -8,7 +8,11 @@ const usersSlice = createSlice({
     initialState: {
         users: [],
     },
-    reducers: {},
+    reducers: {
+        updateUser: (state, action) => {
+            state.state = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchUsers.pending, (state) => {})
@@ -30,17 +34,21 @@ export const resetUsers = () => ({
 export default usersSlice.reducer;
 
 // Action thunk để lấy danh sách phim từ API
-export const fetchUsers = createAsyncThunk('users/fetchUser', async (phone) => {
-    try {
-        const response = await usersAPI.postUserWithPhoneNumber(phone);
-        const user = response;
-        // console.log(user);
-        return user;
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        throw error;
-    }
-});
+export const fetchUsers = createAsyncThunk(
+    'users/fetchUser',
+    async (phone, { dispatch }) => {
+        try {
+            const response = await usersAPI.postUserWithPhoneNumber(phone);
+            const user = response;
+            console.log('userSlice', user);
+
+            return user;
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            throw error;
+        }
+    },
+);
 
 export const fetchUsersMail = createAsyncThunk(
     'users/fetchUser',
