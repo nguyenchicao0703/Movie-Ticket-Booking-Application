@@ -11,8 +11,10 @@ import { HeaderImage, Images, ProfileImage } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import { useNavigation } from '@react-navigation/native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { useDispatch, useSelector } from 'react-redux';
+import { usersSelector } from '../redux/selectors';
 import { resetUsers } from '../redux/slice/usersSlice';
-import { useDispatch } from 'react-redux';
+
 const ProfileScreen = ({}) => {
     useEffect(() => {
         GoogleSignin.configure({
