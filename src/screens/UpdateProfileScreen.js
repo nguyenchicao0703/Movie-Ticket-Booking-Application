@@ -30,23 +30,28 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
-import { resetUsers } from '../redux/slice/usersSlice';
+import {
+    fetchUsers,
+    fetchUsersMail,
+    resetUsers,
+} from '../redux/slice/usersSlice';
 import axios from 'axios';
 import usersAPI from '../api/usersAPI';
 const UpdateProfileScreen = () => {
-    const dataUser = useSelector(usersSelector);
-    const userProfile = dataUser.users.data;
+    const navigation = useNavigation();
     const dispatch = useDispatch();
+    const dataUser = useSelector(usersSelector);
+    const [userProfile, setUserProfile] = useState(dataUser.users.data);
+    console.log({ userProfile });
+    const id = userProfile.id_user;
+
     const [name, setName] = useState(userProfile ? userProfile.name : '');
     const [phone, setPhone] = useState(userProfile ? userProfile.phone : '');
     const [email, setEmail] = useState(userProfile ? userProfile.email : '');
     const [avatar, setAvatar] = useState(userProfile ? userProfile.avatar : '');
     const [diachi, setDiachi] = useState(userProfile ? userProfile.diachi : '');
     const [tinh, setTinh] = useState(userProfile ? userProfile.tinh : '');
-
     const [quan, setQuan] = useState(userProfile ? userProfile.quan : '');
-
-    const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
     const { width, height } = useWindowDimensions();
     const [date, setDate] = useState(new Date());
@@ -54,6 +59,13 @@ const UpdateProfileScreen = () => {
     const [dayOfBirth, setDayOfBirth] = useState(
         userProfile ? userProfile.bod : '',
     );
+    const [initialUser, setInitialUser] = useState(userProfile);
+    const [submittedData, setSubmittedData] = useState(null);
+
+    useEffect(() => {
+        setInitialUser(userProfile);
+    }, []);
+
     //Day Of Birth
     const toggleDatepicker = () => {
         setshowPicker(!showPicker);
@@ -117,13 +129,20 @@ const UpdateProfileScreen = () => {
         });
     };
     const clearInputFields = () => {
-        dispatch(resetUsers());
+        // dispatch(resetUsers());
         // Dispatch action để xóa dữ liệu người dùng từ Redux
         // Đặt các trường nhập liệu khác về giá trị mặc định tương ứng
     };
 
     const handleGoBack = () => {
-        // dispatch(resetUsers());
+        setName(initialUser ? initialUser.name : '');
+        setPhone(initialUser ? initialUser.phone : '');
+        setEmail(initialUser ? initialUser.email : '');
+        setAvatar(initialUser ? initialUser.avatar : '');
+        setDiachi(initialUser ? initialUser.diachi : '');
+        setTinh(initialUser ? initialUser.tinh : '');
+        setQuan(initialUser ? initialUser.quan : '');
+        setDayOfBirth(initialUser ? initialUser.bod : '');
         navigation.goBack();
     };
     const handleNameChange = (newName) => {
@@ -145,7 +164,7 @@ const UpdateProfileScreen = () => {
     const handleDiaChiChange = (newDiachi) => {
         setDiachi(newDiachi);
     };
-    const handleUpdateProfile = () => {
+    const handleUpdateProfile = async () => {
         // Kiểm tra xem các trường thông tin đã được điền đầy đủ chưa
         if (
             !name ||
@@ -161,10 +180,9 @@ const UpdateProfileScreen = () => {
             // Ví dụ: hiển thị thông báo lỗi cho người dùng
             return;
         }
-
         // Tạo một đối tượng mới chứa thông tin người dùng đã cập nhật
         const data = {
-            id: userProfile.id_user,
+            id: id,
             name: name,
             phone: phone,
             email: email,
@@ -177,20 +195,19 @@ const UpdateProfileScreen = () => {
         };
         console.log(name);
         // Gọi API để cập nhật thông tin người dùng
-        usersAPI
-            .postUpdateProfile(data)
-            .then((response) => {
-                console.log('cập nhật thành công');
-                console.log(response);
-                // Xử lý thành công sau khi cập nhật thông tin
-                // Ví dụ: hiển thị thông báo thành công cho người dùng
-            })
-            .catch((error) => {
-                console.log('lỗi rồi', error);
-                // Xử lý lỗi nếu gặp lỗi khi cập nhật thông tin
-                // Ví dụ: hiển thị thông báo lỗi cho người dùng
-            });
+        try {
+            const response = await usersAPI.postUpdateProfile(data);
+            console.log('response update profile', response);
+            dispatch(fetchUsers(phone));
+            dispatch(fetchUsersMail(email));
+            // Gọi action để reload lại dữ liệu users
+            // setUserProfile(dataUser.users.data);
+            return response;
+        } catch (error) {
+            console.log('Error fetching update profile', error);
+        }
     };
+
     return (
         <View
             style={{
@@ -288,7 +305,7 @@ const UpdateProfileScreen = () => {
                             source={
                                 selectedImage
                                     ? { uri: selectedImage }
-                                    : { uri: `${userProfile.avatar}` }
+                                    : { uri: `${avatar}` }
                             }
                         />
                         <Pressable
