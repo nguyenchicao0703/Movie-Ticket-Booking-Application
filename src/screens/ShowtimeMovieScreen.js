@@ -15,7 +15,7 @@ import { datesSelector } from '../redux/selectors';
 
 const ShowtimeMovieScreen = ({ navigation, route }) => {
     const { idMovie, nameMovie } = route.params;
-    // console.log({ idMovie });
+    console.log({ idMovie });
     const [data, setData] = useState([]);
     const [statusGetAPI, setSatusGetAPI] = useState(false);
 

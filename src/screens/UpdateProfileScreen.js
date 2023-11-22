@@ -7,11 +7,11 @@ import {
     Pressable,
     useWindowDimensions,
     Modal,
+    ScrollView,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import {
     Colors,
-    DrawerImage,
     Fonts,
     UpdateProfileImage,
     BottomTabImage,
@@ -26,13 +26,19 @@ import {
 } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { ScrollView } from 'react-native-virtualized-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
 import { resetUsers } from '../redux/slice/usersSlice';
 
+const dataGender = [
+    { id: 1, gioitinh: 'Nữ' },
+    { id: 2, gioitinh: 'Nam' },
+];
+
 const UpdateProfileScreen = () => {
+    const { width, height } = useWindowDimensions();
     const dataUser = useSelector(usersSelector);
+    console.log('dataUser', dataUser.users);
     const userProfile = dataUser.users.data;
     const dispatch = useDispatch();
     const [name, setName] = useState(userProfile ? userProfile.name : '');
@@ -46,15 +52,21 @@ const UpdateProfileScreen = () => {
     );
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
-    const { width, height } = useWindowDimensions();
     const [date, setDate] = useState(new Date());
     const [showPicker, setshowPicker] = useState(false);
     const [dayOfBirth, setDayOfBirth] = useState(
         userProfile ? userProfile.bod : '',
     );
+    const [gender, setGender] = useState(dataUser.users.data.gender);
+    console.log({ gender });
+    const fontSize = height * 0.018;
     //Day Of Birth
     const toggleDatepicker = () => {
         setshowPicker(!showPicker);
+    };
+
+    const handleChangeGender = (stringGender) => {
+        setGender(stringGender);
     };
 
     const onChangeDateOfBirth = ({ type }, selectedDate) => {
@@ -123,6 +135,7 @@ const UpdateProfileScreen = () => {
     const handleUpdateProfile = () => {};
     const handleGoBack = () => {
         // dispatch(resetUsers());
+        setGender(dataUser.users.data.gender);
         navigation.goBack();
     };
     return (
@@ -306,7 +319,83 @@ const UpdateProfileScreen = () => {
                             </Pressable>
                         )}
                     </View>
-                    <GenderSelectionBox marginLeft={30} />
+                    {/* <GenderSelectionBox marginLeft={30} /> */}
+                    <View style={[styles.gender]}>
+                        <Text
+                            style={[
+                                styles.titleCheckbox,
+                                { fontSize: fontSize },
+                            ]}
+                        >
+                            Giới tính
+                        </Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    marginTop: 10,
+                                }}
+                            >
+                                <Pressable
+                                    onPress={() => handleChangeGender('1')}
+                                    style={[
+                                        styles.checkBoxCircle,
+                                        {
+                                            width: width * 0.06,
+                                            height: height * 0.03,
+                                        },
+                                    ]}
+                                >
+                                    {gender === '1' ? (
+                                        <View style={styles.inSideCircle} />
+                                    ) : null}
+                                </Pressable>
+                                <Text
+                                    style={{
+                                        color: 'white',
+                                        marginLeft: 10,
+                                        marginRight: 30,
+                                        fontFamily: Fonts.Regular,
+                                        fontSize: fontSize,
+                                    }}
+                                >
+                                    Nam
+                                </Text>
+                            </View>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    marginTop: 10,
+                                }}
+                            >
+                                <Pressable
+                                    onPress={() => handleChangeGender('0')}
+                                    style={[
+                                        styles.checkBoxCircle,
+                                        {
+                                            width: width * 0.06,
+                                            height: height * 0.03,
+                                        },
+                                    ]}
+                                >
+                                    {gender === '0' ? (
+                                        <View style={styles.inSideCircle} />
+                                    ) : null}
+                                </Pressable>
+                                <Text
+                                    style={{
+                                        color: 'white',
+                                        marginLeft: 10,
+                                        marginRight: 30,
+                                        fontFamily: Fonts.Regular,
+                                        fontSize: fontSize,
+                                    }}
+                                >
+                                    Nữ
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
                     <AuthAccountButton
                         text={'Cập nhật'}
                         onPress={handleUpdateProfile}
@@ -373,5 +462,27 @@ const styles = StyleSheet.create({
         color: Colors.DEFAULT_BLACK,
         fontFamily: Fonts.Medium,
         marginTop: -20,
+    },
+    gender: {
+        width: '100%',
+        marginTop: 15,
+        marginLeft: 30,
+    },
+    titleCheckbox: {
+        color: Colors.LIGHT_GRAY,
+        fontFamily: Fonts.Light,
+    },
+    checkBoxCircle: {
+        borderWidth: 2,
+        borderRadius: 100,
+        borderColor: Colors.DARK_RED,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    inSideCircle: {
+        width: '50%',
+        height: '50%',
+        backgroundColor: Colors.DARK_RED,
+        borderRadius: 100,
     },
 });

@@ -9,30 +9,27 @@ import React, { useEffect, useState } from 'react';
 import { Colors, Fonts } from '../constants';
 import { usersSelector } from '../redux/selectors';
 import { useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
 
 const data = [
-    { id: 1, gioitinh: 'Nam' },
-    { id: 2, gioitinh: 'Nữ' },
-    { id: 3, gioitinh: 'Khác' },
+    { id: 1, gioitinh: 'Nữ' },
+    { id: 2, gioitinh: 'Nam' },
 ];
 const GenderSelectionBox = ({ marginLeft }) => {
     const { height, width, scale, fontScale } = useWindowDimensions();
     const fontSize = height * 0.018;
     const [isClick, setIsClick] = useState(0);
 
-    const navigation = useNavigation();
-
     const dataUser = useSelector(usersSelector);
-    const gender = 1;
-    // const gender = dataUser.users.data.gender;
-    // console.log({ gender });
+    const gender = dataUser.users.data.gender;
+    // const gender = 1;
+    console.log({ gender });
     const handleButton = (index) => {
         // console.log({ index });
         setIsClick(index);
     };
 
     useEffect(() => {
+        console.log('gender 2', { gender });
         setIsClick(gender);
     }, []);
 
