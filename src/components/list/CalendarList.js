@@ -1,5 +1,5 @@
 import { View, FlatList } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { CalendarCard } from '../card';
 import { format, addDays } from 'date-fns';
 import { useSelector } from 'react-redux';
@@ -10,20 +10,20 @@ const CalendarList = () => {
 
     const isSelected = useSelector(selectedDateSelector);
 
+    const updateWeekSchedule = useCallback(() => {
+        const currentDate = new Date(); // Lấy thời gian thực
+        const weekDays = [];
+
+        // 1 tuần
+        for (let i = 0; i < 7; i++) {
+            const day = addDays(currentDate, i);
+            weekDays.push(day);
+        }
+
+        setWeekSchedule(weekDays);
+    }, []);
+
     useEffect(() => {
-        const updateWeekSchedule = () => {
-            const currentDate = new Date(); // Lấy thời gian thực
-            const weekDays = [];
-
-            // 1 tuần
-            for (let i = 0; i < 7; i++) {
-                const day = addDays(currentDate, i);
-                weekDays.push(day);
-            }
-
-            setWeekSchedule(weekDays);
-        };
-
         updateWeekSchedule();
 
         // Cập nhật lịch sau mỗi 1 phút
@@ -40,7 +40,7 @@ const CalendarList = () => {
         <View>
             <FlatList
                 data={weekSchedule}
-                extraData={(item) => item.id}
+                extraData={weekSchedule}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item, index }) => (

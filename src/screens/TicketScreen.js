@@ -73,11 +73,14 @@ const TicketScreen = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
-        const filterTypeTicket = data.filter((item) =>
-            clickTab === 0
-                ? item.ngaykhoichieu >= currentDate
-                : item.ngaykhoichieu < currentDate,
-        );
+        const filterTypeTicket =
+            data !== undefined
+                ? data.filter((item) =>
+                      clickTab === 0
+                          ? item.ngaykhoichieu >= currentDate
+                          : item.ngaykhoichieu < currentDate,
+                  )
+                : [];
         setMovie(filterTypeTicket);
         console.log({ movie });
     }, [clickTab]);

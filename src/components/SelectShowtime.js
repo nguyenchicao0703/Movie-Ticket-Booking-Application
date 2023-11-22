@@ -18,8 +18,6 @@ const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
         );
         let stringSeats = getSeatAndPriceData[index].seats;
         let priceShowitmes = getSeatAndPriceData[index].price;
-        // console.log('String seat:', stringSeats);
-        // console.log('Price showtimes:', priceShowitmes);
 
         navigation.navigate('Seat', {
             nameMovie,
@@ -38,7 +36,7 @@ const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
         // Lấy giờ chiếu
         const allShowtimes = data.flatMap((phong) =>
             phong.suat.map((suat) => {
-                const showtimes = suat.giochieu.split(' ')[1]; // Chỉ lấy phần giờ từ giá trị 'giochieu'
+                const showtimes = suat.giochieu;
                 return showtimes;
             }),
         );

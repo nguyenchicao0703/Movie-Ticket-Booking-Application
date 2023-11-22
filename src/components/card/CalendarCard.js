@@ -1,5 +1,5 @@
 import { Text, Pressable } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import { Colors, Fonts } from '../../constants';
 import { useDispatch } from 'react-redux';
 import { getDate, isSelect } from '../../redux/slice/calendarsSlice';
