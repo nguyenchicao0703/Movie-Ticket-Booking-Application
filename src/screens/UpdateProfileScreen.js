@@ -18,13 +18,7 @@ import {
     ModalRatingImage,
 } from '../constants';
 import { useNavigation } from '@react-navigation/native';
-import {
-    AuthAccountButton,
-    GenderSelectionBox,
-    Input,
-    Header,
-    InputAddress,
-} from '../components';
+import { AuthAccountButton, Input, Header, InputAddress } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
@@ -34,7 +28,6 @@ import {
     fetchUsersMail,
     resetUsers,
 } from '../redux/slice/usersSlice';
-import axios from 'axios';
 import usersAPI from '../api/usersAPI';
 
 const UpdateProfileScreen = () => {
@@ -42,7 +35,13 @@ const UpdateProfileScreen = () => {
     const dispatch = useDispatch();
     const { width, height } = useWindowDimensions();
     const dataUser = useSelector(usersSelector);
+    console.log({ dataUser });
     const userProfile = dataUser.users.data;
+    console.log({ userProfile });
+    const id = userProfile.id_user;
+    console.log('update name', name);
+    console.log('name chet tiet', userProfile.name);
+
     const [name, setName] = useState(userProfile ? userProfile.name : '');
     const [phone, setPhone] = useState(userProfile ? userProfile.phone : '');
     const [email, setEmail] = useState(userProfile ? userProfile.email : '');
@@ -61,7 +60,7 @@ const UpdateProfileScreen = () => {
 
     useEffect(() => {
         setInitialUser(userProfile);
-    }, []);
+    }, [dataUser]);
 
     const [gender, setGender] = useState(dataUser.users.data.gender);
     console.log({ gender });
@@ -169,6 +168,7 @@ const UpdateProfileScreen = () => {
     const handleDiaChiChange = (newDiachi) => {
         setDiachi(newDiachi);
     };
+
     const handleUpdateProfile = async () => {
         // Kiểm tra xem các trường thông tin đã được điền đầy đủ chưa
         if (
@@ -196,17 +196,14 @@ const UpdateProfileScreen = () => {
             tinh: tinh,
             quan: quan,
             bod: dayOfBirth,
-            gender: 1,
+            gender: true,
         };
-        console.log(name);
         // Gọi API để cập nhật thông tin người dùng
         try {
+            console.log('gender aaa', gender);
             const response = await usersAPI.postUpdateProfile(data);
             console.log('response update profile', response);
             dispatch(fetchUsers(phone));
-            dispatch(fetchUsersMail(email));
-            // Gọi action để reload lại dữ liệu users
-            // setUserProfile(dataUser.users.data);
             return response;
         } catch (error) {
             console.log('Error fetching update profile', error);
@@ -402,7 +399,28 @@ const UpdateProfileScreen = () => {
                             </Pressable>
                         )}
                     </View>
-                    {/* <GenderSelectionBox marginLeft={30} /> */}
+
+                    <View style={styles.containerInput}>
+                        <InputAddress
+                            style={{}}
+                            label={'Tỉnh/Thành phố'}
+                            value={tinh}
+                            onChangeText={(text) => setTinh(text)}
+                        />
+                        <InputAddress
+                            style={{}}
+                            label={'Quận huyện'}
+                            value={quan}
+                            onChangeText={(text) => setQuan(text)}
+                        />
+                    </View>
+                    <View style={styles.containerInput}>
+                        <Input
+                            label={'Địa chỉ'}
+                            value={diachi}
+                            onChangeText={(text) => setDiachi(text)}
+                        />
+                    </View>
                     <View style={[styles.gender]}>
                         <Text
                             style={[
