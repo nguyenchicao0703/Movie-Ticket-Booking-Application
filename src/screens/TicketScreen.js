@@ -44,7 +44,7 @@ const TicketScreen = ({ navigation }) => {
             try {
                 const response = await ticketAPI.getAll(idUser);
                 // console.log(response.data);
-                setData(response.data);
+                response.status ? setData(response.data) : setData([]);
             } catch (error) {
                 console.log('Error fetching tickets', error);
             }
@@ -131,7 +131,7 @@ const TicketScreen = ({ navigation }) => {
             </View>
             {clickTab === 0 ? (
                 movie.length === 0 ? (
-                    <NoShowtimeMessage />
+                    <NoShowtimeMessage title={'Chưa có dữ liệu vé của bạn'} />
                 ) : (
                     <FlatList
                         style={{ marginHorizontal: 10 }}
@@ -214,7 +214,7 @@ const TicketScreen = ({ navigation }) => {
                     />
                 )
             ) : movie.length === 0 ? (
-                <NoShowtimeMessage />
+                <NoShowtimeMessage title={'Chưa có dữ liệu vé của bạn'} />
             ) : (
                 <MovieList data={movie} listCase={'TicketHistory'} />
             )}

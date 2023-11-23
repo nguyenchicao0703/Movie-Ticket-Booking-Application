@@ -33,7 +33,8 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
         const fetchingShowtimeMovies = async () => {
             try {
                 const response = await showtimesAPI.getAllMovies(idMovie, date);
-                setData(response.data);
+                console.log('data showtimes movies', response);
+                response.status ? setData(response.data) : setData([]);
                 setSatusGetAPI(response.status);
                 // console.log('Response data showtime movies', data);
             } catch (error) {
@@ -102,7 +103,9 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                         </View>
                     ))
                 ) : (
-                    <NoShowtimeMessage />
+                    <NoShowtimeMessage
+                        title={'Ôi không, Hôm nay chưa có suất chiếu'}
+                    />
                 )}
             </ScrollView>
         </View>

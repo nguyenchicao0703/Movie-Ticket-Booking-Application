@@ -12,6 +12,7 @@ import { Header, InformationBottom } from '../components';
 import ticketAPI from '../api/ticketAPI';
 import { useSelector } from 'react-redux';
 import { datesSelector, idUsersSelector } from '../redux/selectors';
+import database from '@react-native-firebase/database';
 
 const TypeSeat = ({ backgroundColor, text }) => {
     return (
@@ -87,6 +88,8 @@ const SeatScreen = ({ navigation, route }) => {
     const idUser = useSelector(idUsersSelector);
     const headerDate = useSelector(datesSelector); // Chỉ dùng để gửi đến header
 
+    // console.log({ stringSeats });
+
     // Cập nhật lại chuỗi khi dữ liệu chuỗi ghế (stringSeats) thay đổi
     useEffect(() => {
         setSeats(stringSeats);
@@ -98,7 +101,7 @@ const SeatScreen = ({ navigation, route }) => {
             setTotalPrice(0);
             setStorageSeats('');
         };
-    }, [stringSeats]);
+    }, []);
 
     const handleSeatPress = useCallback((seatId, seatIndexNumber) => {
         const isSelected = selectedSeats.includes(seatId);
@@ -138,6 +141,10 @@ const SeatScreen = ({ navigation, route }) => {
     };
 
     const handleButtonBack = () => {
+        setSeats(stringSeats);
+        setSelectedSeats([]);
+        setTotalPrice(0);
+        setStorageSeats('');
         navigation.goBack(null);
     };
 

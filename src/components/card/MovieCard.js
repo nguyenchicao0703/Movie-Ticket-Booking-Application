@@ -17,7 +17,10 @@ const MovieCard = ({ data, listCase }) => {
     const navigation = useNavigation();
 
     const handleButtonMovieCard = () => {
-        navigation.navigate('Detail', { id: data.id_phim });
+        navigation.navigate('Detail', {
+            id: data.id_phim,
+            idTicket: data.id_ve,
+        });
         console.log(data.id_phim);
     };
 
@@ -44,7 +47,7 @@ const MovieCard = ({ data, listCase }) => {
                 alignSelf: 'center',
             }}
             onPress={handleButtonMovieCard}
-            disabled={listCase === 'TicketHistory' ? true : false}
+            // disabled={listCase === 'TicketHistory' ? true : false}
         >
             <Image
                 source={{ uri: data.hinhanh }}
@@ -67,7 +70,7 @@ const MovieCard = ({ data, listCase }) => {
                     {data.ten_phim}
                 </Text>
                 <Text style={[styles.text, { fontSize }]}>
-                    Thời lượng: {data.thoiluong}
+                    Thời lượng: {data.thoiluong} phút
                 </Text>
                 <Text style={[styles.text, { fontSize }]}>
                     Khởi chiếu: {data.ngaykhoichieu}
