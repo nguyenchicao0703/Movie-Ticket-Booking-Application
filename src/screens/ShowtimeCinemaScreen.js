@@ -35,7 +35,7 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
                     idCinema,
                     date,
                 );
-                setData(response.data);
+                response.status ? setData(response.data) : setData([]);
                 setSatusGetAPI(response.status);
                 // console.log('Response showtime cinemas', data);
             } catch (error) {
@@ -78,7 +78,9 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
                         </View>
                     ))
                 ) : (
-                    <NoShowtimeMessage />
+                    <NoShowtimeMessage
+                        title={'Ôi không, Hôm nay chưa có suất chiếu'}
+                    />
                 )}
             </ScrollView>
         </View>

@@ -26,7 +26,7 @@ const bottomTabs = [
 ];
 
 const HomeScreen = ({ navigation }) => {
-    const { height, fontScale } = useWindowDimensions();
+    const { width, height, fontScale } = useWindowDimensions();
     const textTitle = fontScale * 22;
 
     const dispatch = useDispatch();
@@ -136,9 +136,10 @@ const HomeScreen = ({ navigation }) => {
                 locations={[0.35, 1]}
                 style={{
                     position: 'absolute',
-                    width: '95%',
-                    height: height * 0.1 + 5,
-                    bottom: height * 0.01,
+                    width: '100%',
+                    height: width * 0.2 - 5,
+                    // height: height * 0.1,
+                    bottom: 0,
                     flexDirection: 'row',
                     justifyContent: 'space-around',
                     borderRadius: 10,

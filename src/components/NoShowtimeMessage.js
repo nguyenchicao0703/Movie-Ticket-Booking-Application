@@ -2,7 +2,7 @@ import { Text } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../constants';
 
-const NoShowtimeMessage = () => {
+const NoShowtimeMessage = ({ title }) => {
     return (
         <Text
             style={{
@@ -13,7 +13,7 @@ const NoShowtimeMessage = () => {
                 marginTop: 10,
             }}
         >
-            Ôi không, Hôm nay chưa có suất chiếu
+            {title}
         </Text>
     );
 };
