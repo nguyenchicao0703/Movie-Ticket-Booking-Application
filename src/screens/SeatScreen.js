@@ -104,6 +104,7 @@ const SeatScreen = ({ navigation, route }) => {
     }, []);
 
     const handleSeatPress = useCallback((seatId, seatIndexNumber) => {
+        // console.log({ seatIndexNumber });
         const isSelected = selectedSeats.includes(seatId);
         let updatedSeats;
         if (isSelected) {
