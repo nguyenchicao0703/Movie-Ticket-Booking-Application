@@ -1,13 +1,20 @@
 import {
     StyleSheet,
     Text,
-    View,
-    Image,
+    ScrollView,
+    KeyboardAvoidingView,
+    NativeModules,
+    NativeEventEmitter,
     useWindowDimensions,
     Pressable,
-    ScrollView,
+    TextInput,
+    View,
+    Image,
+    Button,
+    Alert,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
+import CryptoJS from 'crypto-js';
 import { Colors, Fonts, HomeImage, PaymentImage } from '../constants';
 import {
     Header,
@@ -17,7 +24,9 @@ import {
     AuthAccountButton,
 } from '../components';
 
-const PaymentScreen = ({ navigation }) => {
+const { PayZaloBridge } = NativeModules;
+const payZaloBridgeEmitter = new NativeEventEmitter(PayZaloBridge);
+const PaymentScreen = (navigation) => {
     const { width, fontScale } = useWindowDimensions();
     const textSizeInfoMovie = fontScale * 14;
 
@@ -31,6 +40,127 @@ const PaymentScreen = ({ navigation }) => {
 
     const handleButtonNavigation = (router) => {
         navigation.navigate(router);
+    };
+    const [money, setMoney] = React.useState('10000');
+    const [token, setToken] = React.useState('');
+
+    // console.log(token);
+    const token_trans_id = token;
+    const [dataApi, setDataApi] = React.useState('');
+    const data = dataApi;
+    const [returncode, setReturnCode] = React.useState('');
+
+    useEffect(() => {
+        const subscription = payZaloBridgeEmitter.addListener(
+            'EventPayZalo',
+            (data) => {
+                if (data.returnCode == 1) {
+                    // handle action
+                    Alert.alert('Pay sucsess' + data.returnCode);
+                } else if (data.returnCode == -1) {
+                    ZaloPayBridge.installApp();
+
+                    Alert.alert('Pay errror! ' + data.returnCode);
+                }
+                console.log(data.returnCode);
+            },
+        );
+        return () => subscription?.remove();
+    }, []);
+
+    function getCurrentDateYYMMDD() {
+        var todayDate = new Date().toISOString().slice(2, 10);
+        return todayDate.split('-').join('');
+    }
+
+    function getCurrentDateYYMMDD() {
+        var todayDate = new Date().toISOString().slice(2, 10);
+        return todayDate.split('-').join('');
+    }
+
+    async function createOrder(money) {
+        let apptransid = getCurrentDateYYMMDD() + '_' + new Date().getTime();
+
+        let appid = 2554;
+        let amount = parseInt(money);
+        let appuser = 'ZaloPayDemo';
+        let apptime = new Date().getTime();
+        let embeddata = '{}';
+        let item = '[]';
+        let description = 'Merchant description for order #' + apptransid;
+        let hmacInput =
+            appid +
+            '|' +
+            apptransid +
+            '|' +
+            appuser +
+            '|' +
+            amount +
+            '|' +
+            apptime +
+            '|' +
+            embeddata +
+            '|' +
+            item;
+        let mac = CryptoJS.HmacSHA256(
+            hmacInput,
+            'sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn',
+        );
+        console.log('====================================');
+        console.log('hmacInput: ' + hmacInput);
+        console.log('mac: ' + mac);
+        console.log('====================================');
+        var order = {
+            app_id: appid,
+            app_user: appuser,
+            app_time: apptime,
+            amount: amount,
+            app_trans_id: apptransid,
+            embed_data: embeddata,
+            item: item,
+            description: description,
+
+            mac: mac,
+        };
+
+        console.log(order);
+
+        let formBody = [];
+        for (let i in order) {
+            var encodedKey = encodeURIComponent(i);
+            var encodedValue = encodeURIComponent(order[i]);
+            formBody.push(encodedKey + '=' + encodedValue);
+        }
+        formBody = formBody.join('&');
+        await fetch('https://sb-openapi.zalopay.vn/v2/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type':
+                    'application/x-www-form-urlencoded;charset=UTF-8',
+            },
+            body: formBody,
+        })
+            .then((response) => response.json())
+            .then((resJson) => {
+                console.log(resJson);
+                setDataApi(resJson);
+                setToken(resJson.zp_trans_token);
+                setReturnCode(resJson.return_code);
+            })
+            .catch((error) => {
+                console.log('error ', error);
+            });
+    }
+    const payOrder = (token) => {
+        createOrder(10000);
+        // token từ BE trả về nha
+        const payZP = NativeModules.ZaloPayBridge;
+        // console.log(token);
+        console.log(returncode);
+        console.log(token_trans_id);
+        console.log(data);
+
+        payZP.payOrder(token_trans_id);
     };
 
     return (
@@ -203,7 +333,9 @@ const PaymentScreen = ({ navigation }) => {
                 </Pressable>
                 <View style={{ alignItems: 'center', paddingBottom: 20 }}>
                     <AuthAccountButton
-                        onPress={() => handleButtonNavigation('Bill')}
+                        onPress={() => /*handleButtonNavigation('Bill')*/ {
+                            createOrder(10000), payOrder();
+                        }}
                         text={'Thanh toán'}
                     />
                 </View>

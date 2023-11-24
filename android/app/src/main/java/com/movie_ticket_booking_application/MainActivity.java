@@ -4,6 +4,8 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
+import android.content.Intent;
+import vn.zalopay.sdk.ZaloPaySDK;
 
 public class MainActivity extends ReactActivity {
 
@@ -28,5 +30,10 @@ public class MainActivity extends ReactActivity {
         getMainComponentName(),
         // If you opted-in for the New Architecture, we enable the Fabric Renderer.
         DefaultNewArchitectureEntryPoint.getFabricEnabled());
+  }
+  @Override
+  public void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    ZaloPaySDK.getInstance().onResult(intent);
   }
 }
