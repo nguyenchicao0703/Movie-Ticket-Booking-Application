@@ -23,25 +23,17 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
-import {
-    fetchUsers,
-    fetchUsersMail,
-    resetUsers,
-} from '../redux/slice/usersSlice';
+import { fetchUsers, fetchUsersMail } from '../redux/slice/usersSlice';
 import usersAPI from '../api/usersAPI';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UpdateProfileScreen = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const { width, height } = useWindowDimensions();
     const dataUser = useSelector(usersSelector);
-    console.log({ dataUser });
     const userProfile = dataUser.users.data;
-    console.log({ userProfile });
-    const id = userProfile.id_user;
-    console.log('update name', name);
-    console.log('name chet tiet', userProfile.name);
-
+    console.log('thong tin nguoi dung', dataUser);
     const [name, setName] = useState(userProfile ? userProfile.name : '');
     const [phone, setPhone] = useState(userProfile ? userProfile.phone : '');
     const [email, setEmail] = useState(userProfile ? userProfile.email : '');
@@ -58,11 +50,29 @@ const UpdateProfileScreen = () => {
     const [initialUser, setInitialUser] = useState(userProfile);
     const [submittedData, setSubmittedData] = useState(null);
 
+    const getUserData = async () => {
+        try {
+            const userData = await AsyncStorage.getItem('user');
+            if (userData !== null) {
+                // Dữ liệu người dùng được tìm thấy trong AsyncStorage
+                const user = JSON.parse(userData);
+                dispatch(setUserDataAsyn(user));
+                // Sử dụng dữ liệu người dùng ở đây
+                console.log('Thông tin người dùng:', user);
+            }
+        } catch (error) {
+            console.log('Error retrieving user data:', error);
+        }
+    };
+
+    useEffect(() => {
+        getUserData();
+    }, []);
     useEffect(() => {
         setInitialUser(userProfile);
     }, [dataUser]);
-
-    const [gender, setGender] = useState(dataUser.users.data.gender);
+    console.log(dayOfBirth);
+    const [gender, setGender] = useState(userProfile ? userProfile.gender : '');
     console.log({ gender });
     const fontSize = height * 0.018;
     //Day Of Birth
@@ -76,7 +86,7 @@ const UpdateProfileScreen = () => {
 
     const onChangeDateOfBirth = ({ type }, selectedDate) => {
         if (type == 'set') {
-            const currentDate = data.bod;
+            const currentDate = selectedDate;
             setDate(currentDate);
 
             if (Platform.OS === 'android') {
@@ -146,7 +156,7 @@ const UpdateProfileScreen = () => {
         setTinh(initialUser ? initialUser.tinh : '');
         setQuan(initialUser ? initialUser.quan : '');
         setDayOfBirth(initialUser ? initialUser.bod : '');
-        setGender(dataUser.users.data.gender);
+        setGender(initialUser ? initialUser.gender : '');
         navigation.goBack();
     };
     const handleNameChange = (newName) => {
@@ -178,7 +188,8 @@ const UpdateProfileScreen = () => {
             !dayOfBirth ||
             !tinh ||
             !quan ||
-            !diachi
+            !diachi ||
+            !gender
         ) {
             // Xử lý lỗi nếu các trường thông tin bị thiếu
             console.log('ko được để trống thông tin');
@@ -187,7 +198,7 @@ const UpdateProfileScreen = () => {
         }
         // Tạo một đối tượng mới chứa thông tin người dùng đã cập nhật
         const data = {
-            id: id,
+            id: userProfile.id_user,
             name: name,
             phone: phone,
             email: email,
@@ -196,14 +207,17 @@ const UpdateProfileScreen = () => {
             tinh: tinh,
             quan: quan,
             bod: dayOfBirth,
-            gender: true,
+            gender: gender,
         };
         // Gọi API để cập nhật thông tin người dùng
         try {
-            console.log('gender aaa', gender);
             const response = await usersAPI.postUpdateProfile(data);
             console.log('response update profile', response);
-            dispatch(fetchUsers(phone));
+            dispatch(fetchUsers(phone), fetchUsersMail(email));
+
+            console.log(userProfile.gender);
+            console.log(userProfile.id_user);
+
             return response;
         } catch (error) {
             console.log('Error fetching update profile', error);
@@ -405,20 +419,20 @@ const UpdateProfileScreen = () => {
                             style={{}}
                             label={'Tỉnh/Thành phố'}
                             value={tinh}
-                            onChangeText={(text) => setTinh(text)}
+                            onChangeText={handleTinhChange}
                         />
                         <InputAddress
                             style={{}}
                             label={'Quận huyện'}
                             value={quan}
-                            onChangeText={(text) => setQuan(text)}
+                            onChangeText={handleQuanChange}
                         />
                     </View>
                     <View style={styles.containerInput}>
                         <Input
                             label={'Địa chỉ'}
                             value={diachi}
-                            onChangeText={(text) => setDiachi(text)}
+                            onChangeText={handleDiaChiChange}
                         />
                     </View>
                     <View style={[styles.gender]}>

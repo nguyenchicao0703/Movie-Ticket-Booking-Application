@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, fetchUsersMail } from '../redux/slice/usersSlice';
 import { usersSelector } from '../redux/selectors';
 import { tr } from 'date-fns/locale';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const LoginScreen = () => {
     const [userName, setUserName] = useState('');
     const [showModal, setShowModal] = useState(false);
@@ -51,7 +51,10 @@ const LoginScreen = () => {
             //handle the API response
             if (status) {
                 //login successfuly
-                console.log('Đăng nhập thành công:', response);
+                await AsyncStorage.setItem(
+                    'user',
+                    JSON.stringify(response.payload),
+                );
                 navigation.navigate('Drawer');
                 ToastAndroid.show('đăng nhập thành công', ToastAndroid.LONG);
                 clearState();
@@ -65,6 +68,10 @@ const LoginScreen = () => {
                 } else if (!phones.startsWith('0')) {
                     console.log('Số điện thoại phải bắt đầu bằng 0.');
                     setError('Số điện thoại phải bắt đầu bằng 0.');
+                } else if (phone.length > 12 || phone.length < 10) {
+                    setError(
+                        'Số điện thoại phải có độ dài từ 10 đến 12 chữ số',
+                    );
                 } else if (!status) {
                     console.log('Không tồn tại số điện thoại');
                     setError('Không tồn tại số điện thoại');
@@ -102,10 +109,11 @@ const LoginScreen = () => {
             if (response.payload.status) {
                 if (response.payload.data) {
                     console.log('Logged in successfully');
-                    console.log(
-                        'thong tin nguoi dung :',
-                        response.payload.data,
+                    await AsyncStorage.setItem(
+                        'user',
+                        JSON.stringify(response.payload.data),
                     );
+                    console.log(response);
                     navigation.navigate('Drawer');
                     clearState();
                     setIsLoggedIn(true);
@@ -160,6 +168,27 @@ const LoginScreen = () => {
 
     //     }
     // }, [response.users]);
+    useEffect(() => {
+        GoogleSignin.configure({
+            webClientId:
+                '243901576266-jcuvlf63l60k3n7qhvdsi66icu86inuu.apps.googleusercontent.com',
+        });
+
+        const checkUserLoggedIn = async () => {
+            try {
+                const user = await AsyncStorage.getItem('user');
+                if (user) {
+                    // Người dùng đã đăng nhập trước đó
+                    navigation.navigate('Drawer');
+                    setIsLoggedIn(true);
+                }
+            } catch (error) {
+                console.log('Error checking user login status:', error);
+            }
+        };
+
+        checkUserLoggedIn();
+    }, []);
     const { width, height, scale, fontScale } = useWindowDimensions();
 
     return (

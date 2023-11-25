@@ -1,7 +1,6 @@
-import axios from 'axios';
-
 // const BASE_URL = 'http://10.0.2.2:1234/api'; // URL cơ sở của API
 
+import axios from 'axios';
 const BASE_URL = 'https://mvtk.pro.vn/api'; // URL cơ sở của API trên admin
 
 // const BASE_URL = 'http://192.168.100.4:1234/api'; // URL cơ sở của API máy thật
