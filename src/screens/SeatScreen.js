@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
+    Pressable,
 } from 'react-native';
 import React, { useState, useCallback, useEffect } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
@@ -13,6 +14,7 @@ import ticketAPI from '../api/ticketAPI';
 import { useSelector } from 'react-redux';
 import { datesSelector, idUsersSelector } from '../redux/selectors';
 import database from '@react-native-firebase/database';
+import socket from '../utils/socket';
 
 const TypeSeat = ({ backgroundColor, text }) => {
     return (
@@ -77,13 +79,43 @@ const SeatScreen = ({ navigation, route }) => {
         headerShowtimes,
     } = route.params;
     const [selectedSeats, setSelectedSeats] = useState([]);
-    const [seats, setSeats] = useState(stringSeats);
+    const [seats, setSeats] = useState('');
     const [totalPrice, setTotalPrice] = useState(0);
     const [storageSeats, setStorageSeats] = useState('');
+    const [indexSeat, setIndexSeat] = useState([]);
 
     let seatNumber = 1;
     let alphabetIndexNumber = 0;
     let seatIndexNumber = 0;
+
+    useEffect(() => {
+        socket.connect();
+        function onConnect() {
+            socket.emit('suat', JSON.stringify({ id: idShowtimes }));
+            console.log('connect87654321');
+        }
+
+        function onDisconnect() {
+            console.log('disconnect 2');
+        }
+        function onSuat(value) {
+            setSeats(value.results[0]['chuoighe']);
+            setIndexSeat([]);
+        }
+        socket.on('connect', onConnect);
+        socket.on('disconnect', onDisconnect);
+        socket.on('suat', onSuat);
+        socket.on('connect_error', (err) => {
+            console.log(err instanceof Error);
+            console.log(err.message);
+        });
+        return () => {
+            socket.disconnect();
+            socket.off('connect', onConnect);
+            socket.off('disconnect', onDisconnect);
+            socket.off('suat', onDisconnect);
+        };
+    }, [idShowtimes]);
 
     const idUser = useSelector(idUsersSelector);
     const headerDate = useSelector(datesSelector); // Chỉ dùng để gửi đến header
@@ -92,7 +124,7 @@ const SeatScreen = ({ navigation, route }) => {
 
     // Cập nhật lại chuỗi khi dữ liệu chuỗi ghế (stringSeats) thay đổi
     useEffect(() => {
-        setSeats(stringSeats);
+        // setSeats(stringSeats);
 
         // Đặt lại giá trị mặc định giá trị khi điều hướng sang màn hình khác
         return () => {
@@ -103,35 +135,61 @@ const SeatScreen = ({ navigation, route }) => {
         };
     }, []);
 
-    const handleSeatPress = useCallback((seatId, seatIndexNumber) => {
-        // console.log({ seatIndexNumber });
-        const isSelected = selectedSeats.includes(seatId);
-        let updatedSeats;
-        if (isSelected) {
-            updatedSeats = selectedSeats.filter((seat) => seat !== seatId); // Hủy bỏ chọn ghế
-            setTotalPrice(totalPrice - priceShowitmes);
-        } else {
-            updatedSeats = [...selectedSeats, seatId]; // Chọn ghế
-            setTotalPrice(totalPrice + priceShowitmes);
-        }
-        setSelectedSeats(updatedSeats);
-        setStorageSeats(updatedSeats.join(', '));
-        isSelected
-            ? selectedSeats.filter((seat) => seat !== seatId)
-            : [...selectedSeats, seatId];
-        const seatsArr = seats.split(''); // ['A', 'A', 'U', 'R', ...]
-        seatsArr[seatIndexNumber] = isSelected ? 'A' : 'R'; // Tìm vị trí của phần tử trong mảng sau đó thay thế ký tự
-        setSeats(seatsArr.join('')); // Chuyển lại thành chuỗi để render components
-    });
+    console.log({ idShowtimes });
+
+    const handleSeatPress = useCallback(
+        (seatId, seatIndexNumber, seatIndex) => {
+            console.log({ seatIndexNumber });
+            console.log({ seatIndex });
+            console.log({ seatId });
+            const isSelected = selectedSeats.includes(seatId);
+            let updatedSeats;
+            if (isSelected) {
+                updatedSeats = selectedSeats.filter((seat) => seat !== seatId); // Hủy bỏ chọn ghế
+                setTotalPrice(totalPrice - priceShowitmes);
+                const copyWithoutFirstElement = indexSeat.filter(
+                    (value) => value.index !== seatIndexNumber,
+                );
+                setIndexSeat([...copyWithoutFirstElement]);
+            } else {
+                updatedSeats = [...selectedSeats, seatId]; // Chọn ghế
+                setTotalPrice(totalPrice + priceShowitmes);
+                setIndexSeat([
+                    ...indexSeat,
+                    { index: seatIndexNumber, soghe: seatId },
+                ]);
+            }
+            setSelectedSeats(updatedSeats);
+            setStorageSeats(updatedSeats.join(', '));
+            isSelected
+                ? selectedSeats.filter((seat) => seat !== seatId)
+                : [...selectedSeats, seatId];
+            const seatsArr = seats.split(''); // ['A', 'A', 'U', 'R', ...]
+            seatsArr[seatIndexNumber] = isSelected ? 'A' : 'R'; // Tìm vị trí của phần tử trong mảng sau đó thay thế ký tự
+            setSeats(seatsArr.join('')); // Chuyển lại thành chuỗi để render components
+        },
+    );
+
+    console.log({ storageSeats });
 
     const navigationSeatToCombo = async () => {
         try {
-            await ticketAPI.postBookTicket(idUser, idShowtimes, storageSeats);
-            navigation.navigate('Combo', {
-                nameMovie,
-                storageSeats,
-                totalPrice,
-            });
+            // await ticketAPI.postBookTicket(idUser, idShowtimes, storageSeats);
+            // navigation.navigate('Combo', {
+            //     nameMovie,
+            //     storageSeats,
+            //     totalPrice,
+            // });
+            socket.emit(
+                'datghe',
+                JSON.stringify({
+                    id_user: idUser,
+                    id_suat: idShowtimes,
+                    listghe: [...indexSeat],
+                }),
+            );
+            setIndexSeat([]);
+            console.log(...indexSeat);
         } catch (error) {
             console.log('Error fetch seats', error);
         }
@@ -142,8 +200,9 @@ const SeatScreen = ({ navigation, route }) => {
     };
 
     const handleButtonBack = () => {
-        setSeats(stringSeats);
+        setSeats('');
         setSelectedSeats([]);
+        setIndexSeat([]);
         setTotalPrice(0);
         setStorageSeats('');
         navigation.goBack(null);
@@ -200,6 +259,7 @@ const SeatScreen = ({ navigation, route }) => {
                         {seats.split(/(\/)/).map((row, rowIndex) => (
                             <View key={rowIndex} style={styles.row}>
                                 {row.split('').map((seat, seatIndex) => {
+                                    // console.log({ seat });
                                     let status = null;
                                     if (seat === 'U') {
                                         status = STATUS_BOOKED;
@@ -250,6 +310,7 @@ const SeatScreen = ({ navigation, route }) => {
                                                 handleSeatPress(
                                                     seatId,
                                                     seatNumberId,
+                                                    seatIndex,
                                                 )
                                             }
                                             disabled={status === STATUS_BOOKED}
