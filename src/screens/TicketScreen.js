@@ -10,8 +10,9 @@ import React, { useEffect, useState } from 'react';
 import { Colors, Fonts } from '../constants';
 import { Header, MovieList, NoShowtimeMessage } from '../components';
 import ticketAPI from '../api/ticketAPI';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { idUsersSelector } from '../redux/selectors';
+import { clearUsers } from '../redux/slice/usersSlice';
 
 const TopTabsTicketHistory = [
     { id: 1, category: 'Phim sắp xem' },
@@ -26,7 +27,7 @@ const TicketScreen = ({ navigation }) => {
     const [movie, setMovie] = useState([]);
 
     const idUser = useSelector(idUsersSelector);
-
+    const dispatch = useDispatch();
     const handleClickTopTab = (index) => {
         setClickTab(index);
     };

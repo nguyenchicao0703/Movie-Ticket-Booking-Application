@@ -8,6 +8,7 @@ import {
     useWindowDimensions,
     Modal,
     ScrollView,
+    ToastAndroid,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import {
@@ -26,22 +27,19 @@ import { usersSelector } from '../redux/selectors';
 import {
     fetchUsers,
     fetchUsersMail,
-    resetUsers,
+    setUsers,
 } from '../redux/slice/usersSlice';
 import usersAPI from '../api/usersAPI';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UpdateProfileScreen = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const { width, height } = useWindowDimensions();
     const dataUser = useSelector(usersSelector);
-    console.log({ dataUser });
     const userProfile = dataUser.users.data;
-    console.log({ userProfile });
-    const id = userProfile.id_user;
-    console.log('update name', name);
-    console.log('name chet tiet', userProfile.name);
 
+    console.log('du lieu nguoi dung', userProfile);
     const [name, setName] = useState(userProfile ? userProfile.name : '');
     const [phone, setPhone] = useState(userProfile ? userProfile.phone : '');
     const [email, setEmail] = useState(userProfile ? userProfile.email : '');
@@ -61,8 +59,8 @@ const UpdateProfileScreen = () => {
     useEffect(() => {
         setInitialUser(userProfile);
     }, [dataUser]);
-
-    const [gender, setGender] = useState(dataUser.users.data.gender);
+    console.log(dayOfBirth);
+    const [gender, setGender] = useState(userProfile ? userProfile.gender : '');
     console.log({ gender });
     const fontSize = height * 0.018;
     //Day Of Birth
@@ -76,7 +74,7 @@ const UpdateProfileScreen = () => {
 
     const onChangeDateOfBirth = ({ type }, selectedDate) => {
         if (type == 'set') {
-            const currentDate = data.bod;
+            const currentDate = selectedDate;
             setDate(currentDate);
 
             if (Platform.OS === 'android') {
@@ -131,11 +129,6 @@ const UpdateProfileScreen = () => {
             }
         });
     };
-    const clearInputFields = () => {
-        // dispatch(resetUsers());
-        // Dispatch action để xóa dữ liệu người dùng từ Redux
-        // Đặt các trường nhập liệu khác về giá trị mặc định tương ứng
-    };
 
     const handleGoBack = () => {
         setName(initialUser ? initialUser.name : '');
@@ -146,7 +139,7 @@ const UpdateProfileScreen = () => {
         setTinh(initialUser ? initialUser.tinh : '');
         setQuan(initialUser ? initialUser.quan : '');
         setDayOfBirth(initialUser ? initialUser.bod : '');
-        setGender(dataUser.users.data.gender);
+        setGender(initialUser ? initialUser.gender : '');
         navigation.goBack();
     };
 
@@ -183,7 +176,8 @@ const UpdateProfileScreen = () => {
             !dayOfBirth ||
             !tinh ||
             !quan ||
-            !diachi
+            !diachi ||
+            !gender
         ) {
             // Xử lý lỗi nếu các trường thông tin bị thiếu
             console.log('ko được để trống thông tin');
@@ -192,7 +186,7 @@ const UpdateProfileScreen = () => {
         }
         // Tạo một đối tượng mới chứa thông tin người dùng đã cập nhật
         const data = {
-            id: id,
+            id: userProfile.id_user,
             name: name,
             phone: phone,
             email: email,
@@ -201,14 +195,36 @@ const UpdateProfileScreen = () => {
             tinh: tinh,
             quan: quan,
             bod: dayOfBirth,
-            gender: true,
+            gender: gender,
         };
+        // await AsyncStorage.setItem(
+        //     'user',
+        //     JSON.stringify(response.payload),
+        // );
         // Gọi API để cập nhật thông tin người dùng
         try {
-            console.log('gender aaa', gender);
             const response = await usersAPI.postUpdateProfile(data);
             console.log('response update profile', response);
-            dispatch(fetchUsers(phone));
+
+            const updatedUserData = {
+                data: {
+                    ...userProfile, // Dữ liệu người dùng hiện tại trong AsyncStorage
+                    name: data.name,
+                    phone: data.phone,
+                    email: data.email,
+                    avatar: data.avatar,
+                    diachi: data.diachi,
+                    tinh: data.tinh,
+                    quan: data.quan,
+                    bod: data.bod,
+                    gender: data.gender,
+                },
+            };
+            await AsyncStorage.setItem('user', JSON.stringify(updatedUserData));
+
+            // Cập nhật Redux state với dữ liệu người dùng mới
+            dispatch(setUsers(updatedUserData));
+            ToastAndroid.show('Cập nhật thành công', ToastAndroid.SHORT);
             return response;
         } catch (error) {
             console.log('Error fetching update profile', error);
@@ -357,7 +373,6 @@ const UpdateProfileScreen = () => {
                             label={'Số điện thoại'}
                             value={phone}
                             onChangeText={handlePhoneChange}
-                            editable={false}
                         />
                     </View>
                     <View style={styles.containerInput}>
@@ -411,20 +426,20 @@ const UpdateProfileScreen = () => {
                             style={{}}
                             label={'Tỉnh/Thành phố'}
                             value={tinh}
-                            onChangeText={(text) => setTinh(text)}
+                            onChangeText={handleTinhChange}
                         />
                         <InputAddress
                             style={{}}
                             label={'Quận huyện'}
                             value={quan}
-                            onChangeText={(text) => setQuan(text)}
+                            onChangeText={handleQuanChange}
                         />
                     </View>
                     <View style={styles.containerInput}>
                         <Input
                             label={'Địa chỉ'}
                             value={diachi}
-                            onChangeText={(text) => setDiachi(text)}
+                            onChangeText={handleDiaChiChange}
                         />
                     </View>
                     <View style={[styles.gender]}>

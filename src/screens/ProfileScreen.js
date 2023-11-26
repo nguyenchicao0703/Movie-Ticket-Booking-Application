@@ -14,6 +14,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useDispatch, useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
 import { resetUsers } from '../redux/slice/usersSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileScreen = ({}) => {
     useEffect(() => {
@@ -37,6 +38,7 @@ const ProfileScreen = ({}) => {
             setUserInfo(null);
             dispatch(resetUsers());
             console.log('Sign out');
+            await AsyncStorage.removeItem('user');
             navigation.navigate('Login', { isSignedIn: false });
         } catch (error) {
             console.log('Sign out error:', error.message);

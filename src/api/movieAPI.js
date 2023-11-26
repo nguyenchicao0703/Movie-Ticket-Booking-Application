@@ -9,6 +9,9 @@ const movieAPI = {
     getMovieDetails: (idMovie) => {
         return axiosClient.get(`/Chi-tiet-phim.php?id=${idMovie}`);
     },
+    postRating: () => {
+        return axiosClient.post('/Danh-gia-phim.php');
+    },
 };
 
 export default movieAPI;

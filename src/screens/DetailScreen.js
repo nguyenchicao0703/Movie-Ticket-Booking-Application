@@ -7,6 +7,7 @@ import {
     Pressable,
     Modal,
     TouchableOpacity,
+    ToastAndroid,
 } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { AuthAccountButton, Header, VideoView } from '../components';
@@ -19,10 +20,11 @@ import {
 } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
 import DropDownPicker from 'react-native-dropdown-picker';
-import axios from 'axios';
 import movieAPI from '../api/movieAPI';
 import Video from 'react-native-video';
 import VideoPlayer from 'react-native-video-controls';
+import { fetchMovies } from '../redux/slice/moviesSlice';
+import { useDispatch } from 'react-redux';
 
 const DetailScreen = ({ navigation, route }) => {
     const fontSizeContent = height * 0.03;
@@ -31,21 +33,21 @@ const DetailScreen = ({ navigation, route }) => {
     const { height, width, scale, fontScale } = useWindowDimensions();
     const [modalVisible, setModalVisible] = useState(false);
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState('ten');
+    const [value, setValue] = useState('');
     const [movie, setMovie] = useState(null);
     const [items, setItems] = useState([
-        { label: '10', value: 'ten' },
-        { label: '9', value: 'nine' },
-        { label: '8', value: 'eight' },
-        { label: '7', value: 'seven' },
-        { label: '6', value: 'six' },
-        { label: '5', value: 'five' },
-        { label: '4', value: 'four' },
-        { label: '3', value: 'three' },
-        { label: '2', value: 'two' },
-        { label: '1', value: 'one' },
+        { label: '5 sao', value: 5 },
+        { label: '4 sao', value: 4 },
+        { label: '3 sao', value: 3 },
+        { label: '2 sao', value: 2 },
+        { label: '1 sao ', value: 1 },
     ]);
+    const [ratingResult, setRatingResult] = useState(null);
     const idPhim = route.params.id;
+    const idVe = route.params.idTicket;
+    const dispath = useDispatch();
+    console.log('id Ve ne:', idVe);
+    console.log();
     const [idMovie, setIdMovie] = useState(1);
     const [nameMovie, setNameMovie] = useState('');
 
@@ -101,7 +103,8 @@ const DetailScreen = ({ navigation, route }) => {
                 setMovie(data);
                 setIdMovie(data.id_phim);
                 setNameMovie(data.ten_phim);
-                console.log('Data detail movie', data.diemdanhgia);
+                setRatingResult(data.diemdanhgia);
+                console.log('Data detail movie', data);
             } catch (error) {
                 console.log('Error fetching response Movie Detail:', error);
             }
@@ -113,6 +116,31 @@ const DetailScreen = ({ navigation, route }) => {
     if (!movie) {
         return null; // or render a loading indicator
     }
+    const handleRating = async () => {
+        const data = {
+            id_ve: idVe,
+            diem: value,
+        };
+        await movieAPI
+            .postRating(data)
+            .then((response) => {
+                // Lấy dữ liệu điểm từ phản hồi
+                // Lưu trữ giá trị điểm vào state
+                const status = response.status;
+                if (status === false) {
+                    console.log('đánh giá thất bại :', status);
+                    ToastAndroid.show('Đã đánh giá !', ToastAndroid.SHORT);
+                    handleCloseModal();
+                } else {
+                    console.log('đánh giá thành công', response);
+                    handleCloseModal();
+                }
+            })
+            .catch((error) => {
+                // Xử lý lỗi nếu có
+                console.error(error);
+            });
+    };
 
     return (
         <View style={styles.container}>
@@ -207,7 +235,7 @@ const DetailScreen = ({ navigation, route }) => {
                                             height: height * 0.06,
                                         },
                                     ]}
-                                    onPress={() => console.log(value)}
+                                    onPress={handleRating}
                                 >
                                     <Text
                                         style={[
@@ -239,7 +267,7 @@ const DetailScreen = ({ navigation, route }) => {
                                     marginTop: 5,
                                 }}
                             >
-                                4.9/5
+                                {ratingResult}
                             </Text>
                         </View>
                     </Pressable>
