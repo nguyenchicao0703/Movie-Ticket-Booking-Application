@@ -69,8 +69,15 @@ const CustomDrawerContent = ({ navigation }) => {
     const nameUserSelector = useSelector(usersSelector);
 
     useEffect(() => {
-        setAvatar(avatarSelector.users.data.avatar);
-        setNameUser(nameUserSelector.users.data.name);
+        const avatarUsers = avatarSelector.users;
+        setAvatar(
+            avatarUsers.length !== 0
+                ? avatarUsers.data.avatar
+                : 'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
+        );
+
+        const nameUser = nameUserSelector.users;
+        setNameUser(nameUser.length !== 0 ? nameUser.data.name : '');
     }, [avatarSelector, nameUserSelector]);
 
     return (

@@ -54,7 +54,12 @@ const HomeScreen = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
-        setAvatar(avatarSelector.users.data.avatar);
+        const avatarUsers = avatarSelector.users;
+        setAvatar(
+            avatarUsers.length !== 0
+                ? avatarUsers.data.avatar
+                : 'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
+        );
     }, [avatarSelector]);
 
     return (
