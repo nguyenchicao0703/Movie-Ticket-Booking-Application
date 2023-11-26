@@ -6,8 +6,10 @@ import {
     useWindowDimensions,
     Pressable,
 } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Colors, DrawerImage, Fonts } from '../constants';
+import { useSelector } from 'react-redux';
+import { usersSelector } from '../redux/selectors';
 
 const Line = () => {
     return (
@@ -58,18 +60,32 @@ const Item = ({ imageIndex, title, navigation, router }) => {
 
 const CustomDrawerContent = ({ navigation }) => {
     const { width, height, fontScale } = useWindowDimensions();
+    const [nameUser, setNameUser] = useState('Nguyễn Văn A');
+    const [avatar, setAvatar] = useState(
+        'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
+    );
+
+    const avatarSelector = useSelector(usersSelector);
+    const nameUserSelector = useSelector(usersSelector);
+
+    useEffect(() => {
+        setAvatar(avatarSelector.users.data.avatar);
+        setNameUser(nameUserSelector.users.data.name);
+    }, [avatarSelector, nameUserSelector]);
+
     return (
         <ImageBackground
             style={{ flex: 1, backgroundColor: Colors.DARK_DRAWER }}
             source={DrawerImage[0].image}
         >
             <Image
-                source={DrawerImage[5].image}
+                source={{ uri: avatar }}
                 style={{
                     alignSelf: 'center',
                     marginTop: height * 0.032,
                     width: width * 0.28,
                     height: width * 0.28,
+                    borderRadius: 100,
                 }}
             />
             <Text
@@ -83,7 +99,7 @@ const CustomDrawerContent = ({ navigation }) => {
                     marginBottom: 32,
                 }}
             >
-                Nguyễn Chí Cao
+                {nameUser}
             </Text>
             <Line />
             <Item

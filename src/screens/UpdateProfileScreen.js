@@ -149,6 +149,11 @@ const UpdateProfileScreen = () => {
         setGender(dataUser.users.data.gender);
         navigation.goBack();
     };
+
+    const handleButtonMenu = () => {
+        navigation.openDrawer();
+    };
+
     const handleNameChange = (newName) => {
         setName(newName);
     };
@@ -222,6 +227,7 @@ const UpdateProfileScreen = () => {
             <Header
                 titleHeader={'Thông tin cá nhân'}
                 onButtonBack={() => handleGoBack()}
+                onButtonMenu={() => handleButtonMenu()}
             />
             <ScrollView style={{ width: '100%' }}>
                 <View style={styles.groupAvatar}>

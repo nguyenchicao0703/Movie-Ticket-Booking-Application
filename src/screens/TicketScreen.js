@@ -43,7 +43,6 @@ const TicketScreen = ({ navigation }) => {
         const fetchTickets = async () => {
             try {
                 const response = await ticketAPI.getAll(idUser);
-                // console.log(response.data);
                 response.status ? setData(response.data) : setData([]);
             } catch (error) {
                 console.log('Error fetching tickets', error);
@@ -82,8 +81,8 @@ const TicketScreen = ({ navigation }) => {
                   )
                 : [];
         setMovie(filterTypeTicket);
-        console.log({ movie });
-    }, [clickTab]);
+        // console.log({ movie });
+    }, [clickTab, data]);
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>

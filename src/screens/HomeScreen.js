@@ -7,7 +7,7 @@ import {
     View,
     useWindowDimensions,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BottomTabImage, DrawerImage, HeaderImage } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import LinearGradient from 'react-native-linear-gradient';
@@ -15,7 +15,7 @@ import { HomeList } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovies } from '../redux/slice/moviesSlice';
-import { moviesListSelector } from '../redux/selectors';
+import { moviesListSelector, usersSelector } from '../redux/selectors';
 
 const bottomTabs = [
     { id: 1, image: 1, title: 'Phim', tab: 'Movie' },
@@ -29,8 +29,13 @@ const HomeScreen = ({ navigation }) => {
     const { width, height, fontScale } = useWindowDimensions();
     const textTitle = fontScale * 22;
 
+    const [avatar, setAvatar] = useState(
+        'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
+    );
+
     const dispatch = useDispatch();
     const movies = useSelector(moviesListSelector);
+    const avatarSelector = useSelector(usersSelector);
     // console.log({ movies });
 
     const stackScreen = (router) => {
@@ -47,6 +52,10 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         dispatch(fetchMovies());
     }, []);
+
+    useEffect(() => {
+        setAvatar(avatarSelector.users.data.avatar);
+    }, [avatarSelector]);
 
     return (
         <View
@@ -82,8 +91,9 @@ const HomeScreen = ({ navigation }) => {
                             style={{
                                 width: 35,
                                 height: 35,
+                                borderRadius: 100,
                             }}
-                            source={DrawerImage[5].image}
+                            source={{ uri: avatar }}
                         />
                     </Pressable>
                     <View

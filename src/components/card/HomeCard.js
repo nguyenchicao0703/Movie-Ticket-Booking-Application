@@ -16,7 +16,9 @@ const HomeCard = ({
     const navigation = useNavigation();
 
     const handleButtonClickItem = () => {
-        navigation.navigate('Detail', { id: data.id_phim });
+        var idMovie = data.id_phim;
+        console.log({ idMovie });
+        navigation.navigate('Detail', { id: idMovie });
     };
 
     return (

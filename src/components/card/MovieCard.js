@@ -17,11 +17,17 @@ const MovieCard = ({ data, listCase }) => {
     const navigation = useNavigation();
 
     const handleButtonMovieCard = () => {
-        navigation.navigate('Detail', {
-            id: data.id_phim,
-            idTicket: data.id_ve,
-        });
-        console.log(data.id_phim);
+        var idMovie = data.id_phim;
+        var idTicket = data.id_ve;
+        console.log({ idMovie }, { idTicket });
+        idMovie === undefined || idTicket === undefined
+            ? null
+            : navigation.navigate('Detail', {
+                  id: idMovie,
+                  idTicket,
+              });
+        console.log('id phim', data.id_phim);
+        console.log('id vé', data.id_ve);
     };
 
     const navigateMovieToShowtimeMovie = () => {
