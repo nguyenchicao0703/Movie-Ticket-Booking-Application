@@ -7,16 +7,25 @@ const usersSlice = createSlice({
     name: 'users',
     initialState: {
         users: [],
+        loggedInUser: null,
     },
     reducers: {
         updateUser: (state, action) => {
             state.state = action.payload;
         },
+        setLoggedInUser: (state, action) => {
+            state.loggedInUser = action.payload;
+        },
         clearUsers: (state) => {
             state.users = [];
+            state.loggedInUser = null;
+            state.error = null;
         },
-        setUserDataAsyn: (state, action) => {
-            return action.payload;
+        setUsers: (state, action) => {
+            state.users = action.payload;
+        },
+        setLoggedInUser: (state, action) => {
+            state.loggedInUser = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -43,7 +52,8 @@ const usersSlice = createSlice({
 export const resetUsers = () => ({
     type: 'users/resetUsers',
 });
-export const { setUserDataAsyn } = usersSlice.actions;
+export const { setLoggedInUser, setUserDataAsyn, setUsers } =
+    usersSlice.actions;
 // export const { updateUser, clearUsers } = usersSlice.actions;
 export default usersSlice.reducer;
 

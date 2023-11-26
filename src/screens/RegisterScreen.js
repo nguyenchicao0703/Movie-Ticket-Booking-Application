@@ -17,7 +17,7 @@ const RegisterScreen = ({ navigation }) => {
     const [unTickedRule, setUnTickedRule] = useState(true);
     const [phone, setPhone] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [countdown, setCountdown] = useState(4);
+    const [countdown, setCountdown] = useState(2);
     const [error, setError] = useState('');
     const { height, width, scale, fontScale } = useWindowDimensions();
 
@@ -84,7 +84,7 @@ const RegisterScreen = ({ navigation }) => {
                                 setIsModalVisible(false);
                                 clearInterval(interval);
                                 navigation.navigate('Login');
-                            }, 5000);
+                            }, 2000);
                         })
                         .catch((registerError) => {
                             // Handle registration error

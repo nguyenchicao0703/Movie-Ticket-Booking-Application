@@ -18,9 +18,13 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUsers, fetchUsersMail } from '../redux/slice/usersSlice';
+import {
+    fetchUsers,
+    fetchUsersMail,
+    setUsers,
+} from '../redux/slice/usersSlice';
 import { usersSelector } from '../redux/selectors';
-import { tr } from 'date-fns/locale';
+import { da, tr } from 'date-fns/locale';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const LoginScreen = () => {
     const [userName, setUserName] = useState('');
@@ -51,14 +55,16 @@ const LoginScreen = () => {
             //handle the API response
             if (status) {
                 //login successfuly
-                await AsyncStorage.setItem(
-                    'user',
-                    JSON.stringify(response.payload),
-                );
+
                 navigation.navigate('Drawer');
                 ToastAndroid.show('đăng nhập thành công', ToastAndroid.LONG);
                 clearState();
                 setIsLoggedIn(true);
+                await AsyncStorage.setItem(
+                    'user',
+                    JSON.stringify(response.payload),
+                );
+                console.log('du lieu nguuoi dung', response.payload);
             } else {
                 const phones = phone;
                 // Failed login
@@ -111,7 +117,7 @@ const LoginScreen = () => {
                     console.log('Logged in successfully');
                     await AsyncStorage.setItem(
                         'user',
-                        JSON.stringify(response.payload.data),
+                        JSON.stringify(response.payload),
                     );
                     console.log(response);
                     navigation.navigate('Drawer');
@@ -177,9 +183,13 @@ const LoginScreen = () => {
         const checkUserLoggedIn = async () => {
             try {
                 const user = await AsyncStorage.getItem('user');
+
                 if (user) {
                     // Người dùng đã đăng nhập trước đó
+                    dispatch(setUsers(JSON.parse(user)));
                     navigation.navigate('Drawer');
+                    // const datamoi = useSelector(usersSelector);
+                    console.log(user);
                     setIsLoggedIn(true);
                 }
             } catch (error) {

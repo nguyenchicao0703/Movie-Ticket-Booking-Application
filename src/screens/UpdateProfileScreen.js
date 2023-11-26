@@ -8,6 +8,7 @@ import {
     useWindowDimensions,
     Modal,
     ScrollView,
+    ToastAndroid,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import {
@@ -23,7 +24,11 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
-import { fetchUsers, fetchUsersMail } from '../redux/slice/usersSlice';
+import {
+    fetchUsers,
+    fetchUsersMail,
+    setUsers,
+} from '../redux/slice/usersSlice';
 import usersAPI from '../api/usersAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -33,7 +38,8 @@ const UpdateProfileScreen = () => {
     const { width, height } = useWindowDimensions();
     const dataUser = useSelector(usersSelector);
     const userProfile = dataUser.users.data;
-    console.log('thong tin nguoi dung', dataUser);
+
+    console.log('du lieu nguoi dung', userProfile);
     const [name, setName] = useState(userProfile ? userProfile.name : '');
     const [phone, setPhone] = useState(userProfile ? userProfile.phone : '');
     const [email, setEmail] = useState(userProfile ? userProfile.email : '');
@@ -50,24 +56,6 @@ const UpdateProfileScreen = () => {
     const [initialUser, setInitialUser] = useState(userProfile);
     const [submittedData, setSubmittedData] = useState(null);
 
-    const getUserData = async () => {
-        try {
-            const userData = await AsyncStorage.getItem('user');
-            if (userData !== null) {
-                // Dữ liệu người dùng được tìm thấy trong AsyncStorage
-                const user = JSON.parse(userData);
-                dispatch(setUserDataAsyn(user));
-                // Sử dụng dữ liệu người dùng ở đây
-                console.log('Thông tin người dùng:', user);
-            }
-        } catch (error) {
-            console.log('Error retrieving user data:', error);
-        }
-    };
-
-    useEffect(() => {
-        getUserData();
-    }, []);
     useEffect(() => {
         setInitialUser(userProfile);
     }, [dataUser]);
@@ -141,11 +129,6 @@ const UpdateProfileScreen = () => {
             }
         });
     };
-    const clearInputFields = () => {
-        // dispatch(resetUsers());
-        // Dispatch action để xóa dữ liệu người dùng từ Redux
-        // Đặt các trường nhập liệu khác về giá trị mặc định tương ứng
-    };
 
     const handleGoBack = () => {
         setName(initialUser ? initialUser.name : '');
@@ -209,15 +192,34 @@ const UpdateProfileScreen = () => {
             bod: dayOfBirth,
             gender: gender,
         };
+        // await AsyncStorage.setItem(
+        //     'user',
+        //     JSON.stringify(response.payload),
+        // );
         // Gọi API để cập nhật thông tin người dùng
         try {
             const response = await usersAPI.postUpdateProfile(data);
             console.log('response update profile', response);
-            dispatch(fetchUsers(phone), fetchUsersMail(email));
 
-            console.log(userProfile.gender);
-            console.log(userProfile.id_user);
+            const updatedUserData = {
+                data: {
+                    ...userProfile, // Dữ liệu người dùng hiện tại trong AsyncStorage
+                    name: data.name,
+                    phone: data.phone,
+                    email: data.email,
+                    avatar: data.avatar,
+                    diachi: data.diachi,
+                    tinh: data.tinh,
+                    quan: data.quan,
+                    bod: data.bod,
+                    gender: data.gender,
+                },
+            };
+            await AsyncStorage.setItem('user', JSON.stringify(updatedUserData));
 
+            // Cập nhật Redux state với dữ liệu người dùng mới
+            dispatch(setUsers(updatedUserData));
+            ToastAndroid.show('Cập nhật thành công', ToastAndroid.SHORT);
             return response;
         } catch (error) {
             console.log('Error fetching update profile', error);
@@ -365,7 +367,6 @@ const UpdateProfileScreen = () => {
                             label={'Số điện thoại'}
                             value={phone}
                             onChangeText={handlePhoneChange}
-                            editable={false}
                         />
                     </View>
                     <View style={styles.containerInput}>
