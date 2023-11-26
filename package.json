@@ -22,6 +22,8 @@
         "@react-navigation/native-stack": "^6.9.16",
         "@reduxjs/toolkit": "^1.9.7",
         "axios": "^1.6.2",
+        "crypto-js": "^4.2.0",
+        "crystaljs": "^1.0.6",
         "date-fns": "^2.30.0",
         "react": "18.2.0",
         "react-native": "0.72.6",

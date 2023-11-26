@@ -32,6 +32,7 @@ public class ZPModule extends ReactContextBaseJavaModule {
             params.putString("transToken", transToken);
             params.putString("appTransID", appTransID);
             params.putString("returnCode", PAYMENTSUCCESS);
+
             sendEvent(mReactContext, "EventPayZalo", params);
         }
 
