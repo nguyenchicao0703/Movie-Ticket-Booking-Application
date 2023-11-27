@@ -160,7 +160,7 @@ const PaymentScreen = (navigation) => {
             .catch((error) => {
                 console.log('error ', error);
             });
-        console.log('123123123:' + dataID);
+        // console.log('123123123:' + dataID);
     }
     const payOrder = (token) => {
         // createOrder(1000);
@@ -182,8 +182,8 @@ const PaymentScreen = (navigation) => {
     };
 
     const callBack = async () => {
-        console.log('234234234:' + dataID);
-        console.log('343434343:' + dataMac);
+        // console.log('234234234:' + dataID);
+        // console.log('343434343:' + dataMac);
 
         // var app_trans_id = `${moment().format('YYMMDD')}_${transID}`;
         // '23_1701088992969';
@@ -403,7 +403,7 @@ const PaymentScreen = (navigation) => {
                 <View style={{ alignItems: 'center', paddingBottom: 20 }}>
                     <AuthAccountButton
                         onPress={() => /**/ {
-                            createOrder(1000);
+                            createOrder(590000);
                             payOrder();
                             // callBack();
                         }}
