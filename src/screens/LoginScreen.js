@@ -189,7 +189,7 @@ const LoginScreen = () => {
                     dispatch(setUsers(JSON.parse(user)));
                     navigation.navigate('Drawer');
                     // const datamoi = useSelector(usersSelector);
-                    console.log(user);
+                    // console.log(user);
                     setIsLoggedIn(true);
                 }
             } catch (error) {
