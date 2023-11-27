@@ -11,7 +11,7 @@ import { Colors, Fonts } from '../constants';
 import { Header, MovieList, NoShowtimeMessage } from '../components';
 import ticketAPI from '../api/ticketAPI';
 import { useDispatch, useSelector } from 'react-redux';
-import { idUsersSelector } from '../redux/selectors';
+import { usersSelector } from '../redux/selectors';
 import { clearUsers } from '../redux/slice/usersSlice';
 
 const TopTabsTicketHistory = [
@@ -23,10 +23,9 @@ const TicketScreen = ({ navigation }) => {
     const { width, height, fontScale } = useWindowDimensions();
     const [clickTab, setClickTab] = useState(0);
     const [data, setData] = useState([]);
-    const [currentDate, setCurrentDate] = useState('');
     const [movie, setMovie] = useState([]);
 
-    const idUser = useSelector(idUsersSelector);
+    const idUser = useSelector(usersSelector);
     const dispatch = useDispatch();
     const handleClickTopTab = (index) => {
         setClickTab(index);
@@ -43,42 +42,24 @@ const TicketScreen = ({ navigation }) => {
     useEffect(() => {
         const fetchTickets = async () => {
             try {
-                const response = await ticketAPI.getAll(idUser);
+                const response = await ticketAPI.getAll(
+                    idUser.users.data.id_user,
+                );
+                console.log('response ticket', response.data);
                 response.status ? setData(response.data) : setData([]);
             } catch (error) {
                 console.log('Error fetching tickets', error);
             }
         };
         fetchTickets();
-
-        const updateCurrentDate = () => {
-            var current = new Date();
-            var day = current.getDate();
-            var month = current.getMonth() + 1; // Tháng bắt đầu từ 0, nên cộng thêm 1
-            var year = current.getFullYear();
-            setCurrentDate(`${year}-${month}-${day}`);
-        };
-
-        updateCurrentDate();
-
-        // Cập nhật lịch sau mỗi 5 phút
-        const interval = setInterval(() => {
-            updateCurrentDate();
-            console.log('1');
-        }, 300000); // 5 phút
-
-        return () => {
-            clearInterval(interval);
-        };
     }, []);
 
     useEffect(() => {
+        console.log('data', data);
         const filterTypeTicket =
             data !== undefined
                 ? data.filter((item) =>
-                      clickTab === 0
-                          ? item.ngaykhoichieu >= currentDate
-                          : item.ngaykhoichieu < currentDate,
+                      clickTab === 0 ? item.loaikc === 1 : item.loaikc === 2,
                   )
                 : [];
         setMovie(filterTypeTicket);

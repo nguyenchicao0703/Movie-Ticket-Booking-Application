@@ -7,8 +7,6 @@ const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
     const navigation = useNavigation();
     const [dataShowtimes, setDataShowtimes] = useState([]);
 
-    // console.log(data[0].suat[0].id_suatchieu);
-
     const navigationShowtimeMovieToSeat = (item, index) => {
         // console.log({ item }, { index });
         const getSeatAndPriceData = data.flatMap((phong) =>
@@ -26,11 +24,10 @@ const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
             nameCinema,
             stringSeats,
             priceShowitmes: +priceShowitmes, // Biến chuỗi thành số
-            idShowtimes: data.map((phong) =>
+            idShowtimes: data.flatMap((phong) =>
                 phong.suat.map((suat) => suat.id_suatchieu),
             ),
             headerShowtimes: item, // Chỉ dùng gửi đến header seat
-            idSuatChieu: data[0].suat[0].id_suatchieu,
         });
     };
 

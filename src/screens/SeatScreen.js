@@ -5,15 +5,13 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
-    Pressable,
 } from 'react-native';
 import React, { useState, useCallback, useEffect } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
 import { Header, InformationBottom } from '../components';
 import ticketAPI from '../api/ticketAPI';
 import { useSelector } from 'react-redux';
-import { datesSelector, idUsersSelector } from '../redux/selectors';
-import database from '@react-native-firebase/database';
+import { datesSelector, usersSelector } from '../redux/selectors';
 import socket from '../utils/socket';
 
 const TypeSeat = ({ backgroundColor, text }) => {
@@ -92,7 +90,7 @@ const SeatScreen = ({ navigation, route }) => {
         socket.connect();
         function onConnect() {
             socket.emit('suat', JSON.stringify({ id: idShowtimes }));
-            console.log('connect87654321');
+            console.log('connect');
         }
 
         function onDisconnect() {
@@ -100,6 +98,7 @@ const SeatScreen = ({ navigation, route }) => {
         }
         function onSuat(value) {
             setSeats(value.results[0]['chuoighe']);
+            console.log('thay đổi ghế');
             setIndexSeat([]);
         }
         socket.on('connect', onConnect);
@@ -117,7 +116,8 @@ const SeatScreen = ({ navigation, route }) => {
         };
     }, [idShowtimes]);
 
-    const idUser = useSelector(idUsersSelector);
+    const idUsersSelector = useSelector(usersSelector);
+    let idUser = idUsersSelector.users.data.id_user;
     const headerDate = useSelector(datesSelector); // Chỉ dùng để gửi đến header
 
     // console.log({ stringSeats });
@@ -151,6 +151,14 @@ const SeatScreen = ({ navigation, route }) => {
                     (value) => value.index !== seatIndexNumber,
                 );
                 setIndexSeat([...copyWithoutFirstElement]);
+                socket.emit(
+                    'chonghe',
+                    JSON.stringify({
+                        id: idShowtimes,
+                        index: seatIndexNumber,
+                        status: 'A',
+                    }),
+                );
             } else {
                 updatedSeats = [...selectedSeats, seatId]; // Chọn ghế
                 setTotalPrice(totalPrice + priceShowitmes);
@@ -158,19 +166,27 @@ const SeatScreen = ({ navigation, route }) => {
                     ...indexSeat,
                     { index: seatIndexNumber, soghe: seatId },
                 ]);
+                socket.emit(
+                    'chonghe',
+                    JSON.stringify({
+                        id: idShowtimes,
+                        index: seatIndexNumber,
+                        status: 'U',
+                    }),
+                );
+                // const seatsArr = seats.split(''); // ['A', 'A', 'U', 'R', ...]
+                // seatsArr[seatIndexNumber] = isSelected ? 'A' : 'R'; // Tìm vị trí của phần tử trong mảng sau đó thay thế ký tự
+                // setSeats(seatsArr.join('')); // Chuyển lại thành chuỗi để render components
             }
+
             setSelectedSeats(updatedSeats);
             setStorageSeats(updatedSeats.join(', '));
-            isSelected
-                ? selectedSeats.filter((seat) => seat !== seatId)
-                : [...selectedSeats, seatId];
-            const seatsArr = seats.split(''); // ['A', 'A', 'U', 'R', ...]
-            seatsArr[seatIndexNumber] = isSelected ? 'A' : 'R'; // Tìm vị trí của phần tử trong mảng sau đó thay thế ký tự
-            setSeats(seatsArr.join('')); // Chuyển lại thành chuỗi để render components
         },
     );
 
-    console.log({ storageSeats });
+    // console.log({ storageSeats });
+    console.log({ selectedSeats });
+    console.log({ seats });
 
     const navigationSeatToCombo = async () => {
         try {
@@ -180,16 +196,16 @@ const SeatScreen = ({ navigation, route }) => {
             //     storageSeats,
             //     totalPrice,
             // });
-            socket.emit(
-                'datghe',
-                JSON.stringify({
-                    id_user: idUser,
-                    id_suat: idShowtimes,
-                    listghe: [...indexSeat],
-                }),
-            );
-            setIndexSeat([]);
-            console.log(...indexSeat);
+            // socket.emit(
+            //     'datghe',
+            //     JSON.stringify({
+            //         id_user: idUser,
+            //         id_suat: idShowtimes,
+            //         listghe: [...indexSeat],
+            //     }),
+            // );
+            // setIndexSeat([]);
+            console.log('index seat ládaddladj', [...indexSeat]);
         } catch (error) {
             console.log('Error fetch seats', error);
         }
@@ -219,6 +235,8 @@ const SeatScreen = ({ navigation, route }) => {
 
     // seat (string)
     // A, U, R, _, /
+
+    console.log('value', selectedSeats);
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
@@ -261,12 +279,20 @@ const SeatScreen = ({ navigation, route }) => {
                                 {row.split('').map((seat, seatIndex) => {
                                     // console.log({ seat });
                                     let status = null;
-                                    if (seat === 'U') {
+                                    seatNumber < 10
+                                        ? (seatNumber = '0' + seatNumber)
+                                        : seatNumber;
+
+                                    const seatId =
+                                        alphabetSeats[alphabetIndexNumber] +
+                                        seatNumber;
+                                    if (selectedSeats.includes(seatId)) {
+                                        console.log('U');
+                                        status = STATUS_RESERVED;
+                                    } else if (seat === 'U') {
                                         status = STATUS_BOOKED;
                                     } else if (seat === 'A') {
                                         status = STATUS_AVAILABLE;
-                                    } else if (seat === 'R') {
-                                        status = STATUS_RESERVED;
                                     } else if (seat === '_') {
                                         seatIndexNumber++;
                                         return (
@@ -282,21 +308,13 @@ const SeatScreen = ({ navigation, route }) => {
                                         return;
                                     }
 
-                                    seatNumber < 10
-                                        ? (seatNumber = '0' + seatNumber)
-                                        : seatNumber;
-
-                                    const seatId =
-                                        alphabetSeats[alphabetIndexNumber] +
-                                        seatNumber;
-
                                     seatNumber++;
                                     const seatNumberId = seatIndexNumber;
                                     seatIndexNumber++;
 
                                     return (
                                         <TouchableOpacity
-                                            key={seatIndex}
+                                            key={seatId}
                                             style={[
                                                 styles.seat,
                                                 status === STATUS_BOOKED &&
@@ -313,7 +331,7 @@ const SeatScreen = ({ navigation, route }) => {
                                                     seatIndex,
                                                 )
                                             }
-                                            disabled={status === STATUS_BOOKED}
+                                            // disabled={status === STATUS_BOOKED}
                                         >
                                             <Text style={styles.seatText}>
                                                 {seatId}
