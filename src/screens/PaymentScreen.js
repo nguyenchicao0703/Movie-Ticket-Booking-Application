@@ -23,13 +23,17 @@ import {
     PaymentTitleBar,
     AuthAccountButton,
 } from '../components';
+import axios from 'axios';
+import callbackZL from '../api/zalopayApi';
+import { useNavigation } from '@react-navigation/native';
 
 const { PayZaloBridge } = NativeModules;
+
 const payZaloBridgeEmitter = new NativeEventEmitter(PayZaloBridge);
 const PaymentScreen = (navigation) => {
     const { width, fontScale } = useWindowDimensions();
     const textSizeInfoMovie = fontScale * 14;
-
+    const navi = useNavigation();
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -49,7 +53,8 @@ const PaymentScreen = (navigation) => {
     const [dataApi, setDataApi] = React.useState('');
     const data = dataApi;
     const [returncode, setReturnCode] = React.useState('');
-
+    const [dataID, setDataID] = React.useState('');
+    const [dataMac, setDataMac] = React.useState();
     useEffect(() => {
         const subscription = payZaloBridgeEmitter.addListener(
             'EventPayZalo',
@@ -105,12 +110,14 @@ const PaymentScreen = (navigation) => {
         let mac = CryptoJS.HmacSHA256(
             hmacInput,
             'sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn',
-        );
-        console.log('====================================');
-        console.log('hmacInput: ' + hmacInput);
-        console.log('mac: ' + mac);
-        console.log('====================================');
-        var order = {
+        ).toString();
+        setDataID(apptransid);
+        setDataMac(mac);
+        // console.log('====================================');
+        // console.log('hmacInput: ' + hmacInput);
+        // console.log('mac: ' + mac);
+        // console.log('====================================');
+        let order = {
             app_id: appid,
             app_user: appuser,
             app_time: apptime,
@@ -119,12 +126,12 @@ const PaymentScreen = (navigation) => {
             embed_data: embeddata,
             item: item,
             description: description,
-
             mac: mac,
         };
-
         console.log(order);
 
+        // console.log('============================');
+        // console.log(order);
         let formBody = [];
         for (let i in order) {
             var encodedKey = encodeURIComponent(i);
@@ -140,9 +147,12 @@ const PaymentScreen = (navigation) => {
             },
             body: formBody,
         })
+            // .then((response) => {
+            //     console.log(response.json);
+            // })
             .then((response) => response.json())
             .then((resJson) => {
-                console.log(resJson);
+                // console.log(resJson);
                 setDataApi(resJson);
                 setToken(resJson.zp_trans_token);
                 setReturnCode(resJson.return_code);
@@ -150,19 +160,78 @@ const PaymentScreen = (navigation) => {
             .catch((error) => {
                 console.log('error ', error);
             });
+        console.log('123123123:' + dataID);
     }
     const payOrder = (token) => {
-        createOrder(10000);
+        // createOrder(1000);
         // token từ BE trả về nha
         const payZP = NativeModules.ZaloPayBridge;
         // console.log(token);
         console.log(returncode);
         console.log(token_trans_id);
         console.log(data);
+        console.log('=====================');
+        // console.log('order:' + reqmac);
 
         payZP.payOrder(token_trans_id);
+
+        // callBack();
+        setTimeout(() => {
+            callBack();
+        }, 4000);
     };
 
+    const callBack = async () => {
+        console.log('234234234:' + dataID);
+        console.log('343434343:' + dataMac);
+
+        // var app_trans_id = `${moment().format('YYMMDD')}_${transID}`;
+        // '23_1701088992969';
+        // getCurrentDateYYMMDD() + '_' + new Date().getTime();
+        const config = {
+            app_id: 2554,
+            key1: 'sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn',
+            key2: 'trMrHtvjo6myautxDUiAcYsVtaeQ8nhf',
+            endpoint: 'https://sb-openapi.zalopay.vn/v2/query',
+        };
+        const hmacInput = config.app_id + '|' + dataID + '|' + config.key1;
+
+        const dataCB = {
+            app_id: config.app_id,
+            app_trans_id: dataID,
+            // mac: '537e156527b4933404486e9283569bfb3d6752c89d3ea7e4d6b8a5c551ea0a32',
+            mac: CryptoJS.HmacSHA256(hmacInput, config.key1).toString(),
+        };
+        console.log(dataCB);
+        try {
+            let formBody = [];
+            for (let i in dataCB) {
+                var encodedKey = encodeURIComponent(i);
+                var encodedValue = encodeURIComponent(dataCB[i]);
+                formBody.push(encodedKey + '=' + encodedValue);
+            }
+            formBody = formBody.join('&');
+
+            const response = await fetch(config.endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type':
+                        'application/x-www-form-urlencoded;charset=UTF-8',
+                },
+                body: formBody,
+            });
+            const resJson = await response.json(); // Phải sử dụng await ở đây để lấy dữ liệu JSON từ response
+            console.log(resJson);
+            if (resJson.return_code == 1) {
+                // Alert.alert('Thanh toán thành công');
+                navi.navigate('Bill');
+            } else {
+                Alert.alert('Thanh toán không thành công');
+            }
+        } catch (e) {
+            console.error('Error creating order:', e);
+        }
+    };
     return (
         <View
             style={{
@@ -333,8 +402,10 @@ const PaymentScreen = (navigation) => {
                 </Pressable>
                 <View style={{ alignItems: 'center', paddingBottom: 20 }}>
                     <AuthAccountButton
-                        onPress={() => /*handleButtonNavigation('Bill')*/ {
-                            createOrder(10000), payOrder();
+                        onPress={() => /**/ {
+                            createOrder(1000);
+                            payOrder();
+                            // callBack();
                         }}
                         text={'Thanh toán'}
                     />
