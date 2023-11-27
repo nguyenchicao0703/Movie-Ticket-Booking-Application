@@ -2,13 +2,21 @@ import { Text, Pressable, FlatList } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Colors, Fonts } from '../constants';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { usersSelector } from '../redux/selectors';
 
 const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
     const navigation = useNavigation();
     const [dataShowtimes, setDataShowtimes] = useState([]);
-
-    // console.log(data[0].suat[0].id_suatchieu);
-
+    const dataUser = useSelector(usersSelector);
+    const [userProfile, setUserProfile] = useState(dataUser.users.data);
+    const [isLogin, setIsLogin] = useState(
+        userProfile ? userProfile.islogin : '',
+    );
+    useEffect(() => {
+        setUserProfile(dataUser.users.data);
+        setIsLogin(dataUser.users.data ? dataUser.users.data.islogin : '');
+    }, [dataUser.users.data]);
     const navigationShowtimeMovieToSeat = (item, index) => {
         // console.log({ item }, { index });
         const getSeatAndPriceData = data.flatMap((phong) =>
@@ -20,18 +28,24 @@ const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
         );
         let stringSeats = getSeatAndPriceData[index].seats;
         let priceShowitmes = getSeatAndPriceData[index].price;
-
-        navigation.navigate('Seat', {
-            nameMovie,
-            nameCinema,
-            stringSeats,
-            priceShowitmes: +priceShowitmes, // Biến chuỗi thành số
-            idShowtimes: data.map((phong) =>
-                phong.suat.map((suat) => suat.id_suatchieu),
-            ),
-            headerShowtimes: item, // Chỉ dùng gửi đến header seat
-            idSuatChieu: data[0].suat[0].id_suatchieu,
-        });
+        console.log(isLogin);
+        if (isLogin) {
+            console.log('thành công');
+            navigation.navigate('Seat', {
+                nameMovie,
+                nameCinema,
+                stringSeats,
+                priceShowitmes: +priceShowitmes, // Biến chuỗi thành số
+                idShowtimes: data.map((phong) =>
+                    phong.suat.map((suat) => suat.id_suatchieu),
+                ),
+                headerShowtimes: item, // Chỉ dùng gửi đến header seat
+                idSuatChieu: data[0].suat[0].id_suatchieu,
+            });
+        } else {
+            console.log('Thất bại, bạn cần đăg nhập để tiếp tục');
+            navigation.navigate('Login');
+        }
     };
 
     useEffect(() => {
