@@ -6,6 +6,9 @@ import {
     Text,
     View,
     useWindowDimensions,
+    Modal,
+    BackHandler,
+    ToastAndroid,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { BottomTabImage, DrawerImage, HeaderImage } from '../constants';
@@ -37,6 +40,17 @@ const HomeScreen = ({ navigation }) => {
     const movies = useSelector(moviesListSelector);
     const avatarSelector = useSelector(usersSelector);
     // console.log({ movies });
+    const dataUser = useSelector(usersSelector);
+    const [userProfile, setUserProfile] = useState(dataUser.users.data);
+    const [isLogin, setIsLogin] = useState(
+        userProfile ? userProfile.islogin : '',
+    );
+    const [modalVisible, setModalVisible] = useState(false);
+
+    useEffect(() => {
+        setUserProfile(dataUser.users.data);
+        setIsLogin(dataUser.users.data ? dataUser.users.data.islogin : '');
+    }, [dataUser.users.data]);
 
     const stackScreen = (router) => {
         navigation.navigate(router);
@@ -62,6 +76,29 @@ const HomeScreen = ({ navigation }) => {
         );
     }, [avatarSelector]);
 
+    const handleProfileScreen = () => {
+        if (isLogin) {
+            console.log('thành công');
+            stackScreen('Profile');
+        } else {
+            console.log('Thất bại, bạn cần đăg nhập để tiếp tục');
+            setModalVisible(true);
+            setTimeout(() => {
+                setModalVisible(false);
+            }, 5000);
+        }
+    };
+    const handleLogin = () => {
+        if (isLogin) {
+            ToastAndroid.show('Bạn đã đăng nhập rồi !');
+        } else {
+            navigation.navigate('Login');
+            console.log(isLogin);
+        }
+    };
+    const handleCancel = () => {
+        setModalVisible(false);
+    };
     return (
         <View
             style={{
@@ -81,6 +118,85 @@ const HomeScreen = ({ navigation }) => {
                     paddingBottom: 100,
                 }}
             >
+                <Modal transparent={true} visible={modalVisible}>
+                    <View style={styles.centeredView}>
+                        <View
+                            style={[
+                                styles.modalView,
+                                { height: height * 0.18 },
+                            ]}
+                        >
+                            <Text
+                                style={[
+                                    styles.modalTitle,
+                                    { fontSize: height * 0.024 },
+                                ]}
+                            >
+                                Thông báo
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.modalText,
+                                    { fontSize: height * 0.02 },
+                                ]}
+                            >
+                                Bạn chưa đăng nhập !
+                            </Text>
+                            <View
+                                style={{
+                                    width: '90%',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <Pressable
+                                    onPress={handleCancel}
+                                    style={[
+                                        styles.buttonClose,
+
+                                        ,
+                                        {
+                                            width: width * 0.51,
+                                            height: height * 0.06,
+                                        },
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.textStyle,
+                                            {
+                                                fontSize: height * 0.02,
+                                                color: Colors.DARK_RED,
+                                            },
+                                        ]}
+                                    >
+                                        Hủy
+                                    </Text>
+                                </Pressable>
+                                <Pressable
+                                    onPress={handleLogin}
+                                    style={[
+                                        styles.button,
+                                        {
+                                            width: width * 0.51,
+                                            height: height * 0.06,
+                                        },
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.textStyle,
+                                            { fontSize: height * 0.02 },
+                                        ]}
+                                    >
+                                        Đăng nhập{' '}
+                                    </Text>
+                                </Pressable>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
                 <View
                     style={{
                         marginTop: 15,
@@ -90,7 +206,7 @@ const HomeScreen = ({ navigation }) => {
                 >
                     <Pressable
                         style={{ marginLeft: 15 }}
-                        onPress={() => stackScreen('Profile')}
+                        onPress={handleProfileScreen}
                     >
                         <Image
                             style={{
@@ -210,5 +326,57 @@ const styles = StyleSheet.create({
     },
     list: {
         marginTop: 8,
+    },
+    modalView: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '90%',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    button: {
+        borderRadius: 20,
+        elevation: 2,
+        flex: 1,
+        backgroundColor: Colors.DARK_RED,
+        width: '50%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 8,
+    },
+    buttonClose: {
+        borderRadius: 20,
+        borderColor: Colors.DARK_RED,
+        borderWidth: 1,
+        elevation: 2,
+        flex: 1,
+        backgroundColor: Colors.DEFAULT_WHITE,
+        width: '50%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 0,
+        fontFamily: Fonts.SemiBold,
+    },
+    modalText: {
+        textAlign: 'center',
+        color: Colors.DARK_GRAY,
+        fontFamily: Fonts.Light,
+        marginTop: 0,
+    },
+    textStyle: {
+        color: Colors.DEFAULT_WHITE,
+        textAlign: 'center',
+        fontFamily: Fonts.SemiBold,
+        fontSize: 18,
+    },
+    modalTitle: {
+        textAlign: 'center',
+        color: Colors.DEFAULT_BLACK,
+        fontFamily: Fonts.SemiBold,
     },
 });
