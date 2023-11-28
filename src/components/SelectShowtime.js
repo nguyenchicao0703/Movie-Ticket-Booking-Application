@@ -13,10 +13,12 @@ const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
     const [isLogin, setIsLogin] = useState(
         userProfile ? userProfile.islogin : '',
     );
+
     useEffect(() => {
         setUserProfile(dataUser.users.data);
         setIsLogin(dataUser.users.data ? dataUser.users.data.islogin : '');
     }, [dataUser.users.data]);
+
     const navigationShowtimeMovieToSeat = (item, index) => {
         // console.log({ item }, { index });
         const getSeatAndPriceData = data.flatMap((phong) =>
@@ -26,11 +28,12 @@ const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
                 return { seats, price };
             }),
         );
+
         let stringSeats = getSeatAndPriceData[index].seats;
         let priceShowitmes = getSeatAndPriceData[index].price;
-        console.log(isLogin);
+
+        // console.log(isLogin);
         if (isLogin) {
-            console.log('thành công');
             navigation.navigate('Seat', {
                 nameMovie,
                 nameCinema,
@@ -38,7 +41,7 @@ const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
                 priceShowitmes: +priceShowitmes, // Biến chuỗi thành số
                 idShowtimes: data.flatMap((phong) =>
                     phong.suat.map((suat) => suat.id_suatchieu),
-                ),
+                )[index],
                 headerShowtimes: item, // Chỉ dùng gửi đến header seat
             });
         } else {
