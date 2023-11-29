@@ -219,7 +219,7 @@ const SeatScreen = ({ navigation, route }) => {
             //               }),
             //           );
             //           console.log('timer');
-            //       }, 5000)
+            //       }, 15000)
             //     : null; // 5 phút
             // setTimer(_timer);
             // clearTimeout(timer);
@@ -270,7 +270,7 @@ const SeatScreen = ({ navigation, route }) => {
         dispatch(setShowtime(headerShowtimes));
         dispatch(setTotalPayment(totalPrice));
         dispatch(setSeatsIndex(storageSeats));
-        navigation.navigate('Combo');
+        navigation.navigate('Payment');
     };
 
     const handleButtonMenu = () => {
