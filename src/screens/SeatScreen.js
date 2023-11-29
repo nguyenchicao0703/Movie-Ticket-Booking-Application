@@ -13,6 +13,15 @@ import { Header, InformationBottom } from '../components';
 import { useSelector } from 'react-redux';
 import { datesSelector, usersSelector } from '../redux/selectors';
 import socket from '../utils/socket';
+import { useDispatch } from 'react-redux';
+import {
+    setDateShowtime,
+    setMovieName,
+    setShowtime,
+    setCinemaName,
+    setTotalPayment,
+    setSeatsIndex,
+} from '../redux/slice/bookingSlice';
 
 const TypeSeat = ({ backgroundColor, text }) => {
     return (
@@ -80,6 +89,10 @@ const SeatScreen = ({ navigation, route }) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [storageSeats, setStorageSeats] = useState('');
     const [indexSeat, setIndexSeat] = useState([]);
+    const [checkStatusTimerSeats, setCheckStatusTimerSeats] = useState(false);
+    const [timer, setTimer] = useState(null);
+
+    const dispatch = useDispatch();
 
     const idUsersSelector = useSelector(usersSelector);
     const headerDate = useSelector(datesSelector); // Chỉ dùng để gửi đến header
@@ -148,6 +161,13 @@ const SeatScreen = ({ navigation, route }) => {
     //     };
     // }, []);
 
+    const returnDefault = () => {
+        setSelectedSeats([]);
+        setStorageSeats('');
+        setTotalPrice(0);
+        setIndexSeat([]);
+    };
+
     const handleSeatPress = useCallback((seatId, seatIndexNumber) => {
         // console.log({ seatIndexNumber });
         // console.log({ seatId });
@@ -168,6 +188,7 @@ const SeatScreen = ({ navigation, route }) => {
             );
             setIndexSeat([...copyWithoutFirstElement]);
             setTotalPrice(totalPrice - priceShowitmes);
+            setCheckStatusTimerSeats(true);
         } else {
             socket.emit(
                 'chonghe',
@@ -183,18 +204,22 @@ const SeatScreen = ({ navigation, route }) => {
                 { index: seatIndexNumber, soghe: seatId },
             ]);
             setTotalPrice(totalPrice + priceShowitmes);
-            setTimeout(() => {
-                setSelectedSeats([]);
-                socket.emit(
-                    'chonghe',
-                    JSON.stringify({
-                        id: idShowtimes,
-                        index: seatIndexNumber,
-                        status: 'A',
-                    }),
-                );
-                console.log('timer');
-            }, 30000); // 5 phút
+            const _timer = setCheckStatusTimerSeats(false);
+            checkStatusTimerSeats === false
+                ? setTimeout(() => {
+                      returnDefault();
+                      socket.emit(
+                          'chonghe',
+                          JSON.stringify({
+                              id: idShowtimes,
+                              index: seatIndexNumber,
+                              status: 'A',
+                          }),
+                      );
+                      console.log('timer');
+                  }, 5000)
+                : null; // 5 phút
+            setTimer(_timer);
         }
 
         setSelectedSeats(updatedSeats);
@@ -204,6 +229,8 @@ const SeatScreen = ({ navigation, route }) => {
     // console.log({ storageSeats });
     // console.log({ selectedSeats });
     // console.log({ seats });
+
+    console.log({ indexSeat });
 
     const navigationSeatToCombo = async () => {
         try {
@@ -224,14 +251,23 @@ const SeatScreen = ({ navigation, route }) => {
                     listghe: [...indexSeat],
                 }),
             );
-            setSelectedSeats([]);
-            setIndexSeat([]);
-            setStorageSeats('');
-            setTotalPrice(0);
+            returnDefault();
+            clearTimeout(timer);
+            setCheckStatusTimerSeats(true);
         } catch (error) {
             console.log('Error fetch seats', error);
         }
     };
+
+    // const navigationSeatToCombo = () => {
+    //     dispatch(setCinemaName(nameCinema));
+    //     dispatch(setMovieName(nameMovie));
+    //     dispatch(setDateShowtime(headerDate));
+    //     dispatch(setShowtime(headerShowtimes));
+    //     dispatch(setTotalPayment(totalPrice));
+    //     dispatch(setSeatsIndex(storageSeats));
+    //     navigation.navigate('Combo');
+    // };
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
@@ -252,11 +288,9 @@ const SeatScreen = ({ navigation, route }) => {
                     status: 'A',
                 }),
             );
-            setSelectedSeats([]);
-            setIndexSeat([]);
-            setTotalPrice(0);
-            setStorageSeats('');
+            returnDefault();
         }
+        setCheckStatusTimerSeats(true);
         navigation.goBack(null);
     };
 
@@ -394,7 +428,8 @@ const SeatScreen = ({ navigation, route }) => {
                 nameMovie={nameMovie}
                 seat={storageSeats}
                 totalPayment={totalPrice}
-                onPress={storageSeats !== '' ? navigationSeatToCombo : null}
+                // onPress={storageSeats !== '' ? navigationSeatToCombo : null}
+                onPress={navigationSeatToCombo}
             />
         </View>
     );
