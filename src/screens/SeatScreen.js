@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
+    AppState,
 } from 'react-native';
 import React, { useState, useCallback, useEffect } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
@@ -115,6 +116,38 @@ const SeatScreen = ({ navigation, route }) => {
         };
     }, [idShowtimes]);
 
+    // useEffect(() => {
+    //     const handleAppStateChange = async (nextAppState) => {
+    //         if (nextAppState === 'background') {
+    //             console.log('Ứng dụng bị thoát');
+    //             // Return trạng thái của "ghế đang chọn" -> "ghế trống"
+    //             // Return state default
+    //             let _seatIndexNumber;
+    //             for (let i = 0; i < indexSeat.length; i++) {
+    //                 _seatIndexNumber = indexSeat[i].index;
+    //                 await socket.emit(
+    //                     'chonghe',
+    //                     JSON.stringify({
+    //                         id: idShowtimes,
+    //                         index: _seatIndexNumber,
+    //                         status: 'A',
+    //                     }),
+    //                 );
+    //                 setSelectedSeats([]);
+    //                 setIndexSeat([]);
+    //                 setTotalPrice(0);
+    //                 setStorageSeats('');
+    //             }
+    //         }
+    //     };
+
+    //     AppState.addEventListener('change', handleAppStateChange);
+
+    //     return () => {
+    //         AppState.removeEventListener('change', handleAppStateChange);
+    //     };
+    // }, []);
+
     const handleSeatPress = useCallback((seatId, seatIndexNumber) => {
         // console.log({ seatIndexNumber });
         // console.log({ seatId });
@@ -150,6 +183,18 @@ const SeatScreen = ({ navigation, route }) => {
                 { index: seatIndexNumber, soghe: seatId },
             ]);
             setTotalPrice(totalPrice + priceShowitmes);
+            setTimeout(() => {
+                setSelectedSeats([]);
+                socket.emit(
+                    'chonghe',
+                    JSON.stringify({
+                        id: idShowtimes,
+                        index: seatIndexNumber,
+                        status: 'A',
+                    }),
+                );
+                console.log('timer');
+            }, 30000); // 5 phút
         }
 
         setSelectedSeats(updatedSeats);
@@ -193,14 +238,26 @@ const SeatScreen = ({ navigation, route }) => {
     };
 
     const handleButtonBack = () => {
-        // Không cho thoát ra khi đang chọn ghế
-        if (selectedSeats.length === 0) {
+        // Return trạng thái của "ghế đang chọn" -> "ghế trống"
+        // Return state default
+        let _seatIndexNumber;
+        for (let i = 0; i < indexSeat.length; i++) {
+            _seatIndexNumber = indexSeat[i].index;
+            console.log({ _seatIndexNumber });
+            socket.emit(
+                'chonghe',
+                JSON.stringify({
+                    id: idShowtimes,
+                    index: _seatIndexNumber,
+                    status: 'A',
+                }),
+            );
             setSelectedSeats([]);
             setIndexSeat([]);
             setTotalPrice(0);
             setStorageSeats('');
-            navigation.goBack(null);
         }
+        navigation.goBack(null);
     };
 
     // seats.split(/(\/)/) (array)
