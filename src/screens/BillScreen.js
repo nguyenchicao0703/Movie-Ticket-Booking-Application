@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { LineBill } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import { Header } from '../components';
+import { useSelector } from 'react-redux';
+import { bookingSelector } from '../redux/selectors';
 
 const BillScreen = ({ navigation }) => {
     const handleButtonMenu = () => {
@@ -12,7 +14,8 @@ const BillScreen = ({ navigation }) => {
     const handleButtonBack = () => {
         navigation.navigate('Home');
     };
-
+    const dataBooking = useSelector(bookingSelector);
+    const [discountPayment, setDiscountPayment] = React.useState(0);
     return (
         <View style={styles.container}>
             <Header
@@ -30,20 +33,26 @@ const BillScreen = ({ navigation }) => {
                             fontSize: 22,
                         }}
                     >
-                        spider-man no way home
+                        {dataBooking.movieName}
                     </Text>
                     <View style={styles.bodyAbove1}>
-                        <Text style={styles.txt}>07 tháng 10, 2023</Text>
-                        <Text style={styles.txt}>15:00 ~ 19:11</Text>
+                        <Text style={styles.txt}>
+                            Ngày chiếu: {dataBooking.date}
+                        </Text>
+                        <Text style={styles.txt}>
+                            Giờ chiếu: {dataBooking.showtime}
+                        </Text>
                     </View>
                     <View style={styles.bodyAbove2}>
                         <Text style={styles.title}>Rạp</Text>
-                        <Text style={styles.txt}>MTB Gò Vấp</Text>
+                        <Text style={styles.txt}>{dataBooking.cinemaName}</Text>
                     </View>
                     <View style={styles.bodyAbove3}>
                         <View style={styles.bodyAbove3Left}>
                             <Text style={styles.title}>Ghế</Text>
-                            <Text style={styles.txt}>MTB Gò Vấp</Text>
+                            <Text style={styles.txt}>
+                                {dataBooking.seatsIndex}
+                            </Text>
                         </View>
                         <View style={styles.bodyAbove3Right}>
                             <Text style={styles.title}>Phòng chiếu</Text>
@@ -56,15 +65,19 @@ const BillScreen = ({ navigation }) => {
                             <Text style={styles.title}>
                                 Giá vé bao gồm F&B:
                             </Text>
-                            <Text style={styles.txt}>610.000 đ</Text>
+                            <Text style={styles.txt}>
+                                {dataBooking.totalPayment} đ
+                            </Text>
                         </View>
                         <View style={styles.bodyBelow1}>
                             <Text style={styles.title}>Số tiền được giảm:</Text>
-                            <Text style={styles.txt}>20.000 đ</Text>
+                            <Text style={styles.txt}>{discountPayment} đ</Text>
                         </View>
                         <View style={styles.bodyBelow1}>
                             <Text style={styles.title}>Tổng tiền:</Text>
-                            <Text style={styles.txt}>590.000 đ</Text>
+                            <Text style={styles.txt}>
+                                {dataBooking.totalPayment - discountPayment} đ
+                            </Text>
                         </View>
                         <View style={styles.bodyBelow2}>
                             <Text style={styles.txt2}>

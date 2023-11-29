@@ -21,6 +21,9 @@ import {
     AuthAccountButton,
 } from '../components';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { bookingSelector } from '../redux/selectors';
+import PaymentBar from '../components/PaymentBar';
 
 const { PayZaloBridge } = NativeModules;
 
@@ -34,16 +37,21 @@ const PaymentScreen = (navigation) => {
     };
 
     const handleButtonBack = () => {
-        navigation.goBack(null);
+        navigation.goBack();
     };
 
     const handleButtonNavigation = (router) => {
         navigation.navigate(router);
     };
-    const [money, setMoney] = React.useState('10000');
+    const [discoutPayment, setDiscountPayment] = React.useState(0);
+    const [money, setMoney] = React.useState('0');
     const [token, setToken] = React.useState('');
+    const bookingData = useSelector(bookingSelector);
 
+    const itemBK = [bookingData];
     // console.log(token);
+    // console.log(itemBK);
+
     const token_trans_id = token;
     const [dataApi, setDataApi] = React.useState('');
     const data = dataApi;
@@ -77,7 +85,6 @@ const PaymentScreen = (navigation) => {
         var todayDate = new Date().toISOString().slice(2, 10);
         return todayDate.split('-').join('');
     }
-
     async function createOrder(money) {
         let apptransid = getCurrentDateYYMMDD() + '_' + new Date().getTime();
 
@@ -86,7 +93,7 @@ const PaymentScreen = (navigation) => {
         let appuser = 'ZaloPayDemo';
         let apptime = new Date().getTime();
         let embeddata = '{}';
-        let item = '[]';
+        let item = JSON.stringify(itemBK);
         let description = 'Merchant description for order #' + apptransid;
         let hmacInput =
             appid +
@@ -125,8 +132,6 @@ const PaymentScreen = (navigation) => {
         };
         console.log(order);
 
-        // console.log('============================');
-        // console.log(order);
         let formBody = [];
         for (let i in order) {
             var encodedKey = encodeURIComponent(i);
@@ -142,12 +147,9 @@ const PaymentScreen = (navigation) => {
             },
             body: formBody,
         })
-            // .then((response) => {
-            //     console.log(response.json);
-            // })
             .then((response) => response.json())
             .then((resJson) => {
-                // console.log(resJson);
+                console.log(resJson);
                 setDataApi(resJson);
                 setToken(resJson.zp_trans_token);
                 setReturnCode(resJson.return_code);
@@ -161,7 +163,7 @@ const PaymentScreen = (navigation) => {
         // createOrder(1000);
         // token từ BE trả về nha
         const payZP = NativeModules.ZaloPayBridge;
-        // console.log(token);
+        console.log(token);
         console.log(returncode);
         console.log(token_trans_id);
         console.log(data);
@@ -173,16 +175,10 @@ const PaymentScreen = (navigation) => {
         // callBack();
         setTimeout(() => {
             callBack();
-        }, 4000);
+        }, 3000);
     };
 
     const callBack = async () => {
-        // console.log('234234234:' + dataID);
-        // console.log('343434343:' + dataMac);
-
-        // var app_trans_id = `${moment().format('YYMMDD')}_${transID}`;
-        // '23_1701088992969';
-        // getCurrentDateYYMMDD() + '_' + new Date().getTime();
         const config = {
             app_id: 2554,
             key1: 'sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn',
@@ -221,7 +217,7 @@ const PaymentScreen = (navigation) => {
                 // Alert.alert('Thanh toán thành công');
                 navi.navigate('Bill');
             } else {
-                Alert.alert('Thanh toán không thành công');
+                // Alert.alert('Thanh toán không thành công');
             }
         } catch (e) {
             console.error('Error creating order:', e);
@@ -271,7 +267,7 @@ const PaymentScreen = (navigation) => {
                                 textTransform: 'uppercase',
                             }}
                         >
-                            SPIDER-MAN NO WAY HOME
+                            {bookingData.movieName}
                         </Text>
                         <Text
                             style={[
@@ -279,7 +275,7 @@ const PaymentScreen = (navigation) => {
                                 { fontSize: textSizeInfoMovie },
                             ]}
                         >
-                            07 tháng 10, 2023
+                            {bookingData.date}
                         </Text>
                         <Text
                             style={[
@@ -287,7 +283,7 @@ const PaymentScreen = (navigation) => {
                                 { fontSize: textSizeInfoMovie },
                             ]}
                         >
-                            15:00 ~ 17:11
+                            {bookingData.showtime}
                         </Text>
                         <Text
                             style={[
@@ -295,7 +291,7 @@ const PaymentScreen = (navigation) => {
                                 { fontSize: textSizeInfoMovie },
                             ]}
                         >
-                            MTB Gò Vấp
+                            {bookingData.cinemaName}
                         </Text>
                         <Text
                             style={[
@@ -303,7 +299,7 @@ const PaymentScreen = (navigation) => {
                                 { fontSize: textSizeInfoMovie },
                             ]}
                         >
-                            Ghế: H18, H19
+                            Ghế: {bookingData.seatsIndex}
                         </Text>
                         <Text
                             style={[
@@ -314,19 +310,18 @@ const PaymentScreen = (navigation) => {
                                 },
                             ]}
                         >
-                            Tổng thanh toán: 590.000 đ
+                            Tổng thanh toán: {bookingData.totalPayment} đ
                         </Text>
                     </View>
                 </View>
                 <PaymentTitleBar title={'THÔNG TIN VÉ '} />
+                <PaymentBar content={'Số lượng'} number={1} lineBoolean />
                 <PaymentContentBar
-                    content={'Số lượng'}
-                    number={'3'}
-                    lineBoolean
+                    content={'Tổng'}
+                    number={bookingData.totalPayment}
                 />
-                <PaymentContentBar content={'Tổng'} number={'220.000 đ'} />
                 <PaymentTitleBar title={'Thông tin bắp nước'} />
-                <PaymentCombo
+                {/* <PaymentCombo
                     name={'BABY SHARK SINGLE COMBO '}
                     amount={'195.000'}
                     number={'1'}
@@ -335,8 +330,13 @@ const PaymentScreen = (navigation) => {
                     name={'BABY SHARK SINGLE COMBO '}
                     amount={'195.000'}
                     number={'1'}
+                /> */}
+                {/* <PaymentContentBar content={'Tổng'} number={'>'} /> */}
+                <PaymentContentBar
+                    content={'Combo'}
+                    number={'>'}
+                    numberBoolean
                 />
-                <PaymentContentBar content={'Tổng'} number={'390.000'} />
                 <PaymentTitleBar title={'Phương thức giảm giá'} />
                 <Pressable onPress={() => handleButtonNavigation('Discount')}>
                     <PaymentContentBar
@@ -349,15 +349,18 @@ const PaymentScreen = (navigation) => {
                 <PaymentTitleBar title={'Tổng kết'} />
                 <PaymentContentBar
                     content={'Giá vé bao gồm F&B'}
-                    number={'610.000'}
+                    number={bookingData.totalPayment}
                     lineBoolean
                 />
                 <PaymentContentBar
                     content={'Số tiền được giảm giá'}
-                    number={'20.000'}
+                    number={discoutPayment}
                     lineBoolean
                 />
-                <PaymentContentBar content={'Tổng tiền'} number={'590.000'} />
+                <PaymentContentBar
+                    content={'Tổng tiền'}
+                    number={bookingData.totalPayment - discoutPayment}
+                />
                 <PaymentTitleBar title={'Thanh toán'} />
                 {/* ZaloPay */}
                 <Pressable
@@ -398,7 +401,7 @@ const PaymentScreen = (navigation) => {
                 <View style={{ alignItems: 'center', paddingBottom: 20 }}>
                     <AuthAccountButton
                         onPress={() => /**/ {
-                            createOrder(590000);
+                            createOrder(bookingData.totalPayment);
                             payOrder();
                             // callBack();
                         }}

@@ -9,7 +9,7 @@ const bookingSlice = createSlice({
         showtime: '',
         seatsIndex: '',
         totalPayment: 0,
-        combo: [],
+        combo: '[]',
     },
     reducers: {
         setMovieName: (state, action) => {
