@@ -232,42 +232,42 @@ const SeatScreen = ({ navigation, route }) => {
 
     console.log({ indexSeat });
 
-    const navigationSeatToCombo = async () => {
-        try {
-            // console.log(
-            //     'id_user',
-            //     idUsersSelector.users.length !== 0 &&
-            //         idUsersSelector.users.data.id_user,
-            // );
-            // console.log('id_suat', idShowtimes);
-            // console.log('listghe', [...indexSeat]);
-            socket.emit(
-                'datghe',
-                JSON.stringify({
-                    id_user:
-                        idUsersSelector.users.length !== 0 &&
-                        idUsersSelector.users.data.id_user,
-                    id_suat: idShowtimes,
-                    listghe: [...indexSeat],
-                }),
-            );
-            returnDefault();
-            clearTimeout(timer);
-            setCheckStatusTimerSeats(true);
-        } catch (error) {
-            console.log('Error fetch seats', error);
-        }
-    };
-
-    // const navigationSeatToCombo = () => {
-    //     dispatch(setCinemaName(nameCinema));
-    //     dispatch(setMovieName(nameMovie));
-    //     dispatch(setDateShowtime(headerDate));
-    //     dispatch(setShowtime(headerShowtimes));
-    //     dispatch(setTotalPayment(totalPrice));
-    //     dispatch(setSeatsIndex(storageSeats));
-    //     navigation.navigate('Combo');
+    // const navigationSeatToCombo = async () => {
+    //     try {
+    //         // console.log(
+    //         //     'id_user',
+    //         //     idUsersSelector.users.length !== 0 &&
+    //         //         idUsersSelector.users.data.id_user,
+    //         // );
+    //         // console.log('id_suat', idShowtimes);
+    //         // console.log('listghe', [...indexSeat]);
+    //         socket.emit(
+    //             'datghe',
+    //             JSON.stringify({
+    //                 id_user:
+    //                     idUsersSelector.users.length !== 0 &&
+    //                     idUsersSelector.users.data.id_user,
+    //                 id_suat: idShowtimes,
+    //                 listghe: [...indexSeat],
+    //             }),
+    //         );
+    //         returnDefault();
+    //         clearTimeout(timer);
+    //         setCheckStatusTimerSeats(true);
+    //     } catch (error) {
+    //         console.log('Error fetch seats', error);
+    //     }
     // };
+
+    const navigationSeatToCombo = () => {
+        dispatch(setCinemaName(nameCinema));
+        dispatch(setMovieName(nameMovie));
+        dispatch(setDateShowtime(headerDate));
+        dispatch(setShowtime(headerShowtimes));
+        dispatch(setTotalPayment(totalPrice));
+        dispatch(setSeatsIndex(storageSeats));
+        navigation.navigate('Combo');
+    };
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
