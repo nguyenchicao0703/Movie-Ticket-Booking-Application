@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
 
-const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
+const SelectShowtime = ({ data, nameMovie, nameCinema, imageMovie }) => {
     const { height, width } = useWindowDimensions();
     const navigation = useNavigation();
     const [dataShowtimes, setDataShowtimes] = useState([]);
@@ -46,6 +46,7 @@ const SelectShowtime = ({ data, nameMovie, nameCinema }) => {
         if (isLogin) {
             navigation.navigate('Seat', {
                 nameMovie,
+                imageMovie,
                 nameCinema,
                 stringSeats,
                 priceShowitmes: +priceShowitmes, // Biến chuỗi thành số

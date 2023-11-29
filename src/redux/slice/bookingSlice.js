@@ -4,6 +4,7 @@ const bookingSlice = createSlice({
     name: 'booking',
     initialState: {
         movieName: '',
+        movieImage: '',
         cinemaName: '',
         dateShowtime: '',
         showtime: '',
@@ -14,6 +15,9 @@ const bookingSlice = createSlice({
     reducers: {
         setMovieName: (state, action) => {
             state.movieName = action.payload;
+        },
+        setMovieImage: (state, action) => {
+            state.movieImage = action.payload;
         },
         setCinemaName: (state, action) => {
             state.cinemaName = action.payload;
@@ -38,6 +42,7 @@ const bookingSlice = createSlice({
 
 export const {
     setMovieName,
+    setMovieImage,
     setCinemaName,
     setDateShowtime,
     setShowtime,

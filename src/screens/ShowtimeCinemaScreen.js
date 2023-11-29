@@ -74,6 +74,7 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
                                 data={_data.phong}
                                 nameCinema={nameCinema}
                                 nameMovie={_data.ten_phim}
+                                imageMovie={_data.hinhanh}
                             />
                         </View>
                     ))

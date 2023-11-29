@@ -35,6 +35,7 @@ const MovieCard = ({ data, listCase }) => {
             ? navigation.navigate('ShowtimeMovie', {
                   idMovie: data.id_phim,
                   nameMovie: data.ten_phim,
+                  imageMovie: data.hinhanh,
               })
             : null;
         // console.log({ listCase });
@@ -79,7 +80,9 @@ const MovieCard = ({ data, listCase }) => {
                     Thời lượng: {data.thoiluong} phút
                 </Text>
                 <Text style={[styles.text, { fontSize }]}>
-                    Khởi chiếu: {data.ngaykhoichieu}
+                    {listCase !== 'TicketHistory'
+                        ? 'Khởi chiếu: ' + data.ngaykhoichieu
+                        : 'Ngày chiếu: ' + data.ngaychieu}
                 </Text>
                 <Text style={[styles.text, { fontSize }]} numberOfLines={2}>
                     Thể loại: {data.theloai}

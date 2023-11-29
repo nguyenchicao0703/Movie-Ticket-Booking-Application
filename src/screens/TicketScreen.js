@@ -3,6 +3,7 @@ import {
     Image,
     Pressable,
     Text,
+    ToastAndroid,
     View,
     useWindowDimensions,
 } from 'react-native';
@@ -10,9 +11,9 @@ import React, { useEffect, useState } from 'react';
 import { Colors, Fonts } from '../constants';
 import { Header, MovieList, NoShowtimeMessage } from '../components';
 import ticketAPI from '../api/ticketAPI';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
-import { clearUsers } from '../redux/slice/usersSlice';
+import socket from '../utils/socket';
 
 const TopTabsTicketHistory = [
     { id: 1, category: 'Phim sắp xem' },
@@ -24,9 +25,10 @@ const TicketScreen = ({ navigation }) => {
     const [clickTab, setClickTab] = useState(0);
     const [data, setData] = useState([]);
     const [movie, setMovie] = useState([]);
+    const [index, setIndex] = useState('1');
 
     const idUser = useSelector(usersSelector);
-    const dispatch = useDispatch();
+
     const handleClickTopTab = (index) => {
         setClickTab(index);
     };
@@ -45,17 +47,37 @@ const TicketScreen = ({ navigation }) => {
                 const response = await ticketAPI.getAll(
                     idUser.users.data.id_user,
                 );
-                console.log('response ticket', response.data);
+                // console.log('response ticket', response.data);
                 response.status ? setData(response.data) : setData([]);
+                console.log('thay đổi');
             } catch (error) {
                 console.log('Error fetching tickets', error);
             }
         };
         fetchTickets();
-    }, []);
+
+        socket.connect();
+        function onConnect() {
+            console.log('connect');
+        }
+        function onDisconnect() {
+            console.log('disconnect');
+        }
+        socket.on('connect', onConnect);
+        socket.on('disconnect', onDisconnect);
+        socket.on('connect_error', (err) => {
+            console.log(err instanceof Error);
+            console.log(err.message);
+        });
+        return () => {
+            socket.disconnect();
+            socket.off('connect', onConnect);
+            socket.off('disconnect', onDisconnect);
+        };
+    }, [index]);
 
     useEffect(() => {
-        console.log('data', data);
+        // console.log('data', data);
         const filterTypeTicket =
             data !== undefined
                 ? data.filter((item) =>
@@ -64,7 +86,20 @@ const TicketScreen = ({ navigation }) => {
                 : [];
         setMovie(filterTypeTicket);
         // console.log({ movie });
+        console.log('movie đã đc render');
     }, [clickTab, data]);
+
+    const handleCancelTicket = async (idTicket, index) => {
+        await socket.emit(
+            'huyve',
+            JSON.stringify({
+                id_user: idUser.users.data.id_user,
+                id_ve: idTicket,
+            }),
+        );
+        setIndex(index);
+        ToastAndroid.show('Hủy vé thành công', ToastAndroid.LONG);
+    };
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
@@ -119,7 +154,7 @@ const TicketScreen = ({ navigation }) => {
                         data={movie}
                         extraData={(item) => item.id}
                         showsHorizontalScrollIndicator={false}
-                        renderItem={({ item }) => (
+                        renderItem={({ item, index }) => (
                             <Pressable
                                 style={{
                                     width: '100%',
@@ -188,6 +223,43 @@ const TicketScreen = ({ navigation }) => {
                                         >
                                             {item.giaxuatchieu} đ
                                         </Text>
+                                        <Pressable
+                                            style={{
+                                                width: width * 0.25,
+                                                height: width * 0.1,
+                                                justifyContent: 'center',
+                                                borderRadius: 40,
+                                                marginTop: 10,
+                                                backgroundColor:
+                                                    item.trangthai === '0'
+                                                        ? Colors.LIGHT_GRAY
+                                                        : Colors.DARK_RED,
+                                            }}
+                                            onPress={() =>
+                                                handleCancelTicket(
+                                                    item.id_ve,
+                                                    index,
+                                                )
+                                            }
+                                            disabled={
+                                                item.trangthai === '0'
+                                                    ? true
+                                                    : false
+                                            }
+                                        >
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center',
+                                                    color: Colors.DEFAULT_WHITE,
+                                                    fontFamily: Fonts.Medium,
+                                                    fontSize: fontScale * 16,
+                                                }}
+                                            >
+                                                {item.trangthai === '0'
+                                                    ? 'Đã hủy vé'
+                                                    : 'Hủy vé'}
+                                            </Text>
+                                        </Pressable>
                                     </View>
                                 </View>
                             </Pressable>

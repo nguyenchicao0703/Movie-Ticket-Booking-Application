@@ -21,6 +21,7 @@ import {
     setCinemaName,
     setTotalPayment,
     setSeatsIndex,
+    setMovieImage,
 } from '../redux/slice/bookingSlice';
 
 const TypeSeat = ({ backgroundColor, text }) => {
@@ -79,6 +80,7 @@ const STATUS_RESERVED = 3;
 const SeatScreen = ({ navigation, route }) => {
     const {
         nameMovie,
+        imageMovie,
         nameCinema,
         priceShowitmes,
         idShowtimes,
@@ -204,22 +206,23 @@ const SeatScreen = ({ navigation, route }) => {
                 { index: seatIndexNumber, soghe: seatId },
             ]);
             setTotalPrice(totalPrice + priceShowitmes);
-            const _timer = setCheckStatusTimerSeats(false);
-            checkStatusTimerSeats === false
-                ? setTimeout(() => {
-                      returnDefault();
-                      socket.emit(
-                          'chonghe',
-                          JSON.stringify({
-                              id: idShowtimes,
-                              index: seatIndexNumber,
-                              status: 'A',
-                          }),
-                      );
-                      console.log('timer');
-                  }, 5000)
-                : null; // 5 phút
-            setTimer(_timer);
+            // const _timer = setCheckStatusTimerSeats(false);
+            // checkStatusTimerSeats === false
+            //     ? setTimeout(() => {
+            //           returnDefault();
+            //           socket.emit(
+            //               'chonghe',
+            //               JSON.stringify({
+            //                   id: idShowtimes,
+            //                   index: seatIndexNumber,
+            //                   status: 'A',
+            //               }),
+            //           );
+            //           console.log('timer');
+            //       }, 5000)
+            //     : null; // 5 phút
+            // setTimer(_timer);
+            // clearTimeout(timer);
         }
 
         setSelectedSeats(updatedSeats);
@@ -261,6 +264,7 @@ const SeatScreen = ({ navigation, route }) => {
 
     const navigationSeatToCombo = () => {
         dispatch(setCinemaName(nameCinema));
+        dispatch(setMovieImage(imageMovie));
         dispatch(setMovieName(nameMovie));
         dispatch(setDateShowtime(headerDate));
         dispatch(setShowtime(headerShowtimes));
