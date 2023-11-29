@@ -10,21 +10,51 @@ import {
 } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import { Images, Fonts, Colors, BottomTabImage } from '../constants';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import { setUsers } from '../redux/slice/usersSlice';
 
 const WelcomeScreen = ({ navigation }) => {
     const fadeAnim = useRef(new Animated.Value(0)).current;
+    const dispatch = useDispatch();
+    useEffect(() => {}, []);
 
     useEffect(() => {
-        Animated.timing(fadeAnim, {
-            toValue: 1,
-            duration: 2500,
-            useNativeDriver: true,
-        }).start();
-        setTimeout(() => {
-            navigation.navigate('Drawer');
-        }, 3000);
-    }, [fadeAnim, navigation]);
+        GoogleSignin.configure({
+            webClientId:
+                '243901576266-jcuvlf63l60k3n7qhvdsi66icu86inuu.apps.googleusercontent.com',
+        });
 
+        const checkUserLoggedIn = async () => {
+            try {
+                const user = await AsyncStorage.getItem('user');
+
+                if (user) {
+                    // Người dùng đã đăng nhập trước đó
+                    dispatch(setUsers(JSON.parse(user)));
+
+                    navigation.navigate('Drawer');
+
+                    // const datamoi = useSelector(usersSelector);
+                    // console.log(user);
+                } else {
+                    Animated.timing(fadeAnim, {
+                        toValue: 1,
+                        duration: 2500,
+                        useNativeDriver: true,
+                    }).start();
+                    setTimeout(() => {
+                        navigation.navigate('Drawer');
+                    }, 3000);
+                }
+            } catch (error) {
+                console.log('Error checking user login status:', error);
+            }
+        };
+
+        checkUserLoggedIn();
+    }, [fadeAnim, navigation]);
     const { height, width, fonScale, scale } = useWindowDimensions();
 
     return (

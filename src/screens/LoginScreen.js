@@ -174,31 +174,7 @@ const LoginScreen = () => {
 
     //     }
     // }, [response.users]);
-    useEffect(() => {
-        GoogleSignin.configure({
-            webClientId:
-                '243901576266-jcuvlf63l60k3n7qhvdsi66icu86inuu.apps.googleusercontent.com',
-        });
 
-        const checkUserLoggedIn = async () => {
-            try {
-                const user = await AsyncStorage.getItem('user');
-
-                if (user) {
-                    // Người dùng đã đăng nhập trước đó
-                    dispatch(setUsers(JSON.parse(user)));
-                    navigation.navigate('Drawer');
-                    // const datamoi = useSelector(usersSelector);
-                    // console.log(user);
-                    setIsLoggedIn(true);
-                }
-            } catch (error) {
-                console.log('Error checking user login status:', error);
-            }
-        };
-
-        checkUserLoggedIn();
-    }, []);
     const { width, height, scale, fontScale } = useWindowDimensions();
 
     return (
