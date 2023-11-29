@@ -9,7 +9,6 @@ import {
 import React, { useState, useCallback, useEffect } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
 import { Header, InformationBottom } from '../components';
-import ticketAPI from '../api/ticketAPI';
 import { useSelector } from 'react-redux';
 import { datesSelector, usersSelector } from '../redux/selectors';
 import socket from '../utils/socket';
@@ -71,7 +70,6 @@ const SeatScreen = ({ navigation, route }) => {
     const {
         nameMovie,
         nameCinema,
-        stringSeats,
         priceShowitmes,
         idShowtimes,
         headerShowtimes,
@@ -81,6 +79,9 @@ const SeatScreen = ({ navigation, route }) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [storageSeats, setStorageSeats] = useState('');
     const [indexSeat, setIndexSeat] = useState([]);
+
+    const idUsersSelector = useSelector(usersSelector);
+    const headerDate = useSelector(datesSelector); // Chỉ dùng để gửi đến header
 
     let seatNumber = 1;
     let alphabetIndexNumber = 0;
@@ -92,14 +93,12 @@ const SeatScreen = ({ navigation, route }) => {
             socket.emit('suat', JSON.stringify({ id: idShowtimes }));
             console.log('connect');
         }
-
         function onDisconnect() {
-            console.log('disconnect 2');
+            console.log('disconnect');
         }
         function onSuat(value) {
             setSeats(value.results[0]['chuoighe']);
-            console.log('thay đổi ghế');
-            setIndexSeat([]);
+            // setIndexSeat([]);
         }
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
@@ -116,96 +115,74 @@ const SeatScreen = ({ navigation, route }) => {
         };
     }, [idShowtimes]);
 
-    const idUsersSelector = useSelector(usersSelector);
-    let idUser = idUsersSelector.users.data.id_user;
-    const headerDate = useSelector(datesSelector); // Chỉ dùng để gửi đến header
+    const handleSeatPress = useCallback((seatId, seatIndexNumber) => {
+        // console.log({ seatIndexNumber });
+        // console.log({ seatId });
+        const isSelected = selectedSeats.includes(seatId);
+        let updatedSeats;
+        if (isSelected) {
+            socket.emit(
+                'chonghe',
+                JSON.stringify({
+                    id: idShowtimes,
+                    index: seatIndexNumber,
+                    status: 'A',
+                }),
+            );
+            updatedSeats = selectedSeats.filter((seat) => seat !== seatId); // Hủy bỏ chọn ghế
+            const copyWithoutFirstElement = indexSeat.filter(
+                (value) => value.index !== seatIndexNumber,
+            );
+            setIndexSeat([...copyWithoutFirstElement]);
+            setTotalPrice(totalPrice - priceShowitmes);
+        } else {
+            socket.emit(
+                'chonghe',
+                JSON.stringify({
+                    id: idShowtimes,
+                    index: seatIndexNumber,
+                    status: 'U',
+                }),
+            );
+            updatedSeats = [...selectedSeats, seatId]; // Chọn ghế
+            setIndexSeat([
+                ...indexSeat,
+                { index: seatIndexNumber, soghe: seatId },
+            ]);
+            setTotalPrice(totalPrice + priceShowitmes);
+        }
 
-    // console.log({ stringSeats });
-
-    // Cập nhật lại chuỗi khi dữ liệu chuỗi ghế (stringSeats) thay đổi
-    useEffect(() => {
-        // setSeats(stringSeats);
-
-        // Đặt lại giá trị mặc định giá trị khi điều hướng sang màn hình khác
-        return () => {
-            setSelectedSeats([]);
-            setSeats('');
-            setTotalPrice(0);
-            setStorageSeats('');
-        };
-    }, []);
-
-    console.log({ idShowtimes });
-
-    const handleSeatPress = useCallback(
-        (seatId, seatIndexNumber, seatIndex) => {
-            console.log({ seatIndexNumber });
-            console.log({ seatIndex });
-            console.log({ seatId });
-            const isSelected = selectedSeats.includes(seatId);
-            let updatedSeats;
-            if (isSelected) {
-                updatedSeats = selectedSeats.filter((seat) => seat !== seatId); // Hủy bỏ chọn ghế
-                setTotalPrice(totalPrice - priceShowitmes);
-                const copyWithoutFirstElement = indexSeat.filter(
-                    (value) => value.index !== seatIndexNumber,
-                );
-                setIndexSeat([...copyWithoutFirstElement]);
-                socket.emit(
-                    'chonghe',
-                    JSON.stringify({
-                        id: idShowtimes,
-                        index: seatIndexNumber,
-                        status: 'A',
-                    }),
-                );
-            } else {
-                updatedSeats = [...selectedSeats, seatId]; // Chọn ghế
-                setTotalPrice(totalPrice + priceShowitmes);
-                setIndexSeat([
-                    ...indexSeat,
-                    { index: seatIndexNumber, soghe: seatId },
-                ]);
-                socket.emit(
-                    'chonghe',
-                    JSON.stringify({
-                        id: idShowtimes,
-                        index: seatIndexNumber,
-                        status: 'U',
-                    }),
-                );
-                // const seatsArr = seats.split(''); // ['A', 'A', 'U', 'R', ...]
-                // seatsArr[seatIndexNumber] = isSelected ? 'A' : 'R'; // Tìm vị trí của phần tử trong mảng sau đó thay thế ký tự
-                // setSeats(seatsArr.join('')); // Chuyển lại thành chuỗi để render components
-            }
-
-            setSelectedSeats(updatedSeats);
-            setStorageSeats(updatedSeats.join(', '));
-        },
-    );
+        setSelectedSeats(updatedSeats);
+        setStorageSeats(updatedSeats.join(', '));
+    });
 
     // console.log({ storageSeats });
-    console.log({ selectedSeats });
-    console.log({ seats });
+    // console.log({ selectedSeats });
+    // console.log({ seats });
 
     const navigationSeatToCombo = async () => {
         try {
-            // await ticketAPI.postBookTicket(idUser, idShowtimes, storageSeats);
-            // navigation.navigate('Combo', {
-            //     nameMovie,
-            //     storageSeats,
-            //     totalPrice,
-            // });
-            // socket.emit(
-            //     'datghe',
-            //     JSON.stringify({
-            //         id_user: idUser,
-            //         id_suat: idShowtimes,
-            //         listghe: [...indexSeat],
-            //     }),
+            // console.log(
+            //     'id_user',
+            //     idUsersSelector.users.length !== 0 &&
+            //         idUsersSelector.users.data.id_user,
             // );
-            // setIndexSeat([]);
-            console.log('index seat ládaddladj', [...indexSeat]);
+            // console.log('id_suat', idShowtimes);
+            // console.log('listghe', [...indexSeat]);
+            socket.emit(
+                'datghe',
+                JSON.stringify({
+                    id_user:
+                        idUsersSelector.users.length !== 0 &&
+                        idUsersSelector.users.data.id_user,
+                    id_suat: idShowtimes,
+                    listghe: [...indexSeat],
+                }),
+            );
+            setSelectedSeats([]);
+            setIndexSeat([]);
+            setStorageSeats('');
+            setTotalPrice(0);
         } catch (error) {
             console.log('Error fetch seats', error);
         }
@@ -216,12 +193,14 @@ const SeatScreen = ({ navigation, route }) => {
     };
 
     const handleButtonBack = () => {
-        setSeats('');
-        setSelectedSeats([]);
-        setIndexSeat([]);
-        setTotalPrice(0);
-        setStorageSeats('');
-        navigation.goBack(null);
+        // Không cho thoát ra khi đang chọn ghế
+        if (selectedSeats.length === 0) {
+            setSelectedSeats([]);
+            setIndexSeat([]);
+            setTotalPrice(0);
+            setStorageSeats('');
+            navigation.goBack(null);
+        }
     };
 
     // seats.split(/(\/)/) (array)
@@ -235,8 +214,6 @@ const SeatScreen = ({ navigation, route }) => {
 
     // seat (string)
     // A, U, R, _, /
-
-    console.log('value', selectedSeats);
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
@@ -282,12 +259,11 @@ const SeatScreen = ({ navigation, route }) => {
                                     seatNumber < 10
                                         ? (seatNumber = '0' + seatNumber)
                                         : seatNumber;
-
                                     const seatId =
                                         alphabetSeats[alphabetIndexNumber] +
                                         seatNumber;
+
                                     if (selectedSeats.includes(seatId)) {
-                                        console.log('U');
                                         status = STATUS_RESERVED;
                                     } else if (seat === 'U') {
                                         status = STATUS_BOOKED;
@@ -328,10 +304,9 @@ const SeatScreen = ({ navigation, route }) => {
                                                 handleSeatPress(
                                                     seatId,
                                                     seatNumberId,
-                                                    seatIndex,
                                                 )
                                             }
-                                            // disabled={status === STATUS_BOOKED}
+                                            disabled={status === STATUS_BOOKED}
                                         >
                                             <Text style={styles.seatText}>
                                                 {seatId}

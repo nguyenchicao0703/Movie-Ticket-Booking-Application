@@ -2,15 +2,12 @@ import {
     StyleSheet,
     Text,
     ScrollView,
-    KeyboardAvoidingView,
     NativeModules,
     NativeEventEmitter,
     useWindowDimensions,
     Pressable,
-    TextInput,
     View,
     Image,
-    Button,
     Alert,
 } from 'react-native';
 import React, { useEffect } from 'react';
@@ -23,8 +20,6 @@ import {
     PaymentTitleBar,
     AuthAccountButton,
 } from '../components';
-import axios from 'axios';
-import callbackZL from '../api/zalopayApi';
 import { useNavigation } from '@react-navigation/native';
 
 const { PayZaloBridge } = NativeModules;

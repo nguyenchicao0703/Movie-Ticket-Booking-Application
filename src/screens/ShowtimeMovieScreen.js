@@ -33,10 +33,9 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
         const fetchingShowtimeMovies = async () => {
             try {
                 const response = await showtimesAPI.getAllMovies(idMovie, date);
-                console.log('data showtimes movies', response);
+                // console.log('data showtimes movies', response);
                 response.status ? setData(response.data) : setData([]);
                 setSatusGetAPI(response.status);
-                // console.log('Response data showtime movies', data);
             } catch (error) {
                 console.log('Error fetching showtime movies', error);
             }
