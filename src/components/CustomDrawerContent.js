@@ -65,20 +65,26 @@ const CustomDrawerContent = ({ navigation }) => {
         'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
     );
 
-    const avatarSelector = useSelector(usersSelector);
-    const nameUserSelector = useSelector(usersSelector);
-
+    const dataUser = useSelector(usersSelector);
     useEffect(() => {
-        const avatarUsers = avatarSelector.users;
         setAvatar(
-            avatarUsers.length !== 0
-                ? avatarUsers.data.avatar
+            dataUser.users.data
+                ? dataUser.users.data.avatar
+                : 'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
+        );
+        setNameUser(
+            dataUser.users.data ? dataUser.users.data.name : 'Nguyen Van A',
+        );
+    }, [dataUser.users.data]);
+    useEffect(() => {
+        setAvatar(
+            avatar.length !== 0
+                ? avatar
                 : 'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
         );
 
-        const nameUser = nameUserSelector.users;
-        setNameUser(nameUser.length !== 0 ? nameUser.data.name : '');
-    }, [avatarSelector, nameUserSelector]);
+        setNameUser(nameUser.length !== 0 ? nameUser : '');
+    }, [avatar, nameUser]);
 
     return (
         <ImageBackground

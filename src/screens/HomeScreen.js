@@ -38,7 +38,6 @@ const HomeScreen = ({ navigation }) => {
 
     const dispatch = useDispatch();
     const movies = useSelector(moviesListSelector);
-    const avatarSelector = useSelector(usersSelector);
     // console.log({ movies });
     const dataUser = useSelector(usersSelector);
     const [userProfile, setUserProfile] = useState(dataUser.users.data);
@@ -50,6 +49,11 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         setUserProfile(dataUser.users.data);
         setIsLogin(dataUser.users.data ? dataUser.users.data.islogin : '');
+        setAvatar(
+            dataUser.users.data
+                ? dataUser.users.data.avatar
+                : 'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
+        );
     }, [dataUser.users.data]);
 
     const stackScreen = (router) => {
@@ -68,13 +72,12 @@ const HomeScreen = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
-        const avatarUsers = avatarSelector.users;
         setAvatar(
-            avatarUsers.length !== 0
-                ? avatarUsers.data.avatar
+            avatar.length !== 0
+                ? avatar
                 : 'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
         );
-    }, [avatarSelector]);
+    }, [avatar]);
 
     const handleProfileScreen = () => {
         if (isLogin) {
