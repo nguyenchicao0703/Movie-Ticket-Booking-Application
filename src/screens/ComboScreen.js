@@ -5,10 +5,11 @@ import { Header, InformationBottom } from '../components';
 import ComboList from '../components/list/ComboList';
 import { Colors } from '../constants';
 import comboAPI from '../api/comboAPI';
-
+import { useSelector } from 'react-redux';
+import { bookingSelector } from '../redux/selectors';
 const ComboScreen = ({ navigation }) => {
     const [data, setData] = useState();
-
+    const dataBooking = useSelector(bookingSelector);
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -43,9 +44,9 @@ const ComboScreen = ({ navigation }) => {
             />
             <ComboList data={data} />
             <InformationBottom
-                nameMovie={'SIPDER-MAN NO WAY HOME'}
-                seat={'E09, E10'}
-                totalPayment={'220.000'}
+                nameMovie={dataBooking.movieName}
+                seat={dataBooking.seatsIndex}
+                totalPayment={dataBooking.totalPayment.toString()}
                 onPress={navigationComboToPayment}
             />
         </SafeAreaView>

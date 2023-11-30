@@ -270,7 +270,7 @@ const SeatScreen = ({ navigation, route }) => {
         dispatch(setShowtime(headerShowtimes));
         dispatch(setTotalPayment(totalPrice));
         dispatch(setSeatsIndex(storageSeats));
-        navigation.navigate('Payment');
+        navigation.navigate('Combo');
     };
 
     const handleButtonMenu = () => {
