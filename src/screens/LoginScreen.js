@@ -32,6 +32,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
 const LoginScreen = () => {
     const [userName, setUserName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingWaite, setIsLoadingWaite] = useState(false);
+
     const [showModal, setShowModal] = useState(false);
     const [modalTimer, setModalTimer] = useState(null);
     const [phone, setPhone] = useState('');
@@ -141,28 +143,30 @@ const LoginScreen = () => {
         try {
             const response = await dispatch(fetchUsersMail(email));
             console.log(response);
-            // if (response.payload.status) {
-            //     if (response.payload.data) {
-            //         console.log('Logged in successfully');
-            //         await AsyncStorage.setItem(
-            //             'user',
-            //             JSON.stringify(response.payload),
-            //         );
-            //         console.log(response);
-            //         navigation.navigate('Drawer');
-            //         clearState();
-            //         setIsLoggedIn(true);
-            //     } else if (response.payload.data === null) {
-            //         console.log('du lieu ', response.payload.data);
-            //         setShowModal(true);
-            //         setModalTimer(setTimeout(() => setShowModal(false), 3000));
-            //         setIsLoggedIn(true);
-            //         console.log(response.payload.msg);
-            //         // Close the modal after 3 seconds
-            //     }
-            // } else {
-            //     console.log('An error occurred.');
-            // }
+            if (response.payload.status) {
+                if (response.payload.data) {
+                    setIsLoading(true);
+                    console.log('Logged in successfully');
+                    await AsyncStorage.setItem(
+                        'user',
+                        JSON.stringify(response.payload),
+                    );
+                    console.log(response);
+                    navigation.navigate('Drawer');
+                    clearState();
+                    setIsLoggedIn(true);
+                    setIsLoading(false);
+                } else if (response.payload.data === null) {
+                    console.log('du lieu ', response.payload.data);
+                    setShowModal(true);
+                    setModalTimer(setTimeout(() => setShowModal(false), 3000));
+                    setIsLoggedIn(true);
+                    console.log(response.payload.msg);
+                    // Close the modal after 3 seconds
+                }
+            } else {
+                console.log('An error occurred.');
+            }
         } catch (error) {
             console.log('Error logging in with email:', error);
         }
@@ -170,6 +174,7 @@ const LoginScreen = () => {
 
     const handleGoogleSignIn = async () => {
         try {
+            setIsLoadingWaite(true);
             await GoogleSignin.hasPlayServices();
             const { idToken } = await GoogleSignin.signIn();
             const googleCredential =
@@ -181,6 +186,7 @@ const LoginScreen = () => {
             clearState();
             setUserName(user.displayName);
             await handleLoginWithEmail(email);
+            setIsLoadingWaite(false);
         } catch (error) {
             // Handle Google Sign-In error
             // Display appropriate error message to the user
@@ -216,6 +222,15 @@ const LoginScreen = () => {
             <Spinner
                 visible={isLoading}
                 textContent={'Đăng nhập thành công...'}
+                textStyle={{ color: '#FFF' }}
+                size={'slide'}
+                color="#B73131"
+                animation="fade"
+                overlayColor="#1E1F27"
+            />
+            <Spinner
+                visible={isLoadingWaite}
+                textContent={'Đang tải...'}
                 textStyle={{ color: '#FFF' }}
                 size={'slide'}
                 color="#B73131"

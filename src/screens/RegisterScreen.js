@@ -19,6 +19,7 @@ const RegisterScreen = ({ navigation }) => {
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [checkpassword, setCheckpassword] = useState('');
+    const [name, setName] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [countdown, setCountdown] = useState(2);
     const [error, setError] = useState('');
@@ -28,11 +29,12 @@ const RegisterScreen = ({ navigation }) => {
         navigation.goBack();
     };
 
-    const registerUser = async (phone, password) => {
+    const registerUser = async (phone, password, name) => {
         try {
             const response = await usersAPI.postRegisterUserWithPhoneNumber(
                 phone,
                 password,
+                name,
             );
             return response;
         } catch (error) {
@@ -48,6 +50,9 @@ const RegisterScreen = ({ navigation }) => {
     };
     const handleCheckPasswordChange = (text) => {
         setCheckpassword(text);
+    };
+    const handleNameChange = (text) => {
+        setName(text);
     };
     console.log(password);
     const handleSubmit = () => {
@@ -87,43 +92,24 @@ const RegisterScreen = ({ navigation }) => {
             return;
         }
 
-        usersAPI
-            .postCheckPhoneNumber(phone)
-            .then((Response) => {
-                // Handle successful phone number check
-                console.log('Phone number check success:', Response);
-
-                if (Response.status) {
-                    registerUser(phone, password)
-                        .then((Response) => {
-                            console.log('Success:', Response);
-                            if (Response.status) {
-                                setIsLoading(true);
-                                setTimeout(() => {
-                                    setIsLoading(false);
-                                    navigation.navigate('Login');
-                                }, 1000);
-                            } else {
-                                setError('Số điện thoại đã được đăng ký!');
-                                return;
-                            }
-
-                            // Handle successful registration
-                        })
-                        .catch((registerError) => {
-                            // Handle registration error
-                            console.error('Registration error:', registerError);
-                            setIsLoading(false);
-                        });
-                } else if (Response.status === false) {
-                    // Số điện thoại chưa tồn tại
-                    setError('Số điện thoại đã tồn tại!');
-                    setIsLoading(false);
+        registerUser(phone, password, name)
+            .then((response) => {
+                console.log('Success:', response);
+                if (response.status) {
+                    setIsLoading(true);
+                    setTimeout(() => {
+                        setIsLoading(false);
+                        navigation.navigate('Login');
+                    }, 1000);
+                } else {
+                    setError('Số điện thoại đã được đăng ký!');
                 }
+
+                // Handle successful registration
             })
-            .catch((checkError) => {
-                // Handle phone number check error
-                console.error('Phone number check error:', checkError);
+            .catch((registerError) => {
+                // Handle registration error
+                console.error('Registration error:', registerError);
                 setIsLoading(false);
             });
     };
@@ -150,6 +136,16 @@ const RegisterScreen = ({ navigation }) => {
                 <BackButton onPress={backToLogin} />
                 <TextTitle text={'Đăng ký'} />
                 <View style={styles.container}>
+                    <View style={styles.formRegister}>
+                        <View style={styles.containerInput}>
+                            <Input
+                                keyboardType={'ascii-capable'}
+                                label={'Họ và tên'}
+                                value={name}
+                                onChangeText={handleNameChange}
+                            />
+                        </View>
+                    </View>
                     <View style={styles.formRegister}>
                         <View style={styles.containerInput}>
                             <Input
