@@ -143,6 +143,13 @@ const CustomDrawerContent = ({ navigation }) => {
                 router={'Cinema'}
             />
             <Line />
+            <Item
+                imageIndex={7}
+                title={'Đăng xuất'}
+                navigation={navigation}
+                router={'Login'}
+            />
+            <Line />
         </ImageBackground>
     );
 };
