@@ -9,6 +9,7 @@ import {
     Modal,
     BackHandler,
     ToastAndroid,
+    ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { BottomTabImage, DrawerImage, HeaderImage } from '../constants';
@@ -39,9 +40,8 @@ const HomeScreen = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const movies = useSelector(moviesListSelector);
-    const avatarSelector = useSelector(usersSelector);
-    // console.log({ movies });
     const dataUser = useSelector(usersSelector);
+
     const [userProfile, setUserProfile] = useState(dataUser.users.data);
     const [isLogin, setIsLogin] = useState(
         userProfile ? userProfile.islogin : '',
@@ -51,6 +51,11 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         setUserProfile(dataUser.users.data);
         setIsLogin(dataUser.users.data ? dataUser.users.data.islogin : '');
+        setAvatar(
+            dataUser.users.data
+                ? dataUser.users.data.avatar
+                : 'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
+        );
     }, [dataUser.users.data]);
 
     const stackScreen = (router) => {
@@ -61,21 +66,20 @@ const HomeScreen = ({ navigation }) => {
         navigation.openDrawer();
     };
 
-    const dataMoviePresent = movies.filter((item) => item.loaikc === 1);
-    const dataMovieSpecial = movies.filter((item) => item.loaikc === 2);
+    const dataMoviePresent = movies.movies.filter((item) => item.loaikc === 1);
+    const dataMovieSpecial = movies.movies.filter((item) => item.loaikc === 2);
 
     useEffect(() => {
         dispatch(fetchMovies());
     }, []);
 
     useEffect(() => {
-        const avatarUsers = avatarSelector.users;
         setAvatar(
-            avatarUsers.length !== 0
-                ? avatarUsers.data.avatar
+            avatar.length !== 0
+                ? avatar
                 : 'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
         );
-    }, [avatarSelector]);
+    }, [avatar]);
 
     const handleProfileScreen = () => {
         if (isLogin) {
@@ -254,7 +258,18 @@ const HomeScreen = ({ navigation }) => {
                 >
                     Phim đang chiếu
                 </Text>
-                <HomeList data={dataMoviePresent} />
+                {!movies.loading ? (
+                    <ActivityIndicator
+                        size="large"
+                        color="#FF0000"
+                        style={{ marginTop: 10 }}
+                    />
+                ) : (
+                    <HomeList
+                        data={dataMoviePresent}
+                        movieCase={'moviePresent'}
+                    />
+                )}
                 <Text
                     style={[
                         styles.title,
@@ -263,7 +278,18 @@ const HomeScreen = ({ navigation }) => {
                 >
                     Phim sắp chiếu
                 </Text>
-                <HomeList data={dataMovieSpecial} />
+                {!movies.loading ? (
+                    <ActivityIndicator
+                        size="large"
+                        color="#FF0000"
+                        style={{ marginTop: 10 }}
+                    />
+                ) : (
+                    <HomeList
+                        data={dataMovieSpecial}
+                        movieCase={'movieSpecial'}
+                    />
+                )}
             </ScrollView>
             {/* bottom tab */}
             <LinearGradient

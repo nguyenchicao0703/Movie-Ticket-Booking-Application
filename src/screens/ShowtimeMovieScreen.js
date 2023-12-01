@@ -1,39 +1,76 @@
-import { Text, View, Image } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { Text, View, Image, ActivityIndicator, FlatList } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Colors, Fonts, SelectShowTimeImage } from '../constants';
 import {
-    CalendarList,
     Header,
     SelectShowtime,
     MovieTitle,
     NoShowtimeMessage,
+    CalendarCard,
 } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import showtimesAPI from '../api/showtimesAPI';
 import { useSelector } from 'react-redux';
-import { datesSelector } from '../redux/selectors';
+import {
+    datesRemainingSelector,
+    selectedDateSelector,
+} from '../redux/selectors';
+import { format, addDays } from 'date-fns';
 
 const ShowtimeMovieScreen = ({ navigation, route }) => {
     const { idMovie, nameMovie } = route.params;
-    console.log({ idMovie });
     const [data, setData] = useState([]);
     const [statusGetAPI, setSatusGetAPI] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [weekSchedule, setWeekSchedule] = useState([]);
 
-    const handleButtonBack = () => {
+    let dateSelector = useSelector(datesRemainingSelector);
+
+    // console.log({ idMovie });
+
+    const handleButtonBack = useCallback(() => {
         navigation.goBack(null);
-    };
+    }, [navigation]);
 
-    const handleButtonMenu = () => {
+    const handleButtonMenu = useCallback(() => {
         navigation.openDrawer();
-    };
+    }, [navigation]);
 
-    const date = useSelector(datesSelector);
+    const updateWeekSchedule = useCallback(() => {
+        const currentDate = new Date(); // Lấy thời gian thực
+        const weekDays = [];
+
+        // 1 tuần
+        for (let i = 0; i < 7; i++) {
+            const day = addDays(currentDate, i);
+            weekDays.push(day);
+        }
+
+        setWeekSchedule(weekDays);
+    }, []);
+
+    useEffect(() => {
+        updateWeekSchedule();
+
+        // Cập nhật lịch sau mỗi 1 phút
+        const interval = setInterval(() => {
+            updateWeekSchedule();
+        }, 60000); // 1 phút
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
 
     useEffect(() => {
         const fetchingShowtimeMovies = async () => {
             try {
-                const response = await showtimesAPI.getAllMovies(idMovie, date);
+                const response = await showtimesAPI.getAllMovies(
+                    idMovie,
+                    dateSelector.dates,
+                );
                 // console.log('data showtimes movies', response);
+                setIsLoading(true);
                 response.status ? setData(response.data) : setData([]);
                 setSatusGetAPI(response.status);
             } catch (error) {
@@ -42,7 +79,7 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
         };
 
         fetchingShowtimeMovies();
-    }, [date]);
+    }, [dateSelector.dates]);
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
@@ -64,9 +101,30 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                 >
                     Chọn ngày
                 </Text>
-                <CalendarList />
+                <FlatList
+                    data={weekSchedule}
+                    kextraData={weekSchedule}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({ item, index }) => (
+                        <CalendarCard
+                            date={format(item, 'dd')} // Ngày
+                            day={format(item, 'eeee')} // Thứ
+                            isFirst={index === 0}
+                            index={index}
+                            selectedDate={dateSelector.isSelect}
+                            data={format(item, 'yyyy-MM-dd')}
+                        />
+                    )}
+                />
                 <MovieTitle title={nameMovie} />
-                {statusGetAPI ? (
+                {!isLoading ? (
+                    <ActivityIndicator
+                        size="large"
+                        color="#FF0000"
+                        style={{ marginTop: 10 }}
+                    />
+                ) : statusGetAPI ? (
                     data.map((_data, index) => (
                         <View key={_data.id_rap}>
                             <View>

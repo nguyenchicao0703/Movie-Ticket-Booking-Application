@@ -48,6 +48,7 @@ const TicketScreen = ({ navigation }) => {
                     idUser.users.data.id_user,
                 );
                 // console.log('response ticket', response.data);
+                console.log('fetch');
                 response.status ? setData(response.data) : setData([]);
                 console.log('thay đổi');
             } catch (error) {
@@ -78,7 +79,7 @@ const TicketScreen = ({ navigation }) => {
 
     useEffect(() => {
         // console.log('data', data);
-        const filterTypeTicket =
+        let filterTypeTicket =
             data !== undefined
                 ? data.filter((item) =>
                       clickTab === 0 ? item.loaikc === 1 : item.loaikc === 2,

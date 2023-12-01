@@ -18,4 +18,4 @@ const NoShowtimeMessage = ({ title }) => {
     );
 };
 
-export default NoShowtimeMessage;
+export default React.memo(NoShowtimeMessage);

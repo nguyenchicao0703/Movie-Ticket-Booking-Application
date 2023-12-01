@@ -1,5 +1,5 @@
 import { Text, Pressable } from 'react-native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Colors, Fonts } from '../../constants';
 import { useDispatch } from 'react-redux';
 import { getDate, isSelect } from '../../redux/slice/calendarsSlice';
@@ -27,10 +27,11 @@ const CalendarCard = ({
 
     const dispatch = useDispatch();
 
-    const handleSelectDateCard = () => {
+    const handleSelectDateCard = useCallback(() => {
+        // console.log('dispatch');
         dispatch(getDate(data));
         dispatch(isSelect(index));
-    };
+    }, [data, index, dispatch]);
 
     const _day = caseDay[day] || '';
 

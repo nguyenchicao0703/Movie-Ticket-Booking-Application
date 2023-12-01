@@ -11,6 +11,7 @@ const HomeCard = ({
     cardHeight,
     nameScale,
     timeScale,
+    movieCase,
 }) => {
     // console.log({ data });
     const navigation = useNavigation();
@@ -29,6 +30,7 @@ const HomeCard = ({
                 isFirst ? { marginLeft: 15 } : isLast ? { marginRight: 0 } : {},
                 { maxWidth: cardWidth },
             ]}
+            disabled={movieCase === 'movieSpecial'}
         >
             <Image
                 style={[styles.image, { width: cardWidth, height: cardHeight }]}

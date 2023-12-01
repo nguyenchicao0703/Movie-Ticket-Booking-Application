@@ -2,7 +2,7 @@ import { FlatList, useWindowDimensions } from 'react-native';
 import React from 'react';
 import HomeCard from '../card/HomeCard';
 
-const HomeList = ({ data }) => {
+const HomeList = ({ data, movieCase }) => {
     const { width, height, fontScale } = useWindowDimensions();
 
     return (
@@ -26,6 +26,7 @@ const HomeList = ({ data }) => {
                     cardHeight={height * 0.5}
                     nameScale={fontScale * 16}
                     timeScale={fontScale * 12}
+                    movieCase={movieCase}
                 />
             )}
         />

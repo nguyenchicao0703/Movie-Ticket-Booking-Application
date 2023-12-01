@@ -24,13 +24,14 @@ import {
     setMovieImage,
 } from '../redux/slice/bookingSlice';
 
-const TypeSeat = ({ backgroundColor, text }) => {
+const TypeSeat = React.memo(({ backgroundColor, text }) => {
     return (
         <View
             style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 marginRight: 50,
+                marginBottom: 20,
             }}
         >
             <View
@@ -52,7 +53,7 @@ const TypeSeat = ({ backgroundColor, text }) => {
             </Text>
         </View>
     );
-};
+});
 
 const alphabetSeats = [
     'A',
@@ -76,6 +77,7 @@ const alphabetSeats = [
 const STATUS_AVAILABLE = 1;
 const STATUS_BOOKED = 2;
 const STATUS_RESERVED = 3;
+const STATUS_ASSIGNED = 4;
 
 const SeatScreen = ({ navigation, route }) => {
     const {
@@ -163,14 +165,14 @@ const SeatScreen = ({ navigation, route }) => {
     //     };
     // }, []);
 
-    const returnDefault = () => {
+    const returnDefault = useCallback(() => {
         setSelectedSeats([]);
         setStorageSeats('');
         setTotalPrice(0);
         setIndexSeat([]);
-    };
+    }, []);
 
-    const handleSeatPress = useCallback((seatId, seatIndexNumber) => {
+    const handleSeatPress = (seatId, seatIndexNumber) => {
         // console.log({ seatIndexNumber });
         // console.log({ seatId });
         const isSelected = selectedSeats.includes(seatId);
@@ -197,7 +199,7 @@ const SeatScreen = ({ navigation, route }) => {
                 JSON.stringify({
                     id: idShowtimes,
                     index: seatIndexNumber,
-                    status: 'U',
+                    status: 'S',
                 }),
             );
             updatedSeats = [...selectedSeats, seatId]; // Chọn ghế
@@ -227,7 +229,7 @@ const SeatScreen = ({ navigation, route }) => {
 
         setSelectedSeats(updatedSeats);
         setStorageSeats(updatedSeats.join(', '));
-    });
+    };
 
     // console.log({ storageSeats });
     // console.log({ selectedSeats });
@@ -235,43 +237,43 @@ const SeatScreen = ({ navigation, route }) => {
 
     console.log({ indexSeat });
 
-    // const navigationSeatToCombo = async () => {
-    //     try {
-    //         // console.log(
-    //         //     'id_user',
-    //         //     idUsersSelector.users.length !== 0 &&
-    //         //         idUsersSelector.users.data.id_user,
-    //         // );
-    //         // console.log('id_suat', idShowtimes);
-    //         // console.log('listghe', [...indexSeat]);
-    //         socket.emit(
-    //             'datghe',
-    //             JSON.stringify({
-    //                 id_user:
-    //                     idUsersSelector.users.length !== 0 &&
-    //                     idUsersSelector.users.data.id_user,
-    //                 id_suat: idShowtimes,
-    //                 listghe: [...indexSeat],
-    //             }),
-    //         );
-    //         returnDefault();
-    //         clearTimeout(timer);
-    //         setCheckStatusTimerSeats(true);
-    //     } catch (error) {
-    //         console.log('Error fetch seats', error);
-    //     }
-    // };
-
     const navigationSeatToCombo = () => {
-        dispatch(setCinemaName(nameCinema));
-        dispatch(setMovieImage(imageMovie));
-        dispatch(setMovieName(nameMovie));
-        dispatch(setDateShowtime(headerDate));
-        dispatch(setShowtime(headerShowtimes));
-        dispatch(setTotalPayment(totalPrice));
-        dispatch(setSeatsIndex(storageSeats));
-        navigation.navigate('Payment');
+        try {
+            // console.log(
+            //     'id_user',
+            //     idUsersSelector.users.length !== 0 &&
+            //         idUsersSelector.users.data.id_user,
+            // );
+            // console.log('id_suat', idShowtimes);
+            // console.log('listghe', [...indexSeat]);
+            socket.emit(
+                'datghe',
+                JSON.stringify({
+                    id_user:
+                        idUsersSelector.users.length !== 0 &&
+                        idUsersSelector.users.data.id_user,
+                    id_suat: idShowtimes,
+                    listghe: [...indexSeat],
+                }),
+            );
+            returnDefault();
+            // clearTimeout(timer);
+            // setCheckStatusTimerSeats(true);
+        } catch (error) {
+            console.log('Error fetch seats', error);
+        }
     };
+
+    // const navigationSeatToCombo = () => {
+    //     dispatch(setCinemaName(nameCinema));
+    //     dispatch(setMovieImage(imageMovie));
+    //     dispatch(setMovieName(nameMovie));
+    //     dispatch(setDateShowtime(headerDate));
+    //     dispatch(setShowtime(headerShowtimes));
+    //     dispatch(setTotalPayment(totalPrice));
+    //     dispatch(setSeatsIndex(storageSeats));
+    //     navigation.navigate('Payment');
+    // };
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
@@ -294,7 +296,7 @@ const SeatScreen = ({ navigation, route }) => {
             );
             returnDefault();
         }
-        setCheckStatusTimerSeats(true);
+        // setCheckStatusTimerSeats(true);
         navigation.goBack(null);
     };
 
@@ -351,7 +353,7 @@ const SeatScreen = ({ navigation, route }) => {
                                 {row.split('').map((seat, seatIndex) => {
                                     // console.log({ seat });
                                     let status = null;
-                                    seatNumber < 10
+                                    seatNumber < 10 && seat !== '_'
                                         ? (seatNumber = '0' + seatNumber)
                                         : seatNumber;
                                     const seatId =
@@ -360,6 +362,8 @@ const SeatScreen = ({ navigation, route }) => {
 
                                     if (selectedSeats.includes(seatId)) {
                                         status = STATUS_RESERVED;
+                                    } else if (seat === 'S') {
+                                        status = STATUS_ASSIGNED;
                                     } else if (seat === 'U') {
                                         status = STATUS_BOOKED;
                                     } else if (seat === 'A') {
@@ -390,6 +394,8 @@ const SeatScreen = ({ navigation, route }) => {
                                                 styles.seat,
                                                 status === STATUS_BOOKED &&
                                                     styles.bookedSeat,
+                                                status === STATUS_ASSIGNED &&
+                                                    styles.assignedSeat,
                                                 status === STATUS_AVAILABLE &&
                                                     styles.availableSeat,
                                                 status === STATUS_RESERVED &&
@@ -401,7 +407,10 @@ const SeatScreen = ({ navigation, route }) => {
                                                     seatNumberId,
                                                 )
                                             }
-                                            disabled={status === STATUS_BOOKED}
+                                            disabled={
+                                                status === STATUS_BOOKED ||
+                                                status === STATUS_ASSIGNED
+                                            }
                                         >
                                             <Text style={styles.seatText}>
                                                 {seatId}
@@ -413,18 +422,26 @@ const SeatScreen = ({ navigation, route }) => {
                         ))}
                     </View>
                     <View style={{ marginBottom: 200, flexDirection: 'row' }}>
-                        <TypeSeat
-                            text={'Ghế tiêu chuẩn'}
-                            backgroundColor={Colors.DARK_SEAT}
-                        />
-                        <TypeSeat
-                            text={'Ghế đã đặt'}
-                            backgroundColor={Colors.MEDIUM_INDIGO}
-                        />
-                        <TypeSeat
-                            text={'Ghế đang chọn'}
-                            backgroundColor={Colors.DEFAULT_RED}
-                        />
+                        <View style={{ flexDirection: 'column' }}>
+                            <TypeSeat
+                                text={'Ghế tiêu chuẩn'}
+                                backgroundColor={Colors.DARK_SEAT}
+                            />
+                            <TypeSeat
+                                text={'Ghế đã đặt'}
+                                backgroundColor={Colors.MEDIUM_INDIGO}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <TypeSeat
+                                text={'Ghế đang chọn'}
+                                backgroundColor={Colors.DEFAULT_RED}
+                            />
+                            <TypeSeat
+                                text={'Ghế người khác đang chọn'}
+                                backgroundColor={Colors.DEFAULT_ORANGE}
+                            />
+                        </View>
                     </View>
                 </ScrollView>
             </ScrollView>
@@ -432,8 +449,8 @@ const SeatScreen = ({ navigation, route }) => {
                 nameMovie={nameMovie}
                 seat={storageSeats}
                 totalPayment={totalPrice}
-                // onPress={storageSeats !== '' ? navigationSeatToCombo : null}
-                onPress={navigationSeatToCombo}
+                onPress={storageSeats !== '' ? navigationSeatToCombo : null}
+                // onPress={navigationSeatToCombo}
             />
         </View>
     );
@@ -464,6 +481,9 @@ const styles = StyleSheet.create({
     },
     availableSeat: {
         backgroundColor: Colors.DARK_SEAT,
+    },
+    assignedSeat: {
+        backgroundColor: Colors.DEFAULT_ORANGE,
     },
     bookedSeat: {
         backgroundColor: Colors.MEDIUM_INDIGO,
