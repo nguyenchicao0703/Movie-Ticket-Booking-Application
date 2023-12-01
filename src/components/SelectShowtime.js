@@ -58,9 +58,6 @@ const SelectShowtime = ({ data, nameMovie, nameCinema, imageMovie }) => {
         } else {
             console.log('Thất bại, bạn cần đăg nhập để tiếp tục');
             setModalVisible(true);
-            setTimeout(() => {
-                setModalVisible(false);
-            }, 5000);
         }
     };
 
@@ -81,6 +78,7 @@ const SelectShowtime = ({ data, nameMovie, nameCinema, imageMovie }) => {
             ToastAndroid.show('Bạn đã đăng nhập rồi !');
         } else {
             navigation.navigate('Login');
+            setModalVisible(false);
             console.log(isLogin);
         }
     };

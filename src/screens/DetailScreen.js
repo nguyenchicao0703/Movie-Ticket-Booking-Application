@@ -8,6 +8,8 @@ import {
     Modal,
     TouchableOpacity,
     ToastAndroid,
+    ActivityIndicator,
+    StatusBar,
 } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { AuthAccountButton, Header, VideoView } from '../components';
@@ -25,9 +27,11 @@ import Video from 'react-native-video';
 import VideoPlayer from 'react-native-video-controls';
 import { fetchMovies } from '../redux/slice/moviesSlice';
 import { useDispatch } from 'react-redux';
-
+import Spinner from 'react-native-loading-spinner-overlay';
 const DetailScreen = ({ navigation, route }) => {
     const fontSizeContent = height * 0.03;
+    const [isLoading, setIsLoading] = useState(true);
+
     const videoRef = useRef(null);
     const [isVideoPlaying, setIsVideoPlaying] = useState(true);
     const { height, width, scale, fontScale } = useWindowDimensions();
@@ -98,6 +102,7 @@ const DetailScreen = ({ navigation, route }) => {
     useEffect(() => {
         const fetchMovieDetails = async () => {
             try {
+                setIsLoading(true); // Bắt đầu tải dữ liệu
                 const response = await movieAPI.getMovieDetails(idPhim);
                 const data = response.data;
                 setMovie(data);
@@ -105,8 +110,12 @@ const DetailScreen = ({ navigation, route }) => {
                 setNameMovie(data.ten_phim);
                 setRatingResult(data.diemdanhgia);
                 console.log('Data detail movie', data);
+                setTimeout(() => {
+                    setIsLoading(false); // Kết thúc tải dữ liệu
+                });
             } catch (error) {
                 console.log('Error fetching response Movie Detail:', error);
+                setIsLoading(false); // Kết thúc tải dữ liệu
             }
         };
 
@@ -148,6 +157,15 @@ const DetailScreen = ({ navigation, route }) => {
                 titleHeader={'Phim'}
                 onButtonBack={handleButtonBack}
                 onButtonMenu={handleButtonMenu}
+            />
+            <Spinner
+                visible={isLoading}
+                textContent={'Đang tải...'}
+                textStyle={{ color: '#FFF' }}
+                size={'slide'}
+                color="#B73131"
+                animation="fade"
+                overlayColor="#1E1F27"
             />
             {movie && (
                 <ScrollView style={{ width: '100%' }}>

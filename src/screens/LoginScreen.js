@@ -26,8 +26,11 @@ import {
 import { usersSelector } from '../redux/selectors';
 import { da, tr } from 'date-fns/locale';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 const LoginScreen = () => {
     const [userName, setUserName] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalTimer, setModalTimer] = useState(null);
     const [phone, setPhone] = useState('');
@@ -49,6 +52,7 @@ const LoginScreen = () => {
 
     const loginWithPhoneNumber = async () => {
         try {
+            setIsLoading(true);
             const response = await dispatch(fetchUsers(phone));
             const status = response.payload.status;
             const msg = response.payload.msg;
@@ -64,6 +68,8 @@ const LoginScreen = () => {
                     'user',
                     JSON.stringify(response.payload),
                 );
+                navigation.navigate('Drawer');
+                setIsLoading(false);
                 console.log('du lieu nguuoi dung', response.payload);
             } else {
                 const phones = phone;
@@ -84,8 +90,11 @@ const LoginScreen = () => {
                 } else {
                     console.log('Login failed', msg);
                 }
+                setIsLoading(false);
             }
         } catch (error) {
+            setIsLoading(false);
+
             console.log('error logging in', error);
             setError('Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.');
         }
@@ -184,7 +193,15 @@ const LoginScreen = () => {
                 StatusBar="light-content"
                 backgroundColor={Colors.DEFAULT_BLACK}
             />
-
+            <Spinner
+                visible={isLoading}
+                textContent={'Đang tải...'}
+                textStyle={{ color: '#FFF' }}
+                size={'slide'}
+                color="#B73131"
+                animation="fade"
+                overlayColor="#1E1F27"
+            />
             <ImageBackground
                 style={styles.backgroudImage}
                 source={Images[4].image}

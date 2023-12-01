@@ -19,7 +19,8 @@ import { ScrollView } from 'react-native-virtualized-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovies } from '../redux/slice/moviesSlice';
 import { moviesListSelector, usersSelector } from '../redux/selectors';
-
+import Spinner from 'react-native-loading-spinner-overlay';
+import { tr } from 'date-fns/locale';
 const bottomTabs = [
     { id: 1, image: 1, title: 'Phim', tab: 'Movie' },
     { id: 2, image: 0, title: 'Rạp', tab: 'Cinema' },
@@ -35,7 +36,7 @@ const HomeScreen = ({ navigation }) => {
     const [avatar, setAvatar] = useState(
         'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
     );
-
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const movies = useSelector(moviesListSelector);
     const avatarSelector = useSelector(usersSelector);
@@ -83,17 +84,20 @@ const HomeScreen = ({ navigation }) => {
         } else {
             console.log('Thất bại, bạn cần đăg nhập để tiếp tục');
             setModalVisible(true);
-            setTimeout(() => {
-                setModalVisible(false);
-            }, 5000);
         }
     };
     const handleLogin = () => {
         if (isLogin) {
             ToastAndroid.show('Bạn đã đăng nhập rồi !');
         } else {
-            navigation.navigate('Login');
+            setIsLoading(true);
             console.log(isLogin);
+            setTimeout(() => {
+                setIsLoading(false);
+                navigation.navigate('Login');
+            }, 1000);
+
+            setModalVisible(false);
         }
     };
     const handleCancel = () => {
