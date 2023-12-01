@@ -23,6 +23,7 @@ const movieSpecial = 2;
 const MovieScreen = ({ navigation }) => {
     const { width, fontScale } = useWindowDimensions();
     const [clickTab, setClickTab] = useState(0);
+    const [listCase, setListCase] = useState('');
 
     const dispatch = useDispatch();
     const movies = useSelector(moviesRemainingSelector);
@@ -30,7 +31,7 @@ const MovieScreen = ({ navigation }) => {
     const filterTypePremiere = movies.movies.filter((item) =>
         clickTab === 0
             ? item.loaikc === moviesPresent
-            : item.loaikc === movieSpecial,
+            : (item.loaikc === movieSpecial, setListCase('MovieFuture')),
     );
 
     useEffect(() => {
@@ -83,7 +84,7 @@ const MovieScreen = ({ navigation }) => {
                     </Pressable>
                 ))}
             </View>
-            <MovieList data={filterTypePremiere} listCase={'movieFuture'} />
+            <MovieList data={filterTypePremiere} listCase={listCase} />
         </View>
     );
 };
