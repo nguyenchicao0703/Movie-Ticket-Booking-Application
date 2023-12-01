@@ -1,12 +1,6 @@
-import {
-    StyleSheet,
-    View,
-    Text,
-    ActivityIndicator,
-    ScrollView,
-} from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { CinemaList, Header } from '../components';
+import { CinemaList, Header, Loading } from '../components';
 import { Colors, Fonts } from '../constants';
 import cinemaAPI from '../api/cinemaAPI';
 
@@ -46,15 +40,7 @@ const CinemaScreen = ({ navigation }) => {
             <View style={styles.tabBottomText}>
                 <Text style={styles.text}>KHU VỰC TP.HCM</Text>
             </View>
-            {!isLoading ? (
-                <ActivityIndicator
-                    size="large"
-                    color="#FF0000"
-                    style={{ marginTop: 10 }}
-                />
-            ) : (
-                <CinemaList data={data} />
-            )}
+            {!isLoading ? <Loading /> : <CinemaList data={data} />}
         </View>
     );
 };

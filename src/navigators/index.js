@@ -67,7 +67,7 @@ const Navigator = () => {
 
     return (
         <Stack.Navigator
-            initialRouteName="Welcome"
+            initialRouteName="Drawer"
             screenOptions={{ headerShown: false }}
         >
             <Stack.Screen name="Drawer" component={AppDrawer} />

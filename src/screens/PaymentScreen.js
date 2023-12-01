@@ -20,7 +20,6 @@ import {
     PaymentTitleBar,
     AuthAccountButton,
 } from '../components';
-import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { bookingSelector } from '../redux/selectors';
 import PaymentBar from '../components/PaymentBar';
@@ -28,10 +27,11 @@ import PaymentBar from '../components/PaymentBar';
 const { PayZaloBridge } = NativeModules;
 
 const payZaloBridgeEmitter = new NativeEventEmitter(PayZaloBridge);
-const PaymentScreen = (navigation) => {
+
+const PaymentScreen = ({ navigation }) => {
     const { width, fontScale } = useWindowDimensions();
     const textSizeInfoMovie = fontScale * 14;
-    const navi = useNavigation();
+
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -321,12 +321,12 @@ const PaymentScreen = (navigation) => {
                     number={bookingData.totalPayment}
                 />
                 <PaymentTitleBar title={'Thông tin bắp nước'} />
-                {/* <PaymentCombo
+                <PaymentCombo
                     name={'BABY SHARK SINGLE COMBO '}
                     amount={'195.000'}
                     number={'1'}
                 />
-                <PaymentCombo
+                {/* <PaymentCombo
                     name={'BABY SHARK SINGLE COMBO '}
                     amount={'195.000'}
                     number={'1'}
