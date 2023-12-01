@@ -1,10 +1,11 @@
 import axiosClient from './axiosClient';
 
 const usersAPI = {
-    postRegisterUserWithPhoneNumber: (phone, password) => {
+    postRegisterUserWithPhoneNumber: (phone, password, name) => {
         return axiosClient.post('/Dang-ky-tai-khoan-sdt.php', {
             phone,
             password,
+            name,
         });
     },
     postUserWithPhoneNumber: (phone, password) => {
