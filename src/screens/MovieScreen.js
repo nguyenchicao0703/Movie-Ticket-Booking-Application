@@ -4,10 +4,9 @@ import {
     View,
     useWindowDimensions,
     StatusBar,
-    ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Header, MovieList } from '../components';
+import { Header, Loading, MovieList } from '../components';
 import { Colors, Fonts } from '../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { moviesRemainingSelector } from '../redux/selectors';
@@ -85,11 +84,7 @@ const MovieScreen = ({ navigation }) => {
                 ))}
             </View>
             {!movies.loading ? (
-                <ActivityIndicator
-                    size="large"
-                    color="#FF0000"
-                    style={{ marginTop: 10 }}
-                />
+                <Loading />
             ) : (
                 <MovieList data={filterTypePremiere} />
             )}

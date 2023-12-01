@@ -1,4 +1,4 @@
-import { Text, View, FlatList, ActivityIndicator } from 'react-native';
+import { Text, View, FlatList } from 'react-native';
 import React, { useEffect, useState, useCallback } from 'react';
 import { Colors, Fonts } from '../constants';
 import {
@@ -7,6 +7,7 @@ import {
     MovieTitle,
     NoShowtimeMessage,
     CalendarCard,
+    Loading,
 } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import showtimesAPI from '../api/showtimesAPI';
@@ -115,11 +116,7 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
                     )}
                 />
                 {!isLoading ? (
-                    <ActivityIndicator
-                        size="large"
-                        color="#FF0000"
-                        style={{ marginTop: 10 }}
-                    />
+                    <Loading />
                 ) : statusGetAPI ? (
                     data.map((_data) => (
                         <View key={_data.id_phim}>

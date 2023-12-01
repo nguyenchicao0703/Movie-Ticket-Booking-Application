@@ -9,13 +9,12 @@ import {
     Modal,
     BackHandler,
     ToastAndroid,
-    ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { BottomTabImage, DrawerImage, HeaderImage } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import LinearGradient from 'react-native-linear-gradient';
-import { HomeList } from '../components';
+import { HomeList, Loading } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovies } from '../redux/slice/moviesSlice';
@@ -249,11 +248,7 @@ const HomeScreen = ({ navigation }) => {
                     Phim đang chiếu
                 </Text>
                 {!movies.loading ? (
-                    <ActivityIndicator
-                        size="large"
-                        color="#FF0000"
-                        style={{ marginTop: 10 }}
-                    />
+                    <Loading />
                 ) : (
                     <HomeList
                         data={dataMoviePresent}
@@ -269,11 +264,7 @@ const HomeScreen = ({ navigation }) => {
                     Phim sắp chiếu
                 </Text>
                 {!movies.loading ? (
-                    <ActivityIndicator
-                        size="large"
-                        color="#FF0000"
-                        style={{ marginTop: 10 }}
-                    />
+                    <Loading />
                 ) : (
                     <HomeList
                         data={dataMovieSpecial}

@@ -96,6 +96,8 @@ const SeatScreen = ({ navigation, route }) => {
     const [checkStatusTimerSeats, setCheckStatusTimerSeats] = useState(false);
     const [timer, setTimer] = useState(null);
 
+    // console.log({ idShowtimes });
+
     const dispatch = useDispatch();
 
     const idUsersSelector = useSelector(usersSelector);
@@ -111,8 +113,25 @@ const SeatScreen = ({ navigation, route }) => {
             socket.emit('suat', JSON.stringify({ id: idShowtimes }));
             console.log('connect');
         }
-        function onDisconnect() {
+        function onDisconnect(value) {
             console.log('disconnect');
+            console.log('discount', value);
+            let _seatIndexNumber;
+            for (let i = 0; i < indexSeat.length; i++) {
+                _seatIndexNumber = indexSeat[i].index;
+                socket.emit(
+                    'chonghe',
+                    JSON.stringify({
+                        id: idShowtimes,
+                        index: _seatIndexNumber,
+                        status: 'A',
+                    }),
+                );
+                setSelectedSeats([]);
+                setIndexSeat([]);
+                setTotalPrice(0);
+                setStorageSeats('');
+            }
         }
         function onSuat(value) {
             setSeats(value.results[0]['chuoighe']);
@@ -238,42 +257,15 @@ const SeatScreen = ({ navigation, route }) => {
     console.log({ indexSeat });
 
     const navigationSeatToCombo = () => {
-        try {
-            // console.log(
-            //     'id_user',
-            //     idUsersSelector.users.length !== 0 &&
-            //         idUsersSelector.users.data.id_user,
-            // );
-            // console.log('id_suat', idShowtimes);
-            // console.log('listghe', [...indexSeat]);
-            socket.emit(
-                'datghe',
-                JSON.stringify({
-                    id_user:
-                        idUsersSelector.users.length !== 0 &&
-                        idUsersSelector.users.data.id_user,
-                    id_suat: idShowtimes,
-                    listghe: [...indexSeat],
-                }),
-            );
-            returnDefault();
-            // clearTimeout(timer);
-            // setCheckStatusTimerSeats(true);
-        } catch (error) {
-            console.log('Error fetch seats', error);
-        }
+        dispatch(setCinemaName(nameCinema));
+        dispatch(setMovieImage(imageMovie));
+        dispatch(setMovieName(nameMovie));
+        dispatch(setDateShowtime(headerDate.dates));
+        dispatch(setShowtime(headerShowtimes));
+        dispatch(setTotalPayment(totalPrice));
+        dispatch(setSeatsIndex(storageSeats));
+        navigation.navigate('Combo');
     };
-
-    // const navigationSeatToCombo = () => {
-    //     dispatch(setCinemaName(nameCinema));
-    //     dispatch(setMovieImage(imageMovie));
-    //     dispatch(setMovieName(nameMovie));
-    //     dispatch(setDateShowtime(headerDate));
-    //     dispatch(setShowtime(headerShowtimes));
-    //     dispatch(setTotalPayment(totalPrice));
-    //     dispatch(setSeatsIndex(storageSeats));
-    //     navigation.navigate('Payment');
-    // };
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
@@ -319,7 +311,7 @@ const SeatScreen = ({ navigation, route }) => {
                 onButtonBack={handleButtonBack}
                 onButtonMenu={handleButtonMenu}
                 activatedTitleSeats
-                dateShowtime={headerDate}
+                dateShowtime={headerDate.dates}
                 showtimes={headerShowtimes}
             />
             <ScrollView>
