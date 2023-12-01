@@ -5,6 +5,8 @@ import calendarsSlice from './slice/calendarsSlice';
 import bookingSlice from './slice/bookingSlice';
 import setChairsSlice from './setChairsSlice';
 
+import discountSlice from './slice/discountSlice';
+
 const store = configureStore({
     reducer: {
         movies: moviesSlice,
@@ -12,6 +14,7 @@ const store = configureStore({
         calendar: calendarsSlice,
         booking: bookingSlice,
         setCharir: setChairsSlice,
+        discount: discountSlice,
     },
 });
 

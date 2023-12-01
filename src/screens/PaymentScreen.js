@@ -19,24 +19,34 @@ import {
     PaymentContentBar,
     PaymentTitleBar,
     AuthAccountButton,
+    Loading,
 } from '../components';
 import { useSelector } from 'react-redux';
-import { bookingSelector } from '../redux/selectors';
+import {
+    bookingSelector,
+    discountSelector,
+    setCharirSelector,
+    usersSelector,
+} from '../redux/selectors';
 import PaymentBar from '../components/PaymentBar';
 import PaymentDiscount from '../components/PaymentDiscount';
+import socket from '../utils/socket';
 
 const { PayZaloBridge } = NativeModules;
 
 const payZaloBridgeEmitter = new NativeEventEmitter(PayZaloBridge);
 
 const PaymentScreen = ({ navigation, route }) => {
-    const { discountId, discountDate, discountPrice } = route.params;
-    // setDiscountPayment({ discountPrice });
     const { width, fontScale } = useWindowDimensions();
     const textSizeInfoMovie = fontScale * 14;
 
-    // const navigation = useNavigation();
+    const { response } = route.params;
 
+    console.log(comboAPI.giatien);
+
+    const idUsersSelector = useSelector(usersSelector);
+    const dataChairs = useSelector(setCharirSelector);
+    // console.log(dataChairs);
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -48,12 +58,25 @@ const PaymentScreen = ({ navigation, route }) => {
     const handleButtonNavigation = (router) => {
         navigation.navigate(router);
     };
-    const [discoutPayment, setDiscountPayment] = React.useState(0);
+
+    const discountData = useSelector(discountSelector);
+    // console.log(discountData);
+    const discountCode = discountData.discountCode;
+    const discountPrice = discountData.discountPayment;
     const [money, setMoney] = React.useState('0');
     const [token, setToken] = React.useState('');
     const bookingData = useSelector(bookingSelector);
-
-    const itemBK = [bookingData];
+    const itemBK = [
+        bookingData.movieName,
+        bookingData.movieImage,
+        bookingData.cinemaName,
+        bookingData.dateShowtime,
+        bookingData.showtime,
+        bookingData.seatsIndex,
+        bookingData.totalPayment,
+        bookingData.combo,
+        discountPrice,
+    ];
     // console.log(token);
     // console.log(itemBK);
 
@@ -63,8 +86,6 @@ const PaymentScreen = ({ navigation, route }) => {
     const [returncode, setReturnCode] = React.useState('');
     const [dataID, setDataID] = React.useState('');
     const [dataMac, setDataMac] = React.useState();
-
-    console.log({ discountId }, { discountDate }, { discountPrice });
 
     useEffect(() => {
         const subscription = payZaloBridgeEmitter.addListener(
@@ -82,6 +103,27 @@ const PaymentScreen = ({ navigation, route }) => {
             },
         );
         return () => subscription?.remove();
+    }, []);
+    useEffect(() => {
+        socket.connect();
+        function onConnect() {
+            console.log('connect');
+        }
+        function onDisconnect(value) {
+            console.log('disconnect');
+            console.log('discount', value);
+        }
+        socket.on('connect', onConnect);
+        socket.on('disconnect', onDisconnect);
+        socket.on('connect_error', (err) => {
+            console.log(err instanceof Error);
+            console.log(err.message);
+        });
+        return () => {
+            socket.disconnect();
+            socket.off('connect', onConnect);
+            socket.off('disconnect', onDisconnect);
+        };
     }, []);
 
     function getCurrentDateYYMMDD() {
@@ -168,7 +210,7 @@ const PaymentScreen = ({ navigation, route }) => {
         // console.log('123123123:' + dataID);
     }
     const payOrder = (token) => {
-        // createOrder(1000);
+        createOrder(parseInt(bookingData.totalPayment - discountPrice));
         // token từ BE trả về nha
         const payZP = NativeModules.ZaloPayBridge;
         console.log(token);
@@ -182,6 +224,7 @@ const PaymentScreen = ({ navigation, route }) => {
 
         // callBack();
         setTimeout(() => {
+            <Loading />;
             callBack();
         }, 3000);
     };
@@ -223,6 +266,18 @@ const PaymentScreen = ({ navigation, route }) => {
             console.log(resJson);
             if (resJson.return_code == 1) {
                 // Alert.alert('Thanh toán thành công');
+                // try {
+                //     socket.emit(
+                //         'datghe',
+                //         JSON.stringify({
+                //             id_user:
+                //                 idUsersSelector.users.length !== 0 &&
+                //                 idUsersSelector.users.data.id_user,
+                //             id_suat: idShowtimes,
+                //             listghe: [...indexSeat],
+                //         }),
+                //     );
+                // } catch (error) {}
                 navigation.navigate('Bill');
             } else {
                 // Alert.alert('Thanh toán không thành công');
@@ -257,7 +312,7 @@ const PaymentScreen = ({ navigation, route }) => {
                             height: width * 0.35,
                             borderRadius: 5,
                         }}
-                        source={HomeImage[1].image}
+                        source={{ uri: response.data.hinhanh }}
                     />
                     <View
                         style={{
@@ -283,7 +338,7 @@ const PaymentScreen = ({ navigation, route }) => {
                                 { fontSize: textSizeInfoMovie },
                             ]}
                         >
-                            {bookingData.date}
+                            Ngày chiếu: {bookingData.date}
                         </Text>
                         <Text
                             style={[
@@ -291,7 +346,7 @@ const PaymentScreen = ({ navigation, route }) => {
                                 { fontSize: textSizeInfoMovie },
                             ]}
                         >
-                            {bookingData.showtime}
+                            Giờ chiếu: {bookingData.showtime}
                         </Text>
                         <Text
                             style={[
@@ -299,7 +354,7 @@ const PaymentScreen = ({ navigation, route }) => {
                                 { fontSize: textSizeInfoMovie },
                             ]}
                         >
-                            {bookingData.cinemaName}
+                            Rạp: {bookingData.cinemaName}
                         </Text>
                         <Text
                             style={[
@@ -329,11 +384,12 @@ const PaymentScreen = ({ navigation, route }) => {
                     number={bookingData.totalPayment}
                 />
                 <PaymentTitleBar title={'Thông tin bắp nước'} />
-                <PaymentCombo
-                    name={'BABY SHARK SINGLE COMBO '}
-                    amount={'195.000'}
-                    number={'1'}
-                />
+                {/* <PaymentCombo
+                    name={response.data.combo.tensanpham}
+                    amount={response.data.combo.giatien}
+                    number={response.data.combo.soluong}
+                    image={response.data.combo.hinhanh}
+                /> */}
                 {/* <PaymentCombo
                     name={'BABY SHARK SINGLE COMBO '}
                     amount={'195.000'}
@@ -346,14 +402,24 @@ const PaymentScreen = ({ navigation, route }) => {
                     numberBoolean
                 />
                 <PaymentTitleBar title={'Phương thức giảm giá'} />
-                <Pressable onPress={() => handleButtonNavigation('Discount')}>
-                    <PaymentContentBar
-                        content={'Phiếu giảm giá'}
-                        number={'>'}
-                        numberBoolean
+                {discountPrice != 0 ? (
+                    <PaymentDiscount
+                        discount={discountCode}
+                        number={discountPrice}
                     />
-                </Pressable>
-                <PaymentDiscount discount={discountId} number={discountPrice} />
+                ) : (
+                    <Pressable
+                        onPress={() => handleButtonNavigation('Discount')}
+                    >
+                        <PaymentContentBar
+                            content={'Phiếu giảm giá'}
+                            number={'>'}
+                            numberBoolean
+                        />
+                    </Pressable>
+                )}
+
+                {/* <PaymentDiscount discount={discountId} number={discountPrice} /> */}
                 {/* Change */}
                 <PaymentTitleBar title={'Tổng kết'} />
                 <PaymentContentBar
@@ -410,7 +476,6 @@ const PaymentScreen = ({ navigation, route }) => {
                 <View style={{ alignItems: 'center', paddingBottom: 20 }}>
                     <AuthAccountButton
                         onPress={() => /**/ {
-                            createOrder(bookingData.totalPayment);
                             payOrder();
                             // callBack();
                         }}

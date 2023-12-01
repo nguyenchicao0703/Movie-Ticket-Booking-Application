@@ -15,14 +15,19 @@ import axiosClient from '../api/axiosClient';
 import discountAPI from '../api/discountAPI';
 import { useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
-
+import { useDispatch } from 'react-redux';
+import {
+    setDiscountCode,
+    setDiscountTime,
+    setDiscountPayment,
+} from '../redux/slice/discountSlice';
 const DiscountScreen = ({ navigation }) => {
     const { width, height, fontScale } = useWindowDimensions();
     const [data, setData] = useState([]);
-    const [discountId, setDiscountId] = useState('');
-    const [discountDate, setDiscountDate] = useState('');
+    const [discountId, setDiscountId] = useState([]);
+    const [discountDate, setDiscountDate] = useState(['']);
     const [discountPrice, setDiscountPrice] = useState(0);
-
+    const dispatch = useDispatch();
     const dataUser = useSelector(usersSelector);
     console.log(dataUser.users.data.id_user);
     const user_id = dataUser.users.data.id_user;
@@ -52,11 +57,10 @@ const DiscountScreen = ({ navigation }) => {
     };
     const navigationModalDiscountToPayment = () => {
         setModalVisible(false);
-        navigation.navigate('Payment', {
-            discountId,
-            discountDate,
-            discountPrice,
-        });
+        dispatch(setDiscountCode(discountId));
+        dispatch(setDiscountTime(discountDate));
+        dispatch(setDiscountPayment(discountPrice));
+        navigation.goBack(null);
     };
     const dataDiscount = data;
     const [modalVisible, setModalVisible] = useState(false);
@@ -232,40 +236,41 @@ const DiscountScreen = ({ navigation }) => {
                                     </View>
                                 </View>
                             </Modal>
-
-                            <View style={styles.detail}>
-                                <View style={styles.detailLeft}>
-                                    <Text style={styles.modalText}>
-                                        Mã giảm giá:
-                                    </Text>
-                                    <Text style={styles.modalText}>
-                                        Ngày hết hạn:
-                                    </Text>
-                                    <Text style={styles.modalText}>
-                                        Số tiền giảm:
-                                    </Text>
+                            {item.status != 1 ? null : (
+                                <View style={styles.detail}>
+                                    <View style={styles.detailLeft}>
+                                        <Text style={styles.modalText}>
+                                            Mã giảm giá:
+                                        </Text>
+                                        <Text style={styles.modalText}>
+                                            Ngày hết hạn:
+                                        </Text>
+                                        <Text style={styles.modalText}>
+                                            Số tiền giảm:
+                                        </Text>
+                                    </View>
+                                    <View style={styles.detailRight}>
+                                        <Text
+                                            style={styles.detailText}
+                                            numberOfLines={1}
+                                        >
+                                            {item.magiamgia}
+                                        </Text>
+                                        <Text
+                                            style={styles.detailText}
+                                            numberOfLines={1}
+                                        >
+                                            {item.ngayhethan}
+                                        </Text>
+                                        <Text
+                                            style={styles.detailText}
+                                            numberOfLines={1}
+                                        >
+                                            {item.sotiengiam} đ
+                                        </Text>
+                                    </View>
                                 </View>
-                                <View style={styles.detailRight}>
-                                    <Text
-                                        style={styles.detailText}
-                                        numberOfLines={1}
-                                    >
-                                        {item.magiamgia}
-                                    </Text>
-                                    <Text
-                                        style={styles.detailText}
-                                        numberOfLines={1}
-                                    >
-                                        {item.ngayhethan}
-                                    </Text>
-                                    <Text
-                                        style={styles.detailText}
-                                        numberOfLines={1}
-                                    >
-                                        {item.sotiengiam} đ
-                                    </Text>
-                                </View>
-                            </View>
+                            )}
                         </Pressable>
                     ))}
                 </ScrollView>

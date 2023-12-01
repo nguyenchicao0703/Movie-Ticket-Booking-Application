@@ -112,9 +112,7 @@ const ProfileScreen = ({}) => {
                     </View>
                 </View>
                 <View style={styles.body}>
-                    <Pressable
-                        onPress={() => navigation.navigate('UpdateProfile')}
-                    >
+                    <Pressable onPress={() => navigation.navigate('Payment')}>
                         <View style={styles.itemBorder}>
                             <View style={styles.bodyItem}>
                                 <View

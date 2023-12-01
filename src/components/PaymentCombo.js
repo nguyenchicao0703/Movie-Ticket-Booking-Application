@@ -9,10 +9,9 @@ import {
 import React from 'react';
 import { Colors, ComboImage, Fonts, PaymentImage } from '../constants';
 
-const PaymentCombo = ({ name, number, amount }) => {
+const PaymentCombo = ({ name, number, amount, image }) => {
     const { width, fontScale } = useWindowDimensions();
     const fontSize = fontScale * 15;
-
     return (
         <View
             style={{
@@ -28,7 +27,7 @@ const PaymentCombo = ({ name, number, amount }) => {
         >
             <View style={{ flexDirection: 'row' }}>
                 <Image
-                    source={ComboImage[0].image}
+                    source={{ uri: image }}
                     style={{ width: width * 0.15, height: width * 0.19 }}
                 />
                 <View
