@@ -26,7 +26,7 @@ const Drawer = createDrawerNavigator();
 const AppDrawer = () => {
     return (
         <Drawer.Navigator
-            initialRouteName="Home"
+            initialRouteName="Discount"
             screenOptions={{
                 headerShown: false,
                 swipeEnabled: false,
@@ -67,7 +67,7 @@ const Navigator = () => {
 
     return (
         <Stack.Navigator
-            initialRouteName="Welcome"
+            initialRouteName="Login"
             screenOptions={{ headerShown: false }}
         >
             <Stack.Screen name="Drawer" component={AppDrawer} />

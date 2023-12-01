@@ -18,18 +18,18 @@ import { usersSelector } from '../redux/selectors';
 
 const DiscountScreen = ({ navigation }) => {
     const { width, height, fontScale } = useWindowDimensions();
-    const [data, setData] = useState();
+    const [data, setData] = useState([]);
     const [discountId, setDiscountId] = useState('');
     const [discountDate, setDiscountDate] = useState('');
     const [discountPrice, setDiscountPrice] = useState(0);
 
     const dataUser = useSelector(usersSelector);
-    console.log(dataUser.users);
-    // const user_id = dataUser.users.data.id_user;
+    console.log(dataUser.users.data.id_user);
+    const user_id = dataUser.users.data.id_user;
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
-    const dataDiscount = data;
+
     const handleButtonBack = () => {
         navigation.goBack(null);
     };
@@ -58,20 +58,7 @@ const DiscountScreen = ({ navigation }) => {
             discountPrice,
         });
     };
-    const dataLocal = [
-        {
-            id_giamgia: 1,
-            magiamgia: '8jh47j12',
-            ngayhethan: '12/12/2023',
-            sotiengiam: 20000,
-        },
-        {
-            id_giamgia: 2,
-            magiamgia: '8kw4jtxj	',
-            ngayhethan: '13/12/2023',
-            sotiengiam: 30000,
-        },
-    ];
+    const dataDiscount = data;
     const [modalVisible, setModalVisible] = useState(false);
 
     return (
@@ -92,7 +79,7 @@ const DiscountScreen = ({ navigation }) => {
                 </Text>
 
                 <ScrollView style={styles.scroll}>
-                    {dataLocal.map((item) => (
+                    {data.map((item) => (
                         <Pressable
                             key={item.id_giamgia}
                             onPress={() => modalView(item)}
@@ -107,46 +94,76 @@ const DiscountScreen = ({ navigation }) => {
                                     >
                                         <View
                                             key={item.id_giamgia}
-                                            style={styles.detail}
+                                            style={[
+                                                styles.centeredView,
+                                                {
+                                                    width: '130%',
+                                                    marginTop: '5%',
+                                                },
+                                            ]}
                                         >
-                                            <View style={styles.detailLeft}>
+                                            <View style={[styles.detailLeft]}>
                                                 <Text
-                                                    style={
-                                                        styles.detailTextTitle
-                                                    }
+                                                    style={[
+                                                        styles.detailTextTitle,
+                                                        {
+                                                            color: Colors.LIGHT_SILVER,
+                                                        },
+                                                    ]}
                                                 >
                                                     Mã giảm giá:
                                                 </Text>
                                                 <Text
-                                                    style={
-                                                        styles.detailTextTitle
-                                                    }
+                                                    style={[
+                                                        styles.detailTextTitle,
+                                                        {
+                                                            color: Colors.LIGHT_SILVER,
+                                                        },
+                                                    ]}
                                                 >
                                                     Ngày hết hạn:
                                                 </Text>
                                                 <Text
-                                                    style={
-                                                        styles.detailTextTitle
-                                                    }
+                                                    style={[
+                                                        styles.detailTextTitle,
+                                                        {
+                                                            color: Colors.LIGHT_SILVER,
+                                                        },
+                                                    ]}
                                                 >
                                                     Số tiền giảm:
                                                 </Text>
                                             </View>
-                                            <View style={styles.detailRight}>
+                                            <View style={[styles.detailRight]}>
                                                 <Text
-                                                    style={styles.detailText}
+                                                    style={[
+                                                        styles.detailText,
+                                                        {
+                                                            color: Colors.DEFAULT_WHITE,
+                                                        },
+                                                    ]}
                                                     numberOfLines={1}
                                                 >
                                                     {discountId}
                                                 </Text>
                                                 <Text
-                                                    style={styles.detailText}
+                                                    style={[
+                                                        styles.detailText,
+                                                        {
+                                                            color: Colors.DEFAULT_WHITE,
+                                                        },
+                                                    ]}
                                                     numberOfLines={1}
                                                 >
                                                     {discountDate}
                                                 </Text>
                                                 <Text
-                                                    style={styles.detailText}
+                                                    style={[
+                                                        styles.detailText,
+                                                        {
+                                                            color: Colors.DEFAULT_WHITE,
+                                                        },
+                                                    ]}
                                                     numberOfLines={1}
                                                 >
                                                     {discountPrice} đ
@@ -169,8 +186,8 @@ const DiscountScreen = ({ navigation }) => {
 
                                                     ,
                                                     {
-                                                        width: width * 0.51,
-                                                        height: height * 0.06,
+                                                        width: width * 0.41,
+                                                        height: height * 0.05,
                                                     },
                                                 ]}
                                             >
@@ -194,8 +211,8 @@ const DiscountScreen = ({ navigation }) => {
                                                 style={[
                                                     styles.button,
                                                     {
-                                                        width: width * 0.51,
-                                                        height: height * 0.06,
+                                                        width: width * 0.41,
+                                                        height: height * 0.05,
                                                     },
                                                 ]}
                                             >
@@ -208,7 +225,7 @@ const DiscountScreen = ({ navigation }) => {
                                                         },
                                                     ]}
                                                 >
-                                                    Đăng nhập{' '}
+                                                    Xác nhận chọn{' '}
                                                 </Text>
                                             </Pressable>
                                         </View>
@@ -218,13 +235,13 @@ const DiscountScreen = ({ navigation }) => {
 
                             <View style={styles.detail}>
                                 <View style={styles.detailLeft}>
-                                    <Text style={styles.detailTextTitle}>
+                                    <Text style={styles.modalText}>
                                         Mã giảm giá:
                                     </Text>
-                                    <Text style={styles.detailTextTitle}>
+                                    <Text style={styles.modalText}>
                                         Ngày hết hạn:
                                     </Text>
-                                    <Text style={styles.detailTextTitle}>
+                                    <Text style={styles.modalText}>
                                         Số tiền giảm:
                                     </Text>
                                 </View>
@@ -354,7 +371,7 @@ const styles = StyleSheet.create({
         color: Colors.DEFAULT_BLACK,
     },
     modalView: {
-        backgroundColor: 'white',
+        backgroundColor: Colors.DARK_GRAY,
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',
@@ -362,8 +379,10 @@ const styles = StyleSheet.create({
     },
     centeredView: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'space-evenly',
         alignItems: 'center',
+        alignContent: 'space-between',
+        flexDirection: 'row',
     },
     button: {
         borderRadius: 20,
@@ -389,10 +408,10 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.SemiBold,
     },
     modalText: {
-        textAlign: 'center',
         color: Colors.DARK_GRAY,
         fontFamily: Fonts.Light,
         marginTop: 0,
+        justifyContent: 'space-around',
     },
     textStyle: {
         color: Colors.DEFAULT_WHITE,
