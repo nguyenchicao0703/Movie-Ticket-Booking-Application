@@ -2,7 +2,8 @@ import { StyleSheet, View, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { CinemaList, Header, Loading } from '../components';
 import { Colors, Fonts } from '../constants';
-import cinemaAPI from '../api/CinemaAPI';
+import cinemaAPI from '../api/cinemaAPI';
+
 const CinemaScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);

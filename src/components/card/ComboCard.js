@@ -21,13 +21,13 @@ const ComboCard = ({ data, totalPayment }) => {
 
     const dispatch = useDispatch();
     // const dataBooking = useSelector(bookingSelector);
-    // console.log({ dataBooking });
+    // console.log('dataBooking', dataBooking.combo);
 
     const handleQuantityCombo = (operator) => {
         if (operator === '+') {
             setQuantity(quantity + 1);
             dispatch(setTotalPayment(totalPayment + Number(data.giasanpham)));
-            // dispatch(setCombo([]))
+            dispatch(setCombo({ id: Number(data.id_combo), soluong: 1 }));
         } else if (operator === '-') {
             setQuantity(quantity - 1);
             dispatch(setTotalPayment(totalPayment - Number(data.giasanpham)));
