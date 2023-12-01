@@ -10,10 +10,9 @@ import {
 import React, { useState, useCallback, useEffect } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
 import { Header, InformationBottom } from '../components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { datesSelector, usersSelector } from '../redux/selectors';
 import socket from '../utils/socket';
-import { useDispatch } from 'react-redux';
 import {
     setDateShowtime,
     setMovieName,
@@ -23,6 +22,7 @@ import {
     setSeatsIndex,
     setMovieImage,
 } from '../redux/slice/bookingSlice';
+import { setListSeat } from '../redux/setChairsSlice';
 
 const TypeSeat = React.memo(({ backgroundColor, text }) => {
     return (
@@ -100,6 +100,8 @@ const SeatScreen = ({ navigation, route }) => {
     // console.log({ idShowtimes });
 
     const dispatch = useDispatch();
+    // const listSeat1 = useSelector((state) => state.setCharir);
+    // console.log('list hahahah', listSeat1);
 
     const idUsersSelector = useSelector(usersSelector);
     const headerDate = useSelector(datesSelector); // Chỉ dùng để gửi đến header
@@ -230,23 +232,23 @@ const SeatScreen = ({ navigation, route }) => {
             ]);
             setTotalPrice(totalPrice + priceShowitmes);
             setCountSeat(countSeat + 1);
-            // const _timer = setCheckStatusTimerSeats(false);
-            // checkStatusTimerSeats === false
-            //     ? setTimeout(() => {
-            //           returnDefault();
-            //           socket.emit(
-            //               'chonghe',
-            //               JSON.stringify({
-            //                   id: idShowtimes,
-            //                   index: seatIndexNumber,
-            //                   status: 'A',
-            //               }),
-            //           );
-            //           console.log('timer');
-            //       }, 15000)
-            //     : null; // 5 phút
-            // setTimer(_timer);
-            // clearTimeout(timer);
+            const _timer = setCheckStatusTimerSeats(false);
+            checkStatusTimerSeats === false
+                ? setTimeout(() => {
+                      returnDefault();
+                      socket.emit(
+                          'chonghe',
+                          JSON.stringify({
+                              id: idShowtimes,
+                              index: seatIndexNumber,
+                              status: 'A',
+                          }),
+                      );
+                      console.log('timer');
+                  }, 15000)
+                : null; // 5 phút
+            setTimer(_timer);
+            clearTimeout(timer);
         }
 
         setSelectedSeats(updatedSeats);
@@ -259,46 +261,49 @@ const SeatScreen = ({ navigation, route }) => {
 
     console.log({ indexSeat });
 
-    const navigationSeatToCombo = async () => {
-        try {
-            // console.log(
-            //     'id_user',
-            //     idUsersSelector.users.length !== 0 &&
-            //         idUsersSelector.users.data.id_user,
-            // );
-            // console.log('id_suat', idShowtimes);
-            // console.log('listghe', [...indexSeat]);
-            socket.emit(
-                'datghe',
-                JSON.stringify({
-                    id_user:
-                        idUsersSelector.users.length !== 0 &&
-                        idUsersSelector.users.data.id_user,
-                    id_suat: idShowtimes,
-                    listghe: [...indexSeat],
-                }),
-            );
-            returnDefault();
-            // clearTimeout(timer);
-            // setCheckStatusTimerSeats(true);
-        } catch (error) {
-            console.log('Error fetch seats', error);
-        }
-    };
-
-    // const navigationSeatToCombo = () => {
-    //     dispatch(setCinemaName(nameCinema));
-    //     dispatch(setMovieImage(imageMovie));
-    //     dispatch(setMovieName(nameMovie));
-    //     dispatch(setDateShowtime(headerDate.dates));
-    //     dispatch(setShowtime(headerShowtimes));
-    //     dispatch(setTotalPayment(totalPrice));
-    //     dispatch(setSeatsIndex(storageSeats));
-    //     navigation.navigate('Combo', {
-    //         idShowtimes,
-    //         quantityTicket: countSeat,
-    //     });
+    // const navigationSeatToCombo = async () => {
+    //     try {
+    //         // console.log(
+    //         //     'id_user',
+    //         //     idUsersSelector.users.length !== 0 &&
+    //         //         idUsersSelector.users.data.id_user,
+    //         // );
+    //         // console.log('id_suat', idShowtimes);
+    //         // console.log('listghe', [...indexSeat]);
+    //         // socket.emit(
+    //         //     'datghe',
+    //         //     JSON.stringify({
+    //         //         id_user:
+    //         //             idUsersSelector.users.length !== 0 &&
+    //         //             idUsersSelector.users.data.id_user,
+    //         //         id_suat: idShowtimes,
+    //         //         listghe: [...indexSeat],
+    //         //     }),
+    //         // );
+    //         // returnDefault();
+    //         // setCheckStatusTimerSeats(true);
+    //     } catch (error) {
+    //         console.log('Error fetch seats', error);
+    //     }
     // };
+
+    const navigationSeatToCombo = () => {
+        dispatch(setCinemaName(nameCinema));
+        dispatch(setMovieImage(imageMovie));
+        dispatch(setMovieName(nameMovie));
+        dispatch(setDateShowtime(headerDate.dates));
+        dispatch(setShowtime(headerShowtimes));
+        dispatch(setTotalPayment(totalPrice));
+        dispatch(setSeatsIndex(storageSeats));
+        dispatch(setShowtime(idShowtimes));
+        dispatch(setListSeat([...indexSeat]));
+        clearTimeout(timer);
+        returnDefault();
+        navigation.navigate('Combo', {
+            idShowtimes,
+            quantityTicket: countSeat,
+        });
+    };
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
