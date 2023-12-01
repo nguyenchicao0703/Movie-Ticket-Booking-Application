@@ -1,17 +1,35 @@
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    SafeAreaView,
+    Pressable,
+    Modal,
+    useWindowDimensions,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Colors, Fonts } from '../constants';
 import { Header } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import axiosClient from '../api/axiosClient';
 import discountAPI from '../api/discountAPI';
+import { useSelector } from 'react-redux';
+import { usersSelector } from '../redux/selectors';
 
 const DiscountScreen = ({ navigation }) => {
+    const { width, height, fontScale } = useWindowDimensions();
     const [data, setData] = useState();
+    const [discountId, setDiscountId] = useState('');
+    const [discountDate, setDiscountDate] = useState('');
+    const [discountPrice, setDiscountPrice] = useState(0);
+
+    const dataUser = useSelector(usersSelector);
+    console.log(dataUser.users);
+    // const user_id = dataUser.users.data.id_user;
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
-
+    const dataDiscount = data;
     const handleButtonBack = () => {
         navigation.goBack(null);
     };
@@ -19,10 +37,42 @@ const DiscountScreen = ({ navigation }) => {
         fetchData();
     }, []);
     const fetchData = async () => {
-        const response = await discountAPI.getbyID('2');
+        const response = await discountAPI.getbyID(user_id);
         console.log(response.data);
         setData(response.data);
     };
+    const modalView = (item) => {
+        setModalVisible(true);
+        setDiscountId(item.magiamgia);
+        setDiscountDate(item.ngayhethan);
+        setDiscountPrice(item.sotiengiam);
+    };
+    const handleCancel = () => {
+        setModalVisible(false);
+    };
+    const navigationModalDiscountToPayment = () => {
+        setModalVisible(false);
+        navigation.navigate('Payment', {
+            discountId,
+            discountDate,
+            discountPrice,
+        });
+    };
+    const dataLocal = [
+        {
+            id_giamgia: 1,
+            magiamgia: '8jh47j12',
+            ngayhethan: '12/12/2023',
+            sotiengiam: 20000,
+        },
+        {
+            id_giamgia: 2,
+            magiamgia: '8kw4jtxj	',
+            ngayhethan: '13/12/2023',
+            sotiengiam: 30000,
+        },
+    ];
+    const [modalVisible, setModalVisible] = useState(false);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -42,40 +92,164 @@ const DiscountScreen = ({ navigation }) => {
                 </Text>
 
                 <ScrollView style={styles.scroll}>
-                    {data.map((item) => (
-                        <View key={item.id_giamgia} style={styles.detail}>
-                            <View style={styles.detailLeft}>
-                                <Text style={styles.detailTextTitle}>
-                                    Mã giảm giá:
-                                </Text>
-                                <Text style={styles.detailTextTitle}>
-                                    Ngày hết hạn:
-                                </Text>
-                                <Text style={styles.detailTextTitle}>
-                                    Số tiền giảm:
-                                </Text>
+                    {dataLocal.map((item) => (
+                        <Pressable
+                            key={item.id_giamgia}
+                            onPress={() => modalView(item)}
+                        >
+                            <Modal transparent={true} visible={modalVisible}>
+                                <View style={styles.centeredView}>
+                                    <View
+                                        style={[
+                                            styles.modalView,
+                                            { height: height * 0.18 },
+                                        ]}
+                                    >
+                                        <View
+                                            key={item.id_giamgia}
+                                            style={styles.detail}
+                                        >
+                                            <View style={styles.detailLeft}>
+                                                <Text
+                                                    style={
+                                                        styles.detailTextTitle
+                                                    }
+                                                >
+                                                    Mã giảm giá:
+                                                </Text>
+                                                <Text
+                                                    style={
+                                                        styles.detailTextTitle
+                                                    }
+                                                >
+                                                    Ngày hết hạn:
+                                                </Text>
+                                                <Text
+                                                    style={
+                                                        styles.detailTextTitle
+                                                    }
+                                                >
+                                                    Số tiền giảm:
+                                                </Text>
+                                            </View>
+                                            <View style={styles.detailRight}>
+                                                <Text
+                                                    style={styles.detailText}
+                                                    numberOfLines={1}
+                                                >
+                                                    {discountId}
+                                                </Text>
+                                                <Text
+                                                    style={styles.detailText}
+                                                    numberOfLines={1}
+                                                >
+                                                    {discountDate}
+                                                </Text>
+                                                <Text
+                                                    style={styles.detailText}
+                                                    numberOfLines={1}
+                                                >
+                                                    {discountPrice} đ
+                                                </Text>
+                                            </View>
+                                        </View>
+
+                                        <View
+                                            style={{
+                                                width: '90%',
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                            }}
+                                        >
+                                            <Pressable
+                                                onPress={handleCancel}
+                                                style={[
+                                                    styles.buttonClose,
+
+                                                    ,
+                                                    {
+                                                        width: width * 0.51,
+                                                        height: height * 0.06,
+                                                    },
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={[
+                                                        styles.textStyle,
+                                                        {
+                                                            fontSize:
+                                                                height * 0.02,
+                                                            color: Colors.DARK_RED,
+                                                        },
+                                                    ]}
+                                                >
+                                                    Hủy
+                                                </Text>
+                                            </Pressable>
+                                            <Pressable
+                                                onPress={
+                                                    navigationModalDiscountToPayment
+                                                }
+                                                style={[
+                                                    styles.button,
+                                                    {
+                                                        width: width * 0.51,
+                                                        height: height * 0.06,
+                                                    },
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={[
+                                                        styles.textStyle,
+                                                        {
+                                                            fontSize:
+                                                                height * 0.02,
+                                                        },
+                                                    ]}
+                                                >
+                                                    Đăng nhập{' '}
+                                                </Text>
+                                            </Pressable>
+                                        </View>
+                                    </View>
+                                </View>
+                            </Modal>
+
+                            <View style={styles.detail}>
+                                <View style={styles.detailLeft}>
+                                    <Text style={styles.detailTextTitle}>
+                                        Mã giảm giá:
+                                    </Text>
+                                    <Text style={styles.detailTextTitle}>
+                                        Ngày hết hạn:
+                                    </Text>
+                                    <Text style={styles.detailTextTitle}>
+                                        Số tiền giảm:
+                                    </Text>
+                                </View>
+                                <View style={styles.detailRight}>
+                                    <Text
+                                        style={styles.detailText}
+                                        numberOfLines={1}
+                                    >
+                                        {item.magiamgia}
+                                    </Text>
+                                    <Text
+                                        style={styles.detailText}
+                                        numberOfLines={1}
+                                    >
+                                        {item.ngayhethan}
+                                    </Text>
+                                    <Text
+                                        style={styles.detailText}
+                                        numberOfLines={1}
+                                    >
+                                        {item.sotiengiam} đ
+                                    </Text>
+                                </View>
                             </View>
-                            <View style={styles.detailRight}>
-                                <Text
-                                    style={styles.detailText}
-                                    numberOfLines={1}
-                                >
-                                    {item.magiamgia}
-                                </Text>
-                                <Text
-                                    style={styles.detailText}
-                                    numberOfLines={1}
-                                >
-                                    {item.ngayhethan}
-                                </Text>
-                                <Text
-                                    style={styles.detailText}
-                                    numberOfLines={1}
-                                >
-                                    {item.sotiengiam} đ
-                                </Text>
-                            </View>
-                        </View>
+                        </Pressable>
                     ))}
                 </ScrollView>
             </View>
@@ -178,5 +352,57 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.Regular,
         fontSize: 15,
         color: Colors.DEFAULT_BLACK,
+    },
+    modalView: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '90%',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    button: {
+        borderRadius: 20,
+        elevation: 2,
+        flex: 1,
+        backgroundColor: Colors.DARK_RED,
+        width: '50%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 8,
+    },
+    buttonClose: {
+        borderRadius: 20,
+        borderColor: Colors.DARK_RED,
+        borderWidth: 1,
+        elevation: 2,
+        flex: 1,
+        backgroundColor: Colors.DEFAULT_WHITE,
+        width: '50%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 0,
+        fontFamily: Fonts.SemiBold,
+    },
+    modalText: {
+        textAlign: 'center',
+        color: Colors.DARK_GRAY,
+        fontFamily: Fonts.Light,
+        marginTop: 0,
+    },
+    textStyle: {
+        color: Colors.DEFAULT_WHITE,
+        textAlign: 'center',
+        fontFamily: Fonts.SemiBold,
+        fontSize: 18,
+    },
+    modalTitle: {
+        textAlign: 'center',
+        color: Colors.DEFAULT_BLACK,
+        fontFamily: Fonts.SemiBold,
     },
 });
