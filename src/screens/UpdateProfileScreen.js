@@ -43,7 +43,11 @@ const UpdateProfileScreen = () => {
     const [name, setName] = useState(userProfile ? userProfile.name : '');
     const [phone, setPhone] = useState(userProfile ? userProfile.phone : '');
     const [email, setEmail] = useState(userProfile ? userProfile.email : '');
-    const [avatar, setAvatar] = useState(userProfile ? userProfile.avatar : '');
+    const [avatar, setAvatar] = useState(
+        userProfile
+            ? userProfile.avatar
+            : 'https://res.cloudinary.com/tinlaptrinh/image/upload/v1699170423/wew97pt3hnmy1orn5kcu.png',
+    );
     const [diachi, setDiachi] = useState(userProfile ? userProfile.diachi : '');
     const [tinh, setTinh] = useState(userProfile ? userProfile.tinh : '');
     const [quan, setQuan] = useState(userProfile ? userProfile.quan : '');

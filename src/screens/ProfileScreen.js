@@ -39,7 +39,7 @@ const ProfileScreen = ({}) => {
             dispatch(resetUsers());
             console.log('Sign out');
             await AsyncStorage.removeItem('user');
-            navigation.navigate('Login', { isSignedIn: false });
+            navigation.goBack();
         } catch (error) {
             console.log('Sign out error:', error.message);
         }

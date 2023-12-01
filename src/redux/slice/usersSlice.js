@@ -58,18 +58,23 @@ export const { setLoggedInUser, setUserDataAsyn, setUsers } =
 export default usersSlice.reducer;
 
 // Action thunk để lấy danh sách phim từ API
-export const fetchUsers = createAsyncThunk('users/fetchUser', async (phone) => {
-    try {
-        const response = await usersAPI.postUserWithPhoneNumber(phone);
-        const user = response;
-
-        // console.log('userSlice', gender, email);
-        return user;
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        throw error;
-    }
-});
+export const fetchUsers = createAsyncThunk(
+    'users/fetchUser',
+    async ({ phone, password }) => {
+        try {
+            const response = await usersAPI.postUserWithPhoneNumber(
+                phone,
+                password,
+            );
+            const user = response;
+            // console.log('userSlice', gender, email);
+            return user;
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            throw error;
+        }
+    },
+);
 
 export const fetchUsersMail = createAsyncThunk(
     'users/fetchUsersMail',

@@ -41,13 +41,11 @@ const HomeScreen = ({ navigation }) => {
     const dispatch = useDispatch();
     const movies = useSelector(moviesListSelector);
     const dataUser = useSelector(usersSelector);
-
     const [userProfile, setUserProfile] = useState(dataUser.users.data);
     const [isLogin, setIsLogin] = useState(
         userProfile ? userProfile.islogin : '',
     );
     const [modalVisible, setModalVisible] = useState(false);
-
     useEffect(() => {
         setUserProfile(dataUser.users.data);
         setIsLogin(dataUser.users.data ? dataUser.users.data.islogin : '');
@@ -72,14 +70,6 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         dispatch(fetchMovies());
     }, []);
-
-    useEffect(() => {
-        setAvatar(
-            avatar.length !== 0
-                ? avatar
-                : 'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
-        );
-    }, [avatar]);
 
     const handleProfileScreen = () => {
         if (isLogin) {

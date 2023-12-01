@@ -17,6 +17,7 @@ const Input = ({
     keyboardType,
     style,
     placeholder,
+    secureTextEntry,
 }) => {
     const { height, width, scale, fontScale } = useWindowDimensions();
 
@@ -42,6 +43,7 @@ const Input = ({
                 editable={editable}
                 value={value}
                 keyboardType={keyboardType}
+                secureTextEntry={secureTextEntry}
             ></TextInput>
         </View>
     );

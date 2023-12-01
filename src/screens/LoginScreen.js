@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     fetchUsers,
     fetchUsersMail,
+    resetUsers,
     setUsers,
 } from '../redux/slice/usersSlice';
 import { usersSelector } from '../redux/selectors';
@@ -34,6 +35,8 @@ const LoginScreen = () => {
     const [showModal, setShowModal] = useState(false);
     const [modalTimer, setModalTimer] = useState(null);
     const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
+
     const navigation = useNavigation();
     const [error, setError] = useState('');
     const clearState = () => {
@@ -42,54 +45,70 @@ const LoginScreen = () => {
         setModalTimer(null);
         setPhone('');
         setError('');
+        setPassword('');
     };
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const dispatch = useDispatch();
     const response = useSelector(usersSelector);
-
     // Login with Phone Number
-
+    console.log(phone, 'và', password);
+    const handlePhoneChange = (text) => {
+        setPhone(text);
+    };
+    const handlePasswordChange = (text) => {
+        setPassword(text);
+    };
     const loginWithPhoneNumber = async () => {
+        // await AsyncStorage.removeItem('user');
+
+        if (phone.trim() === '') {
+            setError('Số điện thoại bị để trống!');
+            return;
+        }
+        if (!phone.startsWith('0')) {
+            setError('Số điện thoại phải bắt đầu bằng 0.');
+            return;
+        }
+        if (phone.length > 12 || phone.length < 10) {
+            setError('Số điện thoại phải dài từ 10-12 ký tự!');
+            return;
+        }
+        if (password.trim() === '') {
+            setError('Mật khẩu bị để trống!');
+            return;
+        }
+        // if (password.length > 12 || password.length < 8) {
+        //     setError('Mật khẩu phải dài từ 8-12 ký tự');
+        //     return;
+        // }
         try {
-            setIsLoading(true);
-            const response = await dispatch(fetchUsers(phone));
+            const response = await dispatch(fetchUsers({ phone, password }));
+            // console.log(response);
             const status = response.payload.status;
             const msg = response.payload.msg;
             //handle the API response
             if (status) {
                 //login successfuly
+                setIsLoading(true);
 
-                navigation.navigate('Drawer');
                 ToastAndroid.show('đăng nhập thành công', ToastAndroid.LONG);
                 clearState();
                 setIsLoggedIn(true);
+                console.log(response.payload);
                 await AsyncStorage.setItem(
                     'user',
                     JSON.stringify(response.payload),
                 );
-                navigation.navigate('Drawer');
-                setIsLoading(false);
-                console.log('du lieu nguuoi dung', response.payload);
+                setTimeout(() => {
+                    setIsLoading(false);
+                    navigation.navigate('Drawer');
+                }, 1000);
             } else {
-                const phones = phone;
                 // Failed login
-                if (phones.trim() === '') {
-                    console.log('Không được để trống số điện thoại.');
-                    setError('Không được để trống số điện thoại.');
-                } else if (!phones.startsWith('0')) {
-                    console.log('Số điện thoại phải bắt đầu bằng 0.');
-                    setError('Số điện thoại phải bắt đầu bằng 0.');
-                } else if (phone.length > 12 || phone.length < 10) {
-                    setError(
-                        'Số điện thoại phải có độ dài từ 10 đến 12 chữ số',
-                    );
-                } else if (!status) {
-                    console.log('Không tồn tại số điện thoại');
-                    setError('Không tồn tại số điện thoại');
-                } else {
-                    console.log('Login failed', msg);
-                }
+                setError('Sai mật khẩu hoặc số điện thoại chưa được đăng ký!');
+                console.log('Login failed', msg);
+
                 setIsLoading(false);
             }
         } catch (error) {
@@ -101,7 +120,7 @@ const LoginScreen = () => {
     };
 
     const handleLoginWithPhoneNum = () => {
-        loginWithPhoneNumber(phone);
+        loginWithPhoneNumber(phone, password);
     };
 
     //Login with Google Email
@@ -121,28 +140,29 @@ const LoginScreen = () => {
     const handleLoginWithEmail = async (email) => {
         try {
             const response = await dispatch(fetchUsersMail(email));
-            if (response.payload.status) {
-                if (response.payload.data) {
-                    console.log('Logged in successfully');
-                    await AsyncStorage.setItem(
-                        'user',
-                        JSON.stringify(response.payload),
-                    );
-                    console.log(response);
-                    navigation.navigate('Drawer');
-                    clearState();
-                    setIsLoggedIn(true);
-                } else if (response.payload.data === null) {
-                    console.log('du lieu ', response.payload.data);
-                    setShowModal(true);
-                    setModalTimer(setTimeout(() => setShowModal(false), 3000));
-                    setIsLoggedIn(true);
-                    console.log(response.payload.msg);
-                    // Close the modal after 3 seconds
-                }
-            } else {
-                console.log('An error occurred.');
-            }
+            console.log(response);
+            // if (response.payload.status) {
+            //     if (response.payload.data) {
+            //         console.log('Logged in successfully');
+            //         await AsyncStorage.setItem(
+            //             'user',
+            //             JSON.stringify(response.payload),
+            //         );
+            //         console.log(response);
+            //         navigation.navigate('Drawer');
+            //         clearState();
+            //         setIsLoggedIn(true);
+            //     } else if (response.payload.data === null) {
+            //         console.log('du lieu ', response.payload.data);
+            //         setShowModal(true);
+            //         setModalTimer(setTimeout(() => setShowModal(false), 3000));
+            //         setIsLoggedIn(true);
+            //         console.log(response.payload.msg);
+            //         // Close the modal after 3 seconds
+            //     }
+            // } else {
+            //     console.log('An error occurred.');
+            // }
         } catch (error) {
             console.log('Error logging in with email:', error);
         }
@@ -195,7 +215,7 @@ const LoginScreen = () => {
             />
             <Spinner
                 visible={isLoading}
-                textContent={'Đang tải...'}
+                textContent={'Đăng nhập thành công...'}
                 textStyle={{ color: '#FFF' }}
                 size={'slide'}
                 color="#B73131"
@@ -235,7 +255,7 @@ const LoginScreen = () => {
                     </View>
                 </Modal>
 
-                <BackButton />
+                <BackButton onPress={() => navigation.goBack()} />
                 <TextTitle text={'Đăng nhập'} />
                 <View style={styles.container}>
                     <View style={styles.formLogin}>
@@ -249,9 +269,17 @@ const LoginScreen = () => {
                             <Input
                                 style={{ width: '70%' }}
                                 label={'Số điện thoại'}
-                                onChangeText={(text) => setPhone(text)}
+                                onChangeText={handlePhoneChange}
                                 value={phone}
                                 keyboardType={'numeric'}
+                            />
+                            <View style={{ height: height * 0.02 }}></View>
+                            <Input
+                                style={{ width: '70%' }}
+                                label={'Mật khẩu'}
+                                onChangeText={handlePasswordChange}
+                                value={password}
+                                secureTextEntry={true}
                             />
                             {error !== '' && (
                                 <Text style={styles.errorText}>{error}</Text>

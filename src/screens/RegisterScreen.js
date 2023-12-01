@@ -12,23 +12,27 @@ import React, { useState } from 'react';
 import { Images, Fonts, Colors } from '../constants';
 import { AuthAccountButton, BackButton, Input, TextTitle } from '../components';
 import usersAPI from '../api/usersAPI';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const RegisterScreen = ({ navigation }) => {
     const [unTickedRule, setUnTickedRule] = useState(true);
     const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
+    const [checkpassword, setCheckpassword] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [countdown, setCountdown] = useState(2);
     const [error, setError] = useState('');
     const { height, width, scale, fontScale } = useWindowDimensions();
-
+    const [isLoading, setIsLoading] = useState(false);
     const backToLogin = () => {
         navigation.goBack();
     };
 
-    const registerUser = async (phone) => {
+    const registerUser = async (phone, password) => {
         try {
             const response = await usersAPI.postRegisterUserWithPhoneNumber(
                 phone,
+                password,
             );
             return response;
         } catch (error) {
@@ -39,7 +43,13 @@ const RegisterScreen = ({ navigation }) => {
     const handlePhoneChange = (text) => {
         setPhone(text);
     };
-
+    const handlePasswordChange = (text) => {
+        setPassword(text);
+    };
+    const handleCheckPasswordChange = (text) => {
+        setCheckpassword(text);
+    };
+    console.log(password);
     const handleSubmit = () => {
         if (!unTickedRule) {
             setError(
@@ -48,16 +58,32 @@ const RegisterScreen = ({ navigation }) => {
             return;
         }
         if (phone.trim() === '') {
-            setError('Số điện thoại không được để trống');
+            setError('Số điện thoại bị để trống! ');
             return;
         }
 
         if (!phone.startsWith('0')) {
-            setError('Số điện thoại phải bắt đầu bằng số 0');
+            setError('Số điện thoại phải bắt đầu bằng số 0!');
             return;
         }
         if (phone.length > 12 || phone.length < 10) {
-            setError('Số điện thoại phải có độ dài từ 10 đến 12 chữ số');
+            setError('Số điện thoại phải dài từ 10-12 ký tự!');
+            return;
+        }
+        if (password.trim() === '') {
+            setError('Mật khẩu bị để trống!');
+            return;
+        }
+        if (password.length > 12 || password.length < 8) {
+            setError('Mật khẩu phải dài từ 8-12 ký tự');
+            return;
+        }
+        if (checkpassword.trim() === '') {
+            setError('Xác nhận mật khẩu bị để trống!');
+            return;
+        }
+        if (password != checkpassword) {
+            setError('Mật khẩu xác nhận không giống!');
             return;
         }
 
@@ -68,56 +94,50 @@ const RegisterScreen = ({ navigation }) => {
                 console.log('Phone number check success:', Response);
 
                 if (Response.status) {
-                    registerUser(phone)
+                    registerUser(phone, password)
                         .then((Response) => {
-                            // Handle successful registration
                             console.log('Success:', Response);
+                            if (Response.status) {
+                                setIsLoading(true);
+                                setTimeout(() => {
+                                    setIsLoading(false);
+                                    navigation.navigate('Login');
+                                }, 1000);
+                            } else {
+                                setError('Số điện thoại đã được đăng ký!');
+                                return;
+                            }
 
-                            setIsModalVisible(true);
-                            const interval = setInterval(() => {
-                                setCountdown(
-                                    (prevCountdown) => prevCountdown - 1,
-                                );
-                            }, 1000);
-
-                            setTimeout(() => {
-                                setIsModalVisible(false);
-                                clearInterval(interval);
-                                navigation.navigate('Login');
-                            }, 2000);
+                            // Handle successful registration
                         })
                         .catch((registerError) => {
                             // Handle registration error
                             console.error('Registration error:', registerError);
+                            setIsLoading(false);
                         });
                 } else if (Response.status === false) {
                     // Số điện thoại chưa tồn tại
                     setError('Số điện thoại đã tồn tại!');
+                    setIsLoading(false);
                 }
             })
             .catch((checkError) => {
                 // Handle phone number check error
                 console.error('Phone number check error:', checkError);
+                setIsLoading(false);
             });
     };
     return (
-        <View>
-            <Modal
-                visible={isModalVisible}
-                animationType="slide"
-                transparent={true}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalText}>
-                            Đăng kí thành công!
-                        </Text>
-                        <Text style={{}}>
-                            Quay về trang đăng nhập sau {countdown}
-                        </Text>
-                    </View>
-                </View>
-            </Modal>
+        <View style={{ flex: 1 }}>
+            <Spinner
+                visible={isLoading}
+                textContent={'Đăng ký thành công'}
+                textStyle={{ color: '#FFF' }}
+                size={'slide'}
+                color="#B73131"
+                animation="fade"
+                overlayColor="#1E1F27"
+            />
             <StatusBar
                 animated={true}
                 StatusBar="light-content"
@@ -137,6 +157,27 @@ const RegisterScreen = ({ navigation }) => {
                                 label={'Số điện thoại'}
                                 value={phone}
                                 onChangeText={handlePhoneChange}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.formRegister}>
+                        <View style={styles.containerInput}>
+                            <Input
+                                label={'Mật khẩu'}
+                                value={password}
+                                onChangeText={handlePasswordChange}
+                                secureTextEntry={true}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={styles.formRegister}>
+                        <View style={styles.containerInput}>
+                            <Input
+                                label={'Xác nhận mật khẩu'}
+                                value={checkpassword}
+                                onChangeText={handleCheckPasswordChange}
+                                secureTextEntry={true}
                             />
                         </View>
                     </View>
@@ -288,7 +329,7 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'center',
+        marginVertical: 40,
         height: '70%',
     },
 

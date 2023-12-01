@@ -1,12 +1,17 @@
 import axiosClient from './axiosClient';
 
 const usersAPI = {
-    postRegisterUserWithPhoneNumber: (phone) => {
-        console.log({ phone });
-        return axiosClient.post('/Dang-ky-tai-khoan-sdt.php', { phone });
+    postRegisterUserWithPhoneNumber: (phone, password) => {
+        return axiosClient.post('/Dang-ky-tai-khoan-sdt.php', {
+            phone,
+            password,
+        });
     },
-    postUserWithPhoneNumber: (phone) => {
-        return axiosClient.post('/Dang-nhap-sdt.php', { phone });
+    postUserWithPhoneNumber: (phone, password) => {
+        return axiosClient.post('/Dang-nhap-sdt.php', {
+            phone,
+            password,
+        });
     },
     postUserWithMail: (email) => {
         return axiosClient.post('/Dang-nhap-gmail.php', { email });
