@@ -28,9 +28,12 @@ const { PayZaloBridge } = NativeModules;
 
 const payZaloBridgeEmitter = new NativeEventEmitter(PayZaloBridge);
 
-const PaymentScreen = ({ navigation }) => {
+const PaymentScreen = ({ navigation, route }) => {
     const { width, fontScale } = useWindowDimensions();
     const textSizeInfoMovie = fontScale * 14;
+    const { discountId, discountDate, discountPrice } = route.params;
+    console.log({ discountId }, { discountDate }, { discountPrice });
+    // const navigation = useNavigation();
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
@@ -215,7 +218,7 @@ const PaymentScreen = ({ navigation }) => {
             console.log(resJson);
             if (resJson.return_code == 1) {
                 // Alert.alert('Thanh toán thành công');
-                navi.navigate('Bill');
+                navigation.navigate('Bill');
             } else {
                 // Alert.alert('Thanh toán không thành công');
             }

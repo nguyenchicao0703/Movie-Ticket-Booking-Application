@@ -6,7 +6,6 @@ import cinemaAPI from '../api/CinemaAPI';
 const CinemaScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
     const handleButtonBack = () => {
         navigation.goBack(null);
     };
