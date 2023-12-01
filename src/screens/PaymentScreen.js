@@ -23,16 +23,18 @@ import {
 import { useSelector } from 'react-redux';
 import { bookingSelector } from '../redux/selectors';
 import PaymentBar from '../components/PaymentBar';
+import PaymentDiscount from '../components/PaymentDiscount';
 
 const { PayZaloBridge } = NativeModules;
 
 const payZaloBridgeEmitter = new NativeEventEmitter(PayZaloBridge);
 
 const PaymentScreen = ({ navigation, route }) => {
+    const { discountId, discountDate, discountPrice } = route.params;
+    // setDiscountPayment({ discountPrice });
     const { width, fontScale } = useWindowDimensions();
     const textSizeInfoMovie = fontScale * 14;
-    const { discountId, discountDate, discountPrice } = route.params;
-    console.log({ discountId }, { discountDate }, { discountPrice });
+
     // const navigation = useNavigation();
 
     const handleButtonMenu = () => {
@@ -61,6 +63,9 @@ const PaymentScreen = ({ navigation, route }) => {
     const [returncode, setReturnCode] = React.useState('');
     const [dataID, setDataID] = React.useState('');
     const [dataMac, setDataMac] = React.useState();
+
+    console.log({ discountId }, { discountDate }, { discountPrice });
+
     useEffect(() => {
         const subscription = payZaloBridgeEmitter.addListener(
             'EventPayZalo',
@@ -348,6 +353,7 @@ const PaymentScreen = ({ navigation, route }) => {
                         numberBoolean
                     />
                 </Pressable>
+                <PaymentDiscount discount={discountId} number={discountPrice} />
                 {/* Change */}
                 <PaymentTitleBar title={'Tổng kết'} />
                 <PaymentContentBar
@@ -357,12 +363,12 @@ const PaymentScreen = ({ navigation, route }) => {
                 />
                 <PaymentContentBar
                     content={'Số tiền được giảm giá'}
-                    number={discoutPayment}
+                    number={discountPrice}
                     lineBoolean
                 />
                 <PaymentContentBar
                     content={'Tổng tiền'}
-                    number={bookingData.totalPayment - discoutPayment}
+                    number={bookingData.totalPayment - discountPrice}
                 />
                 <PaymentTitleBar title={'Thanh toán'} />
                 {/* ZaloPay */}
