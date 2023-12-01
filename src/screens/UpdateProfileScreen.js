@@ -31,6 +31,7 @@ import {
 } from '../redux/slice/usersSlice';
 import usersAPI from '../api/usersAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { set } from 'date-fns';
 
 const UpdateProfileScreen = () => {
     const navigation = useNavigation();
@@ -39,7 +40,6 @@ const UpdateProfileScreen = () => {
     const dataUser = useSelector(usersSelector);
     const userProfile = dataUser.users.data;
 
-    console.log('du lieu nguoi dung', userProfile);
     const [name, setName] = useState(userProfile ? userProfile.name : '');
     const [phone, setPhone] = useState(userProfile ? userProfile.phone : '');
     const [email, setEmail] = useState(userProfile ? userProfile.email : '');
@@ -51,21 +51,54 @@ const UpdateProfileScreen = () => {
     const [diachi, setDiachi] = useState(userProfile ? userProfile.diachi : '');
     const [tinh, setTinh] = useState(userProfile ? userProfile.tinh : '');
     const [quan, setQuan] = useState(userProfile ? userProfile.quan : '');
+    const [isRegister, setIsRegister] = useState(
+        userProfile ? userProfile.isRegister : 0,
+    );
     const [modalVisible, setModalVisible] = useState(false);
     const [date, setDate] = useState(new Date());
     const [showPicker, setshowPicker] = useState(false);
     const [dayOfBirth, setDayOfBirth] = useState(
         userProfile ? userProfile.bod : '',
     );
+    const [editablePhone, setEditablePhone] = useState(true);
+    const [editableEmail, setEditEmail] = useState(true);
+
     const [initialUser, setInitialUser] = useState(userProfile);
     const [submittedData, setSubmittedData] = useState(null);
+    useEffect(() => {
+        setName(dataUser.users.data ? dataUser.users.data.name : '');
+        setPhone(dataUser.users.data ? dataUser.users.data.phone : '');
+        setEmail(dataUser.users.data ? dataUser.users.data.email : '');
+        setDiachi(dataUser.users.data ? dataUser.users.data.diachi : '');
+        setTinh(dataUser.users.data ? dataUser.users.data.tinh : '');
+        setQuan(dataUser.users.data ? dataUser.users.data.quan : '');
+        setDayOfBirth(dataUser.users.data ? dataUser.users.data.bod : '');
+        setGender(dataUser.users.data ? dataUser.users.data.gender : '');
+        setAvatar(
+            dataUser.users.data
+                ? dataUser.users.data.avatar
+                : 'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=2200',
+        );
+        setIsRegister(dataUser.users.data ? dataUser.users.data.isRegister : 0);
+    }, [dataUser.users.data]);
+
+    // useEffect(() => {
+    //     if (userProfile) {
+    //         if (isRegister === '1') {
+    //             setEditablePhone(false);
+    //         } else if (isRegister === '2') {
+    //             setEditEmail(false);
+    //         }
+    //     }
+    // }, [userProfile]);
+
+    console.log('trạng thái đăng nhập', isRegister);
 
     useEffect(() => {
         setInitialUser(userProfile);
     }, [dataUser]);
-    console.log(dayOfBirth);
     const [gender, setGender] = useState(userProfile ? userProfile.gender : '');
-    console.log({ gender });
+
     const fontSize = height * 0.018;
     //Day Of Birth
     const toggleDatepicker = () => {
@@ -144,9 +177,10 @@ const UpdateProfileScreen = () => {
         setQuan(initialUser ? initialUser.quan : '');
         setDayOfBirth(initialUser ? initialUser.bod : '');
         setGender(initialUser ? initialUser.gender : '');
+        setIsRegister(initialUser ? initialUser.setIsRegister : '');
+
         navigation.goBack();
     };
-
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -188,6 +222,7 @@ const UpdateProfileScreen = () => {
             // Ví dụ: hiển thị thông báo lỗi cho người dùng
             return;
         }
+
         // Tạo một đối tượng mới chứa thông tin người dùng đã cập nhật
         const data = {
             id: userProfile.id_user,
@@ -235,6 +270,16 @@ const UpdateProfileScreen = () => {
         }
     };
 
+    let isPhoneEditable = true;
+    let isEmailEditable = true;
+
+    if (isRegister === '1') {
+        isPhoneEditable = false;
+    } else {
+        isEmailEditable = false;
+    }
+    console.log(isPhoneEditable);
+    console.log(isEmailEditable);
     return (
         <View
             style={{
@@ -376,6 +421,7 @@ const UpdateProfileScreen = () => {
                             keyboardType={'numeric'}
                             label={'Số điện thoại'}
                             value={phone}
+                            editable={isPhoneEditable}
                             onChangeText={handlePhoneChange}
                         />
                     </View>
@@ -383,6 +429,7 @@ const UpdateProfileScreen = () => {
                         <Input
                             label={'Email'}
                             value={email}
+                            editable={isEmailEditable}
                             onChangeText={handleEmailChange}
                         />
                     </View>
