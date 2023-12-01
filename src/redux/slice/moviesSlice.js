@@ -6,22 +6,22 @@ const moviesSlice = createSlice({
     name: 'movies',
     initialState: {
         movies: [],
-        status: false,
+        loading: false,
         error: null,
     },
     reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchMovies.pending, (state) => {
-                state.status = false;
+                state.loading = false;
                 state.error = null;
             })
             .addCase(fetchMovies.fulfilled, (state, action) => {
-                state.status = true;
+                state.loading = true;
                 state.movies = action.payload;
             })
             .addCase(fetchMovies.rejected, (state, action) => {
-                state.status = true;
+                state.loading = false;
                 state.error = action.error.message;
             });
     },
@@ -33,7 +33,7 @@ export default moviesSlice.reducer;
 export const fetchMovies = createAsyncThunk('movies/fetchMovies', async () => {
     try {
         const response = await movieAPI.getAll();
-        console.log('Fetch movies successfully: ', response);
+        // console.log('Fetch movies successfully: ', response);
         if (response.data === undefined) return [];
         return response.data;
     } catch (error) {

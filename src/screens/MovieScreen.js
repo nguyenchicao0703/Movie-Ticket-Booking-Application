@@ -4,12 +4,13 @@ import {
     View,
     useWindowDimensions,
     StatusBar,
+    ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Header, MovieList } from '../components';
 import { Colors, Fonts } from '../constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { moviesListSelector } from '../redux/selectors';
+import { moviesRemainingSelector } from '../redux/selectors';
 import { fetchMovies } from '../redux/slice/moviesSlice';
 
 const TopTabsCategory = [
@@ -25,9 +26,9 @@ const MovieScreen = ({ navigation }) => {
     const [clickTab, setClickTab] = useState(0);
 
     const dispatch = useDispatch();
-    const movies = useSelector(moviesListSelector);
+    const movies = useSelector(moviesRemainingSelector);
 
-    const filterTypePremiere = movies.filter((item) =>
+    const filterTypePremiere = movies.movies.filter((item) =>
         clickTab === 0
             ? item.loaikc === moviesPresent
             : item.loaikc === movieSpecial,
@@ -83,7 +84,15 @@ const MovieScreen = ({ navigation }) => {
                     </Pressable>
                 ))}
             </View>
-            <MovieList data={filterTypePremiere} />
+            {!movies.loading ? (
+                <ActivityIndicator
+                    size="large"
+                    color="#FF0000"
+                    style={{ marginTop: 10 }}
+                />
+            ) : (
+                <MovieList data={filterTypePremiere} />
+            )}
         </View>
     );
 };

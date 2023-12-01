@@ -1,12 +1,18 @@
-import { StyleSheet, View, Text } from 'react-native';
+import {
+    StyleSheet,
+    View,
+    Text,
+    ActivityIndicator,
+    ScrollView,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { CinemaList, Header } from '../components';
 import { Colors, Fonts } from '../constants';
-import { ScrollView } from 'react-native-virtualized-view';
-import cinemaAPI from '../api/CinemaAPI';
+import cinemaAPI from '../api/cinemaAPI';
 
 const CinemaScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleButtonBack = () => {
         navigation.goBack(null);
@@ -20,7 +26,8 @@ const CinemaScreen = ({ navigation }) => {
         const fetchData = async () => {
             try {
                 const response = await cinemaAPI.getAll();
-                setData(response.data);
+                setIsLoading(true);
+                response.status ? setData(response.data) : setData([]);
             } catch (error) {
                 console.log(error);
             }
@@ -39,9 +46,15 @@ const CinemaScreen = ({ navigation }) => {
             <View style={styles.tabBottomText}>
                 <Text style={styles.text}>KHU VỰC TP.HCM</Text>
             </View>
-            <ScrollView>
+            {!isLoading ? (
+                <ActivityIndicator
+                    size="large"
+                    color="#FF0000"
+                    style={{ marginTop: 10 }}
+                />
+            ) : (
                 <CinemaList data={data} />
-            </ScrollView>
+            )}
         </View>
     );
 };

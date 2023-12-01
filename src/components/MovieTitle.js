@@ -31,4 +31,4 @@ const MovieTitle = ({ title }) => {
     );
 };
 
-export default MovieTitle;
+export default React.memo(MovieTitle);
