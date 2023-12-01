@@ -59,6 +59,21 @@ const UpdateProfileScreen = () => {
     );
     const [initialUser, setInitialUser] = useState(userProfile);
     const [submittedData, setSubmittedData] = useState(null);
+    useEffect(() => {
+        setName(dataUser.users.data ? dataUser.users.data.name : '');
+        setPhone(dataUser.users.data ? dataUser.users.data.phone : '');
+        setEmail(dataUser.users.data ? dataUser.users.data.email : '');
+        setDiachi(dataUser.users.data ? dataUser.users.data.diachi : '');
+        setTinh(dataUser.users.data ? dataUser.users.data.tinh : '');
+        setQuan(dataUser.users.data ? dataUser.users.data.quan : '');
+        setDayOfBirth(dataUser.users.data ? dataUser.users.data.bod : '');
+        setGender(dataUser.users.data ? dataUser.users.data.gender : '');
+        setAvatar(
+            dataUser.users.data
+                ? dataUser.users.data.avatar
+                : 'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=2200',
+        );
+    }, [dataUser.users.data]);
 
     useEffect(() => {
         setInitialUser(userProfile);
