@@ -13,9 +13,13 @@ import comboAPI from '../api/comboAPI';
 import { useSelector, useDispatch } from 'react-redux';
 import { bookingSelector } from '../redux/selectors';
 
-const ComboScreen = ({ navigation }) => {
+const ComboScreen = ({ navigation, route }) => {
     const [data, setData] = useState();
     const [isLoading, setIsLoading] = useState(false);
+
+    const { idShowtimes, quantityTicket } = route.params;
+
+    // console.log({ idShowtimes }, { quantityTicket });
 
     const dataBooking = useSelector(bookingSelector);
     // console.log({ dataBooking });
@@ -28,8 +32,19 @@ const ComboScreen = ({ navigation }) => {
         navigation.goBack(null);
     };
 
-    const navigationComboToPayment = () => {
-        navigation.navigate('Payment');
+    const navigationComboToPayment = async () => {
+        try {
+            const response = await comboAPI.postInfomationPayment(
+                idShowtimes,
+                quantityTicket,
+                dataBooking.combo,
+                0,
+            );
+            // console.log({ response });
+            navigation.navigate('Payment');
+        } catch (error) {
+            console.log('Error response Combo', error);
+        }
     };
 
     useEffect(() => {
@@ -63,18 +78,6 @@ const ComboScreen = ({ navigation }) => {
                     }}
                 >
                     <Loading />
-                </View>
-            ) : data.length === 0 ? (
-                <View
-                    style={{
-                        flex: 1,
-                        alignSelf: 'center',
-                        flexDirection: 'row',
-                    }}
-                >
-                    <View style={{ alignSelf: 'center' }}>
-                        <NoShowtimeMessage title={'Không có Combo'} />
-                    </View>
                 </View>
             ) : (
                 <ComboList
