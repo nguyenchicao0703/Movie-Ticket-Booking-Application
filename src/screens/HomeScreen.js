@@ -73,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
     const handleProfileScreen = () => {
         if (isLogin) {
             console.log('thành công');
-            stackScreen('Profile');
+            stackScreen('UpdateProfile');
         } else {
             console.log('Thất bại, bạn cần đăg nhập để tiếp tục');
             setModalVisible(true);
@@ -187,7 +187,7 @@ const HomeScreen = ({ navigation }) => {
                                             { fontSize: height * 0.02 },
                                         ]}
                                     >
-                                        Đăng nhập{' '}
+                                        Đăng nhập
                                     </Text>
                                 </Pressable>
                             </View>
