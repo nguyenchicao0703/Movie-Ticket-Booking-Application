@@ -5,37 +5,33 @@ import {
     Pressable,
     useWindowDimensions,
     Image,
-    Platform,
 } from 'react-native';
 import React, { useState } from 'react';
-import { Colors, ComboImage, Fonts } from '../../constants';
-import { resolveAssetSource } from 'react-native/Libraries/Image/resolveAssetSource';
-import { useDispatch } from 'react-redux';
-import { setTotalPayment } from '../../redux/slice/bookingSlice';
-import { useSelector } from 'react-redux';
+import { Colors, Fonts } from '../../constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCombo, setTotalPayment } from '../../redux/slice/bookingSlice';
 import { bookingSelector } from '../../redux/selectors';
-const ComboCard = ({ data }) => {
-    const { height, width, fontScale } = useWindowDimensions();
+
+const ComboCard = ({ data, totalPayment }) => {
+    const { width, fontScale } = useWindowDimensions();
     const textSizeComboContent = fontScale * 13;
     const textSizeButton = fontScale * 20;
-    const dispatch = useDispatch();
-    const dataBooking = useSelector(bookingSelector);
-    const [quantity, setQuantity] = useState(0);
-    const bookingMoney = dataBooking.totalPayment;
-    const cost = data.giasanpham;
-    const handleQuantityCombo = (operator) => {
-        operator === '+'
-            ? setQuantity(quantity + 1)
-            : quantity === 0
-            ? null && dispatch(setTotalPayment(bookingMoney))
-            : setQuantity(quantity - 1);
 
-        operator === '+'
-            ? dispatch(setTotalPayment(bookingMoney + cost))
-            : dispatch(setTotalPayment(bookingMoney - cost));
-        // if (operator === '+') {
-        //     dispatch(setTotalPayment(parseInt(bookingMoney + cost)));
-        // }
+    const [quantity, setQuantity] = useState(0);
+
+    const dispatch = useDispatch();
+    // const dataBooking = useSelector(bookingSelector);
+    // console.log({ dataBooking });
+
+    const handleQuantityCombo = (operator) => {
+        if (operator === '+') {
+            setQuantity(quantity + 1);
+            dispatch(setTotalPayment(totalPayment + Number(data.giasanpham)));
+            // dispatch(setCombo([]))
+        } else if (operator === '-') {
+            setQuantity(quantity - 1);
+            dispatch(setTotalPayment(totalPayment - Number(data.giasanpham)));
+        }
     };
 
     return (
@@ -99,6 +95,7 @@ const ComboCard = ({ data }) => {
                     <Pressable
                         style={[styles.buttonView, styles.downButton]}
                         onPress={() => handleQuantityCombo('-')}
+                        disabled={quantity === 0}
                     >
                         <Text
                             style={[

@@ -26,7 +26,7 @@ const Drawer = createDrawerNavigator();
 const AppDrawer = () => {
     return (
         <Drawer.Navigator
-            initialRouteName="Combo"
+            initialRouteName="Home"
             screenOptions={{
                 headerShown: false,
                 swipeEnabled: false,

@@ -1,4 +1,4 @@
-import { Text, View, Image, ActivityIndicator, FlatList } from 'react-native';
+import { Text, View, Image, FlatList } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Colors, Fonts, SelectShowTimeImage } from '../constants';
 import {
@@ -7,14 +7,12 @@ import {
     MovieTitle,
     NoShowtimeMessage,
     CalendarCard,
+    Loading,
 } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import showtimesAPI from '../api/showtimesAPI';
 import { useSelector } from 'react-redux';
-import {
-    datesRemainingSelector,
-    selectedDateSelector,
-} from '../redux/selectors';
+import { datesRemainingSelector } from '../redux/selectors';
 import { format, addDays } from 'date-fns';
 
 const ShowtimeMovieScreen = ({ navigation, route }) => {
@@ -119,11 +117,7 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                 />
                 <MovieTitle title={nameMovie} />
                 {!isLoading ? (
-                    <ActivityIndicator
-                        size="large"
-                        color="#FF0000"
-                        style={{ marginTop: 10 }}
-                    />
+                    <Loading />
                 ) : statusGetAPI ? (
                     data.map((_data, index) => (
                         <View key={_data.id_rap}>
