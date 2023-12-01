@@ -35,7 +35,15 @@ const bookingSlice = createSlice({
             state.totalPayment = action.payload;
         },
         setCombo: (state, action) => {
-            state.combo = action.payload;
+            const newItem = action.payload;
+            const existingItem = state.combo.find(
+                (item) => item.id === newItem.id,
+            );
+            if (existingItem) {
+                existingItem.soluong += newItem.soluong;
+            } else {
+                state.combo.push(newItem);
+            }
         },
     },
 });

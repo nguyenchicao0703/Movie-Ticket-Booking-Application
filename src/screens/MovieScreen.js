@@ -83,11 +83,7 @@ const MovieScreen = ({ navigation }) => {
                     </Pressable>
                 ))}
             </View>
-            {!movies.loading ? (
-                <Loading />
-            ) : (
-                <MovieList data={filterTypePremiere} />
-            )}
+            <MovieList data={filterTypePremiere} listCase={'movieFuture'} />
         </View>
     );
 };
