@@ -5,23 +5,37 @@ import {
     Pressable,
     useWindowDimensions,
     Image,
+    Platform,
 } from 'react-native';
 import React, { useState } from 'react';
 import { Colors, ComboImage, Fonts } from '../../constants';
-
+import { resolveAssetSource } from 'react-native/Libraries/Image/resolveAssetSource';
+import { useDispatch } from 'react-redux';
+import { setTotalPayment } from '../../redux/slice/bookingSlice';
+import { useSelector } from 'react-redux';
+import { bookingSelector } from '../../redux/selectors';
 const ComboCard = ({ data }) => {
     const { height, width, fontScale } = useWindowDimensions();
     const textSizeComboContent = fontScale * 13;
     const textSizeButton = fontScale * 20;
-
+    const dispatch = useDispatch();
+    const dataBooking = useSelector(bookingSelector);
     const [quantity, setQuantity] = useState(0);
-
+    const bookingMoney = dataBooking.totalPayment;
+    const cost = data.giasanpham;
     const handleQuantityCombo = (operator) => {
         operator === '+'
             ? setQuantity(quantity + 1)
             : quantity === 0
-            ? null
+            ? null && dispatch(setTotalPayment(bookingMoney))
             : setQuantity(quantity - 1);
+
+        operator === '+'
+            ? dispatch(setTotalPayment(bookingMoney + cost))
+            : dispatch(setTotalPayment(bookingMoney - cost));
+        // if (operator === '+') {
+        //     dispatch(setTotalPayment(parseInt(bookingMoney + cost)));
+        // }
     };
 
     return (
