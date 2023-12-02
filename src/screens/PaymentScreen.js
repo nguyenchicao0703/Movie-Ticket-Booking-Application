@@ -133,27 +133,27 @@ const PaymentScreen = ({ navigation, route }) => {
         );
         return () => subscription?.remove();
     }, []);
-    useEffect(() => {
-        socket.connect();
-        function onConnect() {
-            console.log('connect');
-        }
-        function onDisconnect(value) {
-            console.log('disconnect');
-            console.log('discount', value);
-        }
-        socket.on('connect', onConnect);
-        socket.on('disconnect', onDisconnect);
-        socket.on('connect_error', (err) => {
-            console.log(err instanceof Error);
-            console.log(err.message);
-        });
-        return () => {
-            socket.disconnect();
-            socket.off('connect', onConnect);
-            socket.off('disconnect', onDisconnect);
-        };
-    }, []);
+    // useEffect(() => {
+    //     socket.connect();
+    //     function onConnect() {
+    //         console.log('connect');
+    //     }
+    //     function onDisconnect(value) {
+    //         console.log('disconnect');
+    //         console.log('discount', value);
+    //     }
+    //     socket.on('connect', onConnect);
+    //     socket.on('disconnect', onDisconnect);
+    //     socket.on('connect_error', (err) => {
+    //         console.log(err instanceof Error);
+    //         console.log(err.message);
+    //     });
+    //     return () => {
+    //         socket.disconnect();
+    //         socket.off('connect', onConnect);
+    //         socket.off('disconnect', onDisconnect);
+    //     };
+    // }, []);
     // useEffect(() => {
     //     const fetchData = async () => {
     //         try {

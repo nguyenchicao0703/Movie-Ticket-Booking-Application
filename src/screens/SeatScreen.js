@@ -444,9 +444,8 @@ const SeatScreen = ({ navigation, route }) => {
                                                 )
                                             }
                                             disabled={
-                                                status === STATUS_BOOKED
-                                                // ||
-                                                // status === STATUS_ASSIGNED
+                                                status === STATUS_BOOKED ||
+                                                status === STATUS_ASSIGNED
                                             }
                                         >
                                             <Text style={styles.seatText}>
