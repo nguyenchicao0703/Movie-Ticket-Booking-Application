@@ -188,7 +188,9 @@ const LoginScreen = () => {
             await handleLoginWithEmail(email);
             setIsLoadingWaite(false);
         } catch (error) {
-            // Handle Google Sign-In error
+            // Handle Google Sign-In
+            setIsLoadingWaite(false);
+            error;
             // Display appropriate error message to the user
             console.log('Google Sign-In error:', error.message);
         }

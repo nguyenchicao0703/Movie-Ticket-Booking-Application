@@ -178,7 +178,7 @@ const UpdateProfileScreen = () => {
         setDayOfBirth(initialUser ? initialUser.bod : '');
         setGender(initialUser ? initialUser.gender : '');
         setIsRegister(initialUser ? initialUser.setIsRegister : '');
-
+        setSelectedImage('');
         navigation.goBack();
     };
     const handleButtonMenu = () => {
