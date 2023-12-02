@@ -4,23 +4,40 @@ import { LineBill } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import { Header } from '../components';
 import { useSelector } from 'react-redux';
-import { bookingSelector } from '../redux/selectors';
+import { bookingSelector, usersSelector } from '../redux/selectors';
 import QRCode from 'react-native-qrcode-svg';
 
 import BillAPI from '../api/apiCreateBill';
+import billAPI from '../api/billAPI';
 
 const BillScreen = ({ navigation, route }) => {
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
-    const { discountPrice, zpID, postData } = route.params;
-    console.log('data' + [postData]);
+    const { discountPrice, zpID, postData, idTicket } = route.params;
 
-    const str = zpID;
+    const [response, setResponse] = useState([]);
+
+    const userData = useSelector(usersSelector);
+    const idUser = parseInt(userData.users.data.id_user);
+    console.log(idUser);
+    console.log(idTicket);
     const handleButtonBack = () => {
         navigation.navigate('Home');
     };
+    React.useEffect(() => {
+        const getBill = async () => {
+            try {
+                const responseBill = await billAPI.watchBill(idUser, idTicket);
 
+                // const resBill = responseBill.data;
+                console.log(responseBill);
+            } catch (error) {}
+        };
+        getBill();
+    }, []);
+
+    console.log(response.ghe);
     const dataBooking = useSelector(bookingSelector);
     // const [discountPayment, setDiscountPayment] = React.useState(0);
     return (
@@ -47,7 +64,7 @@ const BillScreen = ({ navigation, route }) => {
                             Ngày chiếu: {dataBooking.date}
                         </Text>
                         <Text style={styles.txt}>
-                            Suất chiếu: {dataBooking.showtime}
+                            Giờ chiếu: {dataBooking.showtime}
                         </Text>
                     </View>
                     <View style={styles.bodyAbove2}>

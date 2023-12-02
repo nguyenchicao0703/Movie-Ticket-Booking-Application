@@ -48,7 +48,7 @@ const PaymentScreen = ({ navigation, route }) => {
     const { response } = route.params;
 
     const resCombo = response.data;
-    console.log(resCombo);
+    console.log(response);
     const idUsersSelector = useSelector(usersSelector);
     const dataChairs = useSelector(chairsSelector);
     let indexGhe = null;
@@ -58,7 +58,14 @@ const PaymentScreen = ({ navigation, route }) => {
     }
     const idShowtimes = dataChairs.idShowtime;
     console.log('idShowtimes', Number(idShowtimes));
-
+    let idCombo;
+    let quality;
+    for (let i = 0; i < response.data.combo.length; i++) {
+        idCombo = response.data.combo[i].id_combo;
+        quality = response.data.combo[i].soluong;
+    }
+    console.log('=======================');
+    console.log(idCombo, quality);
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -91,12 +98,12 @@ const PaymentScreen = ({ navigation, route }) => {
         discountPrice,
     ];
     const postData = {
-        id_user: idUsersSelector.users.data.id_user,
-        id_suat: response.data.id_suatchieu,
+        id_user: parseInt(idUsersSelector.users.data.id_user),
+        id_suat: parseInt(response.data.id_suatchieu),
         id_km: discountId,
         tongtien: response.data.tongbill,
         soghe: bookingData.seatsIndex,
-        listcombo: response.data.combo,
+        listcombo: [{ id: parseInt(idCombo), soluong: parseInt(quality) }],
         // id_user: 69,
         // id_suat: 44,
         // id_km: 1,
@@ -265,6 +272,21 @@ const PaymentScreen = ({ navigation, route }) => {
             });
         // console.log('123123123:' + dataID);
     }
+    useEffect(() => {
+        try {
+            socket.emit(
+                'datghe',
+                JSON.stringify({
+                    id_user:
+                        idUsersSelector.users.length !== 0 &&
+                        idUsersSelector.users.data.id_user,
+                    id_suat: Number(idShowtimes),
+                    listghe: dataChairs.listGhe,
+                }),
+            );
+        } catch (error) {}
+    }, []);
+
     const payOrder = (token) => {
         createOrder(parseInt(bookingData.totalPayment - discountPrice));
         // token từ BE trả về nha
