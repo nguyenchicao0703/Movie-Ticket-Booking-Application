@@ -44,6 +44,7 @@ const PaymentScreen = ({ navigation, route }) => {
     const textSizeInfoMovie = fontScale * 14;
 
     const [listSeat, setListSeat] = useState([]);
+    const [socket1, setSocket1] = useState(null);
 
     const { response } = route.params;
 
@@ -70,6 +71,15 @@ const PaymentScreen = ({ navigation, route }) => {
     const handleButtonNavigation = (router) => {
         navigation.navigate(router);
     };
+
+    useEffect(() => {
+        const socketConnect = socket.connect();
+        setSocket1(socketConnect);
+
+        return () => {
+            socketConnect.disconnect();
+        };
+    }, []);
 
     const discountData = useSelector(discountSelector);
     // console.log(discountData);
@@ -338,9 +348,10 @@ const PaymentScreen = ({ navigation, route }) => {
                                 idUsersSelector.users.length !== 0 &&
                                 idUsersSelector.users.data.id_user,
                             id_suat: Number(idShowtimes),
-                            listghe: dataChairs.listGhe,
+                            listghe: dataChairs.listSeat,
                         }),
                     );
+                    socket1.emit('suat', JSON.stringify({ id: idShowtimes }));
                 } catch (error) {
                     console.log('Error response Combo', error);
                 }
