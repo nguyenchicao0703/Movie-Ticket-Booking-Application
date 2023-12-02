@@ -64,7 +64,6 @@ const Item = ({ imageIndex, title, navigation, router }) => {
 const CustomDrawerContent = ({ navigation }) => {
     const { width, height, fontScale } = useWindowDimensions();
     const [userInfo, setUserInfo] = useState(null);
-
     const [nameUser, setNameUser] = useState('Nguyễn Văn A');
     const [avatar, setAvatar] = useState(
         'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
