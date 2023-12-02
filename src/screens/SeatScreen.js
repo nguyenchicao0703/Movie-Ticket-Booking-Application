@@ -23,6 +23,7 @@ import {
     setMovieImage,
 } from '../redux/slice/bookingSlice';
 import { setIdShowtimes, setListSeat } from '../redux/setChairsSlice';
+import { setSeatString } from '../redux/slice/seatsSlice';
 
 const TypeSeat = React.memo(({ backgroundColor, text }) => {
     return (
@@ -110,6 +111,9 @@ const SeatScreen = ({ navigation, route }) => {
     let alphabetIndexNumber = 0;
     let seatIndexNumber = 0;
 
+    // const seat = useSelector((state) => state.seatString.seatString);
+    // console.log('seat', seat);
+
     useEffect(() => {
         socket.connect();
         function onConnect() {
@@ -137,6 +141,8 @@ const SeatScreen = ({ navigation, route }) => {
             }
         }
         function onSuat(value) {
+            console.log('test');
+            // dispatchsetSeatString(value.results[0]['chuoighe']));
             setSeats(value.results[0]['chuoighe']);
             // setIndexSeat([]);
         }
@@ -398,10 +404,10 @@ const SeatScreen = ({ navigation, route }) => {
 
                                     if (selectedSeats.includes(seatId)) {
                                         status = STATUS_RESERVED;
-                                    } else if (seat === 'S') {
-                                        status = STATUS_ASSIGNED;
                                     } else if (seat === 'U') {
                                         status = STATUS_BOOKED;
+                                    } else if (seat === 'S') {
+                                        status = STATUS_ASSIGNED;
                                     } else if (seat === 'A') {
                                         status = STATUS_AVAILABLE;
                                     } else if (seat === '_') {
