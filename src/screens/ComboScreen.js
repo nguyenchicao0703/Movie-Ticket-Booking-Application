@@ -11,7 +11,12 @@ import ComboList from '../components/list/ComboList';
 import { Colors } from '../constants';
 import comboAPI from '../api/comboAPI';
 import { useSelector, useDispatch } from 'react-redux';
-import { bookingSelector } from '../redux/selectors';
+import {
+    bookingSelector,
+    chairsSelector,
+    usersSelector,
+} from '../redux/selectors';
+import socket from '../utils/socket';
 
 const ComboScreen = ({ navigation, route }) => {
     const [data, setData] = useState();
@@ -32,6 +37,18 @@ const ComboScreen = ({ navigation, route }) => {
         navigation.goBack(null);
     };
 
+    const idUsersSelector = useSelector(usersSelector);
+    const dataChairs = useSelector(chairsSelector);
+    const _idShowtimes = dataChairs.idShowtime;
+
+    console.log('idsuat', Number(_idShowtimes));
+    console.log(
+        'iduser',
+        idUsersSelector.users.length !== 0 &&
+            idUsersSelector.users.data.id_user,
+    );
+    console.log('listGhe', dataChairs.listSeat);
+
     const navigationComboToPayment = async () => {
         try {
             const response = await comboAPI.postInfomationPayment(
@@ -41,6 +58,16 @@ const ComboScreen = ({ navigation, route }) => {
                 0,
             );
             // console.log(response.data.combo);
+            socket.emit(
+                'datghe',
+                JSON.stringify({
+                    id_user:
+                        idUsersSelector.users.length !== 0 &&
+                        idUsersSelector.users.data.id_user,
+                    id_suat: Number(_idShowtimes),
+                    listghe: dataChairs.listSeat,
+                }),
+            );
             navigation.navigate('Payment', { response });
         } catch (error) {
             console.log('Error response Combo', error);

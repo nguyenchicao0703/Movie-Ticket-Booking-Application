@@ -137,6 +137,7 @@ const SeatScreen = ({ navigation, route }) => {
             }
         }
         function onSuat(value) {
+            console.log('test');
             setSeats(value.results[0]['chuoighe']);
             // setIndexSeat([]);
         }
@@ -398,10 +399,10 @@ const SeatScreen = ({ navigation, route }) => {
 
                                     if (selectedSeats.includes(seatId)) {
                                         status = STATUS_RESERVED;
-                                    } else if (seat === 'S') {
-                                        status = STATUS_ASSIGNED;
                                     } else if (seat === 'U') {
                                         status = STATUS_BOOKED;
+                                    } else if (seat === 'S') {
+                                        status = STATUS_ASSIGNED;
                                     } else if (seat === 'A') {
                                         status = STATUS_AVAILABLE;
                                     } else if (seat === '_') {
