@@ -6,7 +6,7 @@ export const moviesListSelector = (state) => state.movies;
 export const datesSelector = (state) => state.calendar;
 export const bookingSelector = (state) => state.booking;
 export const discountSelector = (state) => state.discount;
-export const setCharirSelector = (state) => state.setCharir;
+export const chairsSelector = (state) => state.setCharir;
 export const moviesRemainingSelector = createSelector(
     moviesListSelector,
     (movies) => {

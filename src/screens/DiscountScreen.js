@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
 import { useDispatch } from 'react-redux';
 import {
+    setDiscountId,
     setDiscountCode,
     setDiscountTime,
     setDiscountPayment,
@@ -24,12 +25,13 @@ import {
 const DiscountScreen = ({ navigation }) => {
     const { width, height, fontScale } = useWindowDimensions();
     const [data, setData] = useState([]);
-    const [discountId, setDiscountId] = useState([]);
+    const [discount, setDiscount] = useState(['']);
+    const [maDiscout, setMaDiscount] = useState(['']);
     const [discountDate, setDiscountDate] = useState(['']);
     const [discountPrice, setDiscountPrice] = useState(0);
     const dispatch = useDispatch();
     const dataUser = useSelector(usersSelector);
-    console.log(dataUser.users.data.id_user);
+    // console.log(dataUser.users.data.id_user);
     const user_id = dataUser.users.data.id_user;
     const handleButtonMenu = () => {
         navigation.openDrawer();
@@ -48,7 +50,8 @@ const DiscountScreen = ({ navigation }) => {
     };
     const modalView = (item) => {
         setModalVisible(true);
-        setDiscountId(item.magiamgia);
+        setDiscount(item.id_giamgia);
+        setMaDiscount(item.magiamgia);
         setDiscountDate(item.ngayhethan);
         setDiscountPrice(item.sotiengiam);
     };
@@ -57,7 +60,8 @@ const DiscountScreen = ({ navigation }) => {
     };
     const navigationModalDiscountToPayment = () => {
         setModalVisible(false);
-        dispatch(setDiscountCode(discountId));
+        dispatch(setDiscountId(discount));
+        dispatch(setDiscountCode(maDiscout));
         dispatch(setDiscountTime(discountDate));
         dispatch(setDiscountPayment(discountPrice));
         navigation.goBack(null);
@@ -148,7 +152,7 @@ const DiscountScreen = ({ navigation }) => {
                                                     ]}
                                                     numberOfLines={1}
                                                 >
-                                                    {discountId}
+                                                    {maDiscout}
                                                 </Text>
                                                 <Text
                                                     style={[

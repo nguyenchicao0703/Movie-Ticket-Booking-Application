@@ -245,7 +245,7 @@ const SeatScreen = ({ navigation, route }) => {
                           }),
                       );
                       console.log('timer');
-                  }, 15000)
+                  }, 30000)
                 : null; // 5 phút
             setTimer(_timer);
             clearTimeout(timer);
@@ -261,27 +261,27 @@ const SeatScreen = ({ navigation, route }) => {
 
     console.log({ indexSeat });
 
-    // const navigationSeatToCombo = async () => {
+    // // const navigationSeatToCombo = async () => {
     //     try {
-    //         // console.log(
-    //         //     'id_user',
-    //         //     idUsersSelector.users.length !== 0 &&
-    //         //         idUsersSelector.users.data.id_user,
-    //         // );
-    //         // console.log('id_suat', idShowtimes);
-    //         // console.log('listghe', [...indexSeat]);
-    //         // socket.emit(
-    //         //     'datghe',
-    //         //     JSON.stringify({
-    //         //         id_user:
-    //         //             idUsersSelector.users.length !== 0 &&
-    //         //             idUsersSelector.users.data.id_user,
-    //         //         id_suat: idShowtimes,
-    //         //         listghe: [...indexSeat],
-    //         //     }),
-    //         // );
-    //         // returnDefault();
-    //         // setCheckStatusTimerSeats(true);
+    //         console.log(
+    //             'id_user',
+    //             idUsersSelector.users.length !== 0 &&
+    //                 idUsersSelector.users.data.id_user,
+    //         );
+    //         console.log('id_suat', idShowtimes);
+    //         console.log('listghe', [...indexSeat]);
+    //         socket.emit(
+    //             'datghe',
+    //             JSON.stringify({
+    //                 id_user:
+    //                     idUsersSelector.users.length !== 0 &&
+    //                     idUsersSelector.users.data.id_user,
+    //                 id_suat: idShowtimes,
+    //                 listghe: [...indexSeat],
+    //             }),
+    //         );
+    //         returnDefault();
+    //         setCheckStatusTimerSeats(true);
     //     } catch (error) {
     //         console.log('Error fetch seats', error);
     //     }

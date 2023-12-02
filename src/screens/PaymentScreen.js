@@ -10,7 +10,7 @@ import {
     Image,
     Alert,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { Colors, Fonts, HomeImage, PaymentImage } from '../constants';
 import {
@@ -25,12 +25,15 @@ import { useSelector } from 'react-redux';
 import {
     bookingSelector,
     discountSelector,
-    setCharirSelector,
+    chairsSelector,
     usersSelector,
 } from '../redux/selectors';
 import PaymentBar from '../components/PaymentBar';
 import PaymentDiscount from '../components/PaymentDiscount';
 import socket from '../utils/socket';
+import axios from 'axios';
+import axiosClient from '../api/axiosClient';
+import BillAPI from '../api/apiCreateBill';
 
 const { PayZaloBridge } = NativeModules;
 
@@ -42,11 +45,17 @@ const PaymentScreen = ({ navigation, route }) => {
 
     const { response } = route.params;
 
-    console.log(comboAPI.giatien);
-
+    const resCombo = response.data;
+    console.log(resCombo);
     const idUsersSelector = useSelector(usersSelector);
-    const dataChairs = useSelector(setCharirSelector);
-    // console.log(dataChairs);
+    const dataChairs = useSelector(chairsSelector);
+    let indexGhe = null;
+    if (dataChairs && dataChairs.listSeat && dataChairs.listSeat.length > 0) {
+        indexGhe = dataChairs.listSeat[0].index;
+        // console.log(dataChairs.listSeat.length);
+    }
+    const idShowtimes = dataChairs.idShowtime;
+
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -63,6 +72,7 @@ const PaymentScreen = ({ navigation, route }) => {
     // console.log(discountData);
     const discountCode = discountData.discountCode;
     const discountPrice = discountData.discountPayment;
+    const discountId = discountData.discountId;
     const [money, setMoney] = React.useState('0');
     const [token, setToken] = React.useState('');
     const bookingData = useSelector(bookingSelector);
@@ -77,6 +87,21 @@ const PaymentScreen = ({ navigation, route }) => {
         bookingData.combo,
         discountPrice,
     ];
+    const postData = {
+        id_user: idUsersSelector.users.data.id_user,
+        id_suat: response.data.id_suatchieu,
+        id_km: discountId,
+        tongtien: response.data.tongbill,
+        soghe: bookingData.seatsIndex,
+        listcombo: response.data.combo,
+        // id_user: 69,
+        // id_suat: 44,
+        // id_km: 1,
+        // tongtien: 60000,
+        // soghe: 'D12',
+        // listcombo: null,
+    };
+    console.log(postData);
     // console.log(token);
     // console.log(itemBK);
 
@@ -86,6 +111,7 @@ const PaymentScreen = ({ navigation, route }) => {
     const [returncode, setReturnCode] = React.useState('');
     const [dataID, setDataID] = React.useState('');
     const [dataMac, setDataMac] = React.useState();
+    const [zpCode, setZpCode] = React.useState([]);
 
     useEffect(() => {
         const subscription = payZaloBridgeEmitter.addListener(
@@ -125,7 +151,33 @@ const PaymentScreen = ({ navigation, route }) => {
             socket.off('disconnect', onDisconnect);
         };
     }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await BillAPI.postBill(postData);
+    //             console.log(response);
+    //         } catch (error) {
+    //             console.log('Error response Combo', error);
+    //         }
+    //     };
+    //     return fetchData();
+    // }, []);
 
+    const lockSeat = async () => {
+        try {
+            // console.log('listghe', [...indexSeat]);
+            socket.emit(
+                'datghe',
+                JSON.stringify({
+                    id_user:
+                        idUsersSelector.users.length !== 0 &&
+                        idUsersSelector.users.data.id_user,
+                    id_suat: idShowtimes,
+                    listghe: indexGhe,
+                }),
+            );
+        } catch (error) {}
+    };
     function getCurrentDateYYMMDD() {
         var todayDate = new Date().toISOString().slice(2, 10);
         return todayDate.split('-').join('');
@@ -180,7 +232,7 @@ const PaymentScreen = ({ navigation, route }) => {
             description: description,
             mac: mac,
         };
-        console.log(order);
+        // console.log(order);
 
         let formBody = [];
         for (let i in order) {
@@ -199,7 +251,7 @@ const PaymentScreen = ({ navigation, route }) => {
         })
             .then((response) => response.json())
             .then((resJson) => {
-                console.log(resJson);
+                // console.log(resJson);
                 setDataApi(resJson);
                 setToken(resJson.zp_trans_token);
                 setReturnCode(resJson.return_code);
@@ -213,20 +265,19 @@ const PaymentScreen = ({ navigation, route }) => {
         createOrder(parseInt(bookingData.totalPayment - discountPrice));
         // token từ BE trả về nha
         const payZP = NativeModules.ZaloPayBridge;
-        console.log(token);
-        console.log(returncode);
-        console.log(token_trans_id);
-        console.log(data);
-        console.log('=====================');
+        // console.log(token);
+        // console.log(returncode);
+        // console.log(token_trans_id);
+        // console.log(data);
+        // console.log('=====================');
         // console.log('order:' + reqmac);
 
         payZP.payOrder(token_trans_id);
 
         // callBack();
         setTimeout(() => {
-            <Loading />;
             callBack();
-        }, 3000);
+        }, 5000);
     };
 
     const callBack = async () => {
@@ -244,7 +295,7 @@ const PaymentScreen = ({ navigation, route }) => {
             // mac: '537e156527b4933404486e9283569bfb3d6752c89d3ea7e4d6b8a5c551ea0a32',
             mac: CryptoJS.HmacSHA256(hmacInput, config.key1).toString(),
         };
-        console.log(dataCB);
+        // console.log(dataCB);
         try {
             let formBody = [];
             for (let i in dataCB) {
@@ -263,22 +314,25 @@ const PaymentScreen = ({ navigation, route }) => {
                 body: formBody,
             });
             const resJson = await response.json(); // Phải sử dụng await ở đây để lấy dữ liệu JSON từ response
-            console.log(resJson);
+            // console.log(resJson);
             if (resJson.return_code == 1) {
                 // Alert.alert('Thanh toán thành công');
-                // try {
-                //     socket.emit(
-                //         'datghe',
-                //         JSON.stringify({
-                //             id_user:
-                //                 idUsersSelector.users.length !== 0 &&
-                //                 idUsersSelector.users.data.id_user,
-                //             id_suat: idShowtimes,
-                //             listghe: [...indexSeat],
-                //         }),
-                //     );
-                // } catch (error) {}
-                navigation.navigate('Bill');
+                try {
+                    const response = await BillAPI.postBill(
+                        postData.id_suat,
+                        postData.id_km,
+                        postData.id_user,
+                        postData.soghe,
+                        postData.tongtien,
+                        postData.listcombo,
+                    );
+                    console.log(response);
+                } catch (error) {
+                    console.log('Error response Combo', error);
+                }
+
+                <Loading />;
+                navigation.navigate('Bill', { discountPrice, postData });
             } else {
                 // Alert.alert('Thanh toán không thành công');
             }
@@ -473,6 +527,15 @@ const PaymentScreen = ({ navigation, route }) => {
                     </View>
                     <Image source={PaymentImage[1].image} />
                 </Pressable>
+                <View style={{ alignItems: 'center', paddingBottom: 20 }}>
+                    <AuthAccountButton
+                        onPress={() => /**/ {
+                            lockSeat();
+                            // callBack();
+                        }}
+                        text={'Dat ghe'}
+                    />
+                </View>
                 <View style={{ alignItems: 'center', paddingBottom: 20 }}>
                     <AuthAccountButton
                         onPress={() => /**/ {
