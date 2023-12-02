@@ -6,7 +6,7 @@ import {
     StatusBar,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Header, Loading, MovieList } from '../components';
+import { Header, Loading, MovieList, NoShowtimeMessage } from '../components';
 import { Colors, Fonts } from '../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { moviesRemainingSelector } from '../redux/selectors';
@@ -18,20 +18,24 @@ const TopTabsCategory = [
 ];
 
 const moviesPresent = 1;
-const movieSpecial = 2;
+const movieFuture = 2;
 
 const MovieScreen = ({ navigation }) => {
     const { width, fontScale } = useWindowDimensions();
+    const [movie, setMovie] = useState([]);
     const [clickTab, setClickTab] = useState(0);
 
     const dispatch = useDispatch();
     const movies = useSelector(moviesRemainingSelector);
 
-    const filterTypePremiere = movies.movies.filter((item) =>
-        clickTab === 0
-            ? item.loaikc === moviesPresent
-            : item.loaikc === movieSpecial,
-    );
+    useEffect(() => {
+        const filterTypePremiere = movies.movies.filter((item) =>
+            clickTab === 0
+                ? item.loaikc === moviesPresent
+                : item.loaikc === movieFuture,
+        );
+        setMovie(filterTypePremiere);
+    }, [clickTab]);
 
     useEffect(() => {
         dispatch(fetchMovies());
@@ -83,7 +87,18 @@ const MovieScreen = ({ navigation }) => {
                     </Pressable>
                 ))}
             </View>
-            <MovieList data={filterTypePremiere} listCase={'movieFuture'} />
+            {/* <MovieList data={filterTypePremiere} listCase={listCase} /> */}
+            {clickTab === 0 ? (
+                movie.length === 0 ? (
+                    <NoShowtimeMessage title={'Chưa có dữ liệu phim'} />
+                ) : (
+                    <MovieList data={movie} listCase={'MoviePresent'} />
+                )
+            ) : movie.length === 0 ? (
+                <NoShowtimeMessage title={'Chưa có dữ liệu phim'} />
+            ) : (
+                <MovieList data={movie} listCase={'MovieFuture'} />
+            )}
         </View>
     );
 };

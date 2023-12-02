@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { CinemaList, Header, Loading } from '../components';
 import { Colors, Fonts } from '../constants';
 import cinemaAPI from '../api/CinemaAPI';
+
 const CinemaScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);

@@ -5,17 +5,24 @@ import { Colors, Fonts } from '../constants/index';
 import { Header } from '../components';
 import { useSelector } from 'react-redux';
 import { bookingSelector } from '../redux/selectors';
+import QRCode from 'react-native-qrcode-svg';
 
-const BillScreen = ({ navigation }) => {
+import BillAPI from '../api/apiCreateBill';
+
+const BillScreen = ({ navigation, route }) => {
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
+    const { discountPrice, zpID, postData } = route.params;
+    console.log('data' + [postData]);
 
+    const str = zpID;
     const handleButtonBack = () => {
         navigation.navigate('Home');
     };
+
     const dataBooking = useSelector(bookingSelector);
-    const [discountPayment, setDiscountPayment] = React.useState(0);
+    // const [discountPayment, setDiscountPayment] = React.useState(0);
     return (
         <View style={styles.container}>
             <Header
@@ -40,7 +47,7 @@ const BillScreen = ({ navigation }) => {
                             Ngày chiếu: {dataBooking.date}
                         </Text>
                         <Text style={styles.txt}>
-                            Giờ chiếu: {dataBooking.showtime}
+                            Suất chiếu: {dataBooking.showtime}
                         </Text>
                     </View>
                     <View style={styles.bodyAbove2}>
@@ -54,10 +61,10 @@ const BillScreen = ({ navigation }) => {
                                 {dataBooking.seatsIndex}
                             </Text>
                         </View>
-                        <View style={styles.bodyAbove3Right}>
+                        {/* <View style={styles.bodyAbove3Right}>
                             <Text style={styles.title}>Phòng chiếu</Text>
                             <Text style={styles.txt}>Cinema A2</Text>
-                        </View>
+                        </View> */}
                     </View>
                     <Image style={styles.lineBill} source={LineBill[0].image} />
                     <View style={styles.bodyBelow}>
@@ -71,12 +78,12 @@ const BillScreen = ({ navigation }) => {
                         </View>
                         <View style={styles.bodyBelow1}>
                             <Text style={styles.title}>Số tiền được giảm:</Text>
-                            <Text style={styles.txt}>{discountPayment} đ</Text>
+                            <Text style={styles.txt}>{discountPrice} đ</Text>
                         </View>
                         <View style={styles.bodyBelow1}>
                             <Text style={styles.title}>Tổng tiền:</Text>
                             <Text style={styles.txt}>
-                                {dataBooking.totalPayment - discountPayment} đ
+                                {dataBooking.totalPayment - discountPrice} đ
                             </Text>
                         </View>
                         <View style={styles.bodyBelow2}>
@@ -89,7 +96,8 @@ const BillScreen = ({ navigation }) => {
                             </Text>
                         </View>
                     </View>
-                    <Image style={styles.qr} source={LineBill[1].image} />
+                    {/* <Image style={styles.qr} source={LineBill[1].image} /> */}
+                    {/* <QRCode value={str} /> */}
                 </View>
             </View>
         </View>

@@ -40,8 +40,8 @@ const ComboScreen = ({ navigation, route }) => {
                 dataBooking.combo,
                 0,
             );
-            // console.log({ response });
-            navigation.navigate('Payment');
+            // console.log(response.data.combo);
+            navigation.navigate('Payment', { response });
         } catch (error) {
             console.log('Error response Combo', error);
         }

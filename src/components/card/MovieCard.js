@@ -10,32 +10,54 @@ import React from 'react';
 import { Colors, Fonts } from '../../constants';
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import billAPI from '../../api/billAPI';
+import { useSelector } from 'react-redux';
+import { usersSelector } from '../../redux/selectors';
 
 const MovieCard = ({ data, listCase }) => {
     const { width, height, fontScale } = useWindowDimensions();
     const fontSize = fontScale * 14;
     const navigation = useNavigation();
 
-    const handleButtonMovieCard = () => {
+    const user = useSelector(usersSelector);
+
+    const handleButtonMovieCard = async () => {
         var idMovie = data.id_phim;
         var idTicket = data.id_ve;
+        let idUser = user.users.data.id_user;
         console.log({ idMovie }, { idTicket });
-        idMovie === undefined || idTicket === undefined
-            ? null
-            : navigation.navigate('Detail', {
-                  id: idMovie,
-                  idTicket,
-              });
+        if (listCase === 'TicketViewed' || listCase === 'TicketUnView') {
+            try {
+                const response = await billAPI.watchBill(idUser, idTicket);
+                navigation.navigate('Bill', {
+                    id: idMovie,
+                    idTicket,
+                });
+                console.log('Response data watch bill api', response.data);
+            } catch (error) {
+                console.log('Error response watch bill in movie card', error);
+            }
+        } else {
+            navigation.navigate('Detail', {
+                id: idMovie,
+                idTicket,
+            });
+        }
         console.log('id phim', data.id_phim);
         console.log('id vé', data.id_ve);
     };
 
     const navigateMovieToShowtimeMovie = () => {
-        listCase !== 'TicketHistory' && listCase !== 'movieFuture'
+        listCase === 'MoviePresent'
             ? navigation.navigate('ShowtimeMovie', {
                   idMovie: data.id_phim,
                   nameMovie: data.ten_phim,
                   imageMovie: data.hinhanh,
+              })
+            : listCase === 'TicketViewed' || listCase === 'TicketUnView'
+            ? navigation.navigate('Detail', {
+                  idTicket: data.id_ve,
+                  id: data.id_phim,
               })
             : null;
         // console.log({ listCase });
@@ -80,7 +102,7 @@ const MovieCard = ({ data, listCase }) => {
                     Thời lượng: {data.thoiluong} phút
                 </Text>
                 <Text style={[styles.text, { fontSize }]}>
-                    {listCase !== 'TicketHistory'
+                    {listCase === 'TicketHistory'
                         ? 'Khởi chiếu: ' + data.ngaykhoichieu
                         : 'Ngày chiếu: ' + data.ngaychieu}
                 </Text>
@@ -102,20 +124,25 @@ const MovieCard = ({ data, listCase }) => {
                         marginTop: 10,
                     }}
                 >
-                    <Pressable onPress={navigateMovieToShowtimeMovie}>
-                        <Text
-                            style={{
-                                textAlign: 'center',
-                                color: Colors.DEFAULT_WHITE,
-                                fontFamily: Fonts.Medium,
-                                fontSize: fontScale * 16,
-                            }}
-                        >
-                            {listCase === 'TicketHistory'
-                                ? 'Đã lên lịch'
-                                : 'Đặt vé'}
-                        </Text>
-                    </Pressable>
+                    {listCase === 'MovieFuture' ? null : (
+                        <Pressable onPress={navigateMovieToShowtimeMovie}>
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    color: Colors.DEFAULT_WHITE,
+                                    fontFamily: Fonts.Medium,
+                                    fontSize: fontScale * 16,
+                                }}
+                            >
+                                {listCase === 'MoviePresent'
+                                    ? 'Đặt vé'
+                                    : listCase === 'TicketViewed' ||
+                                      listCase === 'TicketUnView'
+                                    ? 'Chi tiết phim'
+                                    : null}
+                            </Text>
+                        </Pressable>
+                    )}
                 </LinearGradient>
             </View>
             {/* <View

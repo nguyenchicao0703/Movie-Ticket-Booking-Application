@@ -10,7 +10,7 @@ import {
     Image,
     Alert,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { Colors, Fonts, HomeImage, PaymentImage } from '../constants';
 import {
@@ -19,10 +19,21 @@ import {
     PaymentContentBar,
     PaymentTitleBar,
     AuthAccountButton,
+    Loading,
 } from '../components';
 import { useSelector } from 'react-redux';
-import { bookingSelector } from '../redux/selectors';
+import {
+    bookingSelector,
+    discountSelector,
+    chairsSelector,
+    usersSelector,
+} from '../redux/selectors';
 import PaymentBar from '../components/PaymentBar';
+import PaymentDiscount from '../components/PaymentDiscount';
+import socket from '../utils/socket';
+import axios from 'axios';
+import axiosClient from '../api/axiosClient';
+import BillAPI from '../api/apiCreateBill';
 
 const { PayZaloBridge } = NativeModules;
 
@@ -31,9 +42,22 @@ const payZaloBridgeEmitter = new NativeEventEmitter(PayZaloBridge);
 const PaymentScreen = ({ navigation, route }) => {
     const { width, fontScale } = useWindowDimensions();
     const textSizeInfoMovie = fontScale * 14;
-    const { discountId, discountDate, discountPrice } = route.params;
-    console.log({ discountId }, { discountDate }, { discountPrice });
-    // const navigation = useNavigation();
+
+    const [listSeat, setListSeat] = useState([]);
+
+    const { response } = route.params;
+
+    const resCombo = response.data;
+    console.log(resCombo);
+    const idUsersSelector = useSelector(usersSelector);
+    const dataChairs = useSelector(chairsSelector);
+    let indexGhe = null;
+    console.log('chaird', dataChairs.listSeat);
+    if (dataChairs && dataChairs.listSeat && dataChairs.listSeat.length > 0) {
+        indexGhe = dataChairs.listSeat;
+    }
+    const idShowtimes = dataChairs.idShowtime;
+    console.log('idShowtimes', Number(idShowtimes));
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
@@ -46,12 +70,41 @@ const PaymentScreen = ({ navigation, route }) => {
     const handleButtonNavigation = (router) => {
         navigation.navigate(router);
     };
-    const [discoutPayment, setDiscountPayment] = React.useState(0);
+
+    const discountData = useSelector(discountSelector);
+    // console.log(discountData);
+    const discountCode = discountData.discountCode;
+    const discountPrice = discountData.discountPayment;
+    const discountId = discountData.discountId;
     const [money, setMoney] = React.useState('0');
     const [token, setToken] = React.useState('');
     const bookingData = useSelector(bookingSelector);
-
-    const itemBK = [bookingData];
+    const itemBK = [
+        bookingData.movieName,
+        bookingData.movieImage,
+        bookingData.cinemaName,
+        bookingData.dateShowtime,
+        bookingData.showtime,
+        bookingData.seatsIndex,
+        bookingData.totalPayment,
+        bookingData.combo,
+        discountPrice,
+    ];
+    const postData = {
+        id_user: idUsersSelector.users.data.id_user,
+        id_suat: response.data.id_suatchieu,
+        id_km: discountId,
+        tongtien: response.data.tongbill,
+        soghe: bookingData.seatsIndex,
+        listcombo: response.data.combo,
+        // id_user: 69,
+        // id_suat: 44,
+        // id_km: 1,
+        // tongtien: 60000,
+        // soghe: 'D12',
+        // listcombo: null,
+    };
+    console.log(postData);
     // console.log(token);
     // console.log(itemBK);
 
@@ -61,6 +114,8 @@ const PaymentScreen = ({ navigation, route }) => {
     const [returncode, setReturnCode] = React.useState('');
     const [dataID, setDataID] = React.useState('');
     const [dataMac, setDataMac] = React.useState();
+    const [zpCode, setZpCode] = React.useState([]);
+
     useEffect(() => {
         const subscription = payZaloBridgeEmitter.addListener(
             'EventPayZalo',
@@ -78,7 +133,55 @@ const PaymentScreen = ({ navigation, route }) => {
         );
         return () => subscription?.remove();
     }, []);
+    useEffect(() => {
+        socket.connect();
+        function onConnect() {
+            console.log('connect');
+        }
+        function onDisconnect(value) {
+            console.log('disconnect');
+            console.log('discount', value);
+        }
+        socket.on('connect', onConnect);
+        socket.on('disconnect', onDisconnect);
+        socket.on('connect_error', (err) => {
+            console.log(err instanceof Error);
+            console.log(err.message);
+        });
+        return () => {
+            socket.disconnect();
+            socket.off('connect', onConnect);
+            socket.off('disconnect', onDisconnect);
+        };
+    }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await BillAPI.postBill(postData);
+    //             console.log(response);
+    //         } catch (error) {
+    //             console.log('Error response Combo', error);
+    //         }
+    //     };
+    //     return fetchData();
+    // }, []);
+    console.log('id user', idUsersSelector.users.data.id_user);
 
+    const lockSeat = async () => {
+        try {
+            // console.log('listghe', [...indexSeat]);
+            socket.emit(
+                'datghe',
+                JSON.stringify({
+                    id_user:
+                        idUsersSelector.users.length !== 0 &&
+                        idUsersSelector.users.data.id_user,
+                    id_suat: Number(idShowtimes),
+                    listghe: dataChairs.listGhe,
+                }),
+            );
+        } catch (error) {}
+    };
     function getCurrentDateYYMMDD() {
         var todayDate = new Date().toISOString().slice(2, 10);
         return todayDate.split('-').join('');
@@ -133,7 +236,7 @@ const PaymentScreen = ({ navigation, route }) => {
             description: description,
             mac: mac,
         };
-        console.log(order);
+        // console.log(order);
 
         let formBody = [];
         for (let i in order) {
@@ -152,7 +255,7 @@ const PaymentScreen = ({ navigation, route }) => {
         })
             .then((response) => response.json())
             .then((resJson) => {
-                console.log(resJson);
+                // console.log(resJson);
                 setDataApi(resJson);
                 setToken(resJson.zp_trans_token);
                 setReturnCode(resJson.return_code);
@@ -163,14 +266,14 @@ const PaymentScreen = ({ navigation, route }) => {
         // console.log('123123123:' + dataID);
     }
     const payOrder = (token) => {
-        // createOrder(1000);
+        createOrder(parseInt(bookingData.totalPayment - discountPrice));
         // token từ BE trả về nha
         const payZP = NativeModules.ZaloPayBridge;
-        console.log(token);
-        console.log(returncode);
-        console.log(token_trans_id);
-        console.log(data);
-        console.log('=====================');
+        // console.log(token);
+        // console.log(returncode);
+        // console.log(token_trans_id);
+        // console.log(data);
+        // console.log('=====================');
         // console.log('order:' + reqmac);
 
         payZP.payOrder(token_trans_id);
@@ -178,7 +281,7 @@ const PaymentScreen = ({ navigation, route }) => {
         // callBack();
         setTimeout(() => {
             callBack();
-        }, 3000);
+        }, 5000);
     };
 
     const callBack = async () => {
@@ -196,7 +299,7 @@ const PaymentScreen = ({ navigation, route }) => {
             // mac: '537e156527b4933404486e9283569bfb3d6752c89d3ea7e4d6b8a5c551ea0a32',
             mac: CryptoJS.HmacSHA256(hmacInput, config.key1).toString(),
         };
-        console.log(dataCB);
+        // console.log(dataCB);
         try {
             let formBody = [];
             for (let i in dataCB) {
@@ -215,10 +318,35 @@ const PaymentScreen = ({ navigation, route }) => {
                 body: formBody,
             });
             const resJson = await response.json(); // Phải sử dụng await ở đây để lấy dữ liệu JSON từ response
-            console.log(resJson);
+            // console.log(resJson);
             if (resJson.return_code == 1) {
                 // Alert.alert('Thanh toán thành công');
-                navigation.navigate('Bill');
+                try {
+                    const response = await BillAPI.postBill(
+                        postData.id_suat,
+                        postData.id_km,
+                        postData.id_user,
+                        postData.soghe,
+                        postData.tongtien,
+                        postData.listcombo,
+                    );
+                    console.log(response);
+                    socket.emit(
+                        'datghe',
+                        JSON.stringify({
+                            id_user:
+                                idUsersSelector.users.length !== 0 &&
+                                idUsersSelector.users.data.id_user,
+                            id_suat: Number(idShowtimes),
+                            listghe: dataChairs.listGhe,
+                        }),
+                    );
+                } catch (error) {
+                    console.log('Error response Combo', error);
+                }
+
+                <Loading />;
+                navigation.navigate('Bill', { discountPrice, postData });
             } else {
                 // Alert.alert('Thanh toán không thành công');
             }
@@ -252,7 +380,7 @@ const PaymentScreen = ({ navigation, route }) => {
                             height: width * 0.35,
                             borderRadius: 5,
                         }}
-                        source={HomeImage[1].image}
+                        source={{ uri: response.data.hinhanh }}
                     />
                     <View
                         style={{
@@ -278,7 +406,7 @@ const PaymentScreen = ({ navigation, route }) => {
                                 { fontSize: textSizeInfoMovie },
                             ]}
                         >
-                            {bookingData.date}
+                            Ngày chiếu: {bookingData.date}
                         </Text>
                         <Text
                             style={[
@@ -286,7 +414,7 @@ const PaymentScreen = ({ navigation, route }) => {
                                 { fontSize: textSizeInfoMovie },
                             ]}
                         >
-                            {bookingData.showtime}
+                            Giờ chiếu: {bookingData.showtime}
                         </Text>
                         <Text
                             style={[
@@ -294,7 +422,7 @@ const PaymentScreen = ({ navigation, route }) => {
                                 { fontSize: textSizeInfoMovie },
                             ]}
                         >
-                            {bookingData.cinemaName}
+                            Rạp: {bookingData.cinemaName}
                         </Text>
                         <Text
                             style={[
@@ -324,11 +452,12 @@ const PaymentScreen = ({ navigation, route }) => {
                     number={bookingData.totalPayment}
                 />
                 <PaymentTitleBar title={'Thông tin bắp nước'} />
-                <PaymentCombo
-                    name={'BABY SHARK SINGLE COMBO '}
-                    amount={'195.000'}
-                    number={'1'}
-                />
+                {/* <PaymentCombo
+                    name={response.data.combo.tensanpham}
+                    amount={response.data.combo.giatien}
+                    number={response.data.combo.soluong}
+                    image={response.data.combo.hinhanh}
+                /> */}
                 {/* <PaymentCombo
                     name={'BABY SHARK SINGLE COMBO '}
                     amount={'195.000'}
@@ -341,13 +470,24 @@ const PaymentScreen = ({ navigation, route }) => {
                     numberBoolean
                 />
                 <PaymentTitleBar title={'Phương thức giảm giá'} />
-                <Pressable onPress={() => handleButtonNavigation('Discount')}>
-                    <PaymentContentBar
-                        content={'Phiếu giảm giá'}
-                        number={'>'}
-                        numberBoolean
+                {discountPrice != 0 ? (
+                    <PaymentDiscount
+                        discount={discountCode}
+                        number={discountPrice}
                     />
-                </Pressable>
+                ) : (
+                    <Pressable
+                        onPress={() => handleButtonNavigation('Discount')}
+                    >
+                        <PaymentContentBar
+                            content={'Phiếu giảm giá'}
+                            number={'>'}
+                            numberBoolean
+                        />
+                    </Pressable>
+                )}
+
+                {/* <PaymentDiscount discount={discountId} number={discountPrice} /> */}
                 {/* Change */}
                 <PaymentTitleBar title={'Tổng kết'} />
                 <PaymentContentBar
@@ -357,12 +497,12 @@ const PaymentScreen = ({ navigation, route }) => {
                 />
                 <PaymentContentBar
                     content={'Số tiền được giảm giá'}
-                    number={discoutPayment}
+                    number={discountPrice}
                     lineBoolean
                 />
                 <PaymentContentBar
                     content={'Tổng tiền'}
-                    number={bookingData.totalPayment - discoutPayment}
+                    number={bookingData.totalPayment - discountPrice}
                 />
                 <PaymentTitleBar title={'Thanh toán'} />
                 {/* ZaloPay */}
@@ -404,7 +544,6 @@ const PaymentScreen = ({ navigation, route }) => {
                 <View style={{ alignItems: 'center', paddingBottom: 20 }}>
                     <AuthAccountButton
                         onPress={() => /**/ {
-                            createOrder(bookingData.totalPayment);
                             payOrder();
                             // callBack();
                         }}
