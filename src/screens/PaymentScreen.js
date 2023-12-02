@@ -544,15 +544,6 @@ const PaymentScreen = ({ navigation, route }) => {
                 <View style={{ alignItems: 'center', paddingBottom: 20 }}>
                     <AuthAccountButton
                         onPress={() => /**/ {
-                            lockSeat();
-                            // callBack();
-                        }}
-                        text={'Dat ghe'}
-                    />
-                </View>
-                <View style={{ alignItems: 'center', paddingBottom: 20 }}>
-                    <AuthAccountButton
-                        onPress={() => /**/ {
                             payOrder();
                             // callBack();
                         }}
