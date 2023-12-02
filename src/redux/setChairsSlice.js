@@ -11,7 +11,7 @@ const setChairsSlice = createSlice({
         // indexSeat: []
     },
     reducers: {
-        setShowtimes: (state, action) => {
+        setIdShowtimes: (state, action) => {
             state.idShowtime = action.payload;
         },
         setListSeat: (state, action) => {
@@ -20,6 +20,6 @@ const setChairsSlice = createSlice({
     },
 });
 
-export const { setShowtimes, setListSeat } = setChairsSlice.actions;
+export const { setIdShowtimes, setListSeat } = setChairsSlice.actions;
 
 export default setChairsSlice.reducer;

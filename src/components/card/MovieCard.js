@@ -102,7 +102,7 @@ const MovieCard = ({ data, listCase }) => {
                     Thời lượng: {data.thoiluong} phút
                 </Text>
                 <Text style={[styles.text, { fontSize }]}>
-                    {listCase !== 'TicketHistory'
+                    {listCase === 'TicketHistory'
                         ? 'Khởi chiếu: ' + data.ngaykhoichieu
                         : 'Ngày chiếu: ' + data.ngaychieu}
                 </Text>
@@ -134,11 +134,12 @@ const MovieCard = ({ data, listCase }) => {
                                     fontSize: fontScale * 16,
                                 }}
                             >
-                                {listCase === 'TicketHistory'
-                                    ? 'Đã lên lịch'
-                                    : listCase === 'TicketViewed'
+                                {listCase === 'MoviePresent'
+                                    ? 'Đặt vé'
+                                    : listCase === 'TicketViewed' ||
+                                      listCase === 'TicketUnView'
                                     ? 'Chi tiết phim'
-                                    : 'Đặt vé'}
+                                    : null}
                             </Text>
                         </Pressable>
                     )}

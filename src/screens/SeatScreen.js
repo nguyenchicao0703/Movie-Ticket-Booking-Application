@@ -22,7 +22,7 @@ import {
     setSeatsIndex,
     setMovieImage,
 } from '../redux/slice/bookingSlice';
-import { setListSeat } from '../redux/setChairsSlice';
+import { setIdShowtimes, setListSeat } from '../redux/setChairsSlice';
 
 const TypeSeat = React.memo(({ backgroundColor, text }) => {
     return (
@@ -97,7 +97,7 @@ const SeatScreen = ({ navigation, route }) => {
     const [timer, setTimer] = useState(null);
     const [countSeat, setCountSeat] = useState(0);
 
-    // console.log({ idShowtimes });
+    console.log({ idShowtimes });
 
     const dispatch = useDispatch();
     // const listSeat1 = useSelector((state) => state.setCharir);
@@ -194,6 +194,24 @@ const SeatScreen = ({ navigation, route }) => {
         setIndexSeat([]);
     }, []);
 
+    const timeOut = () => {
+        const timerId = setTimeout(() => {
+            returnDefault();
+            socket.emit(
+                'chonghe',
+                JSON.stringify({
+                    id: idShowtimes,
+                    index: seatIndexNumber,
+                    status: 'A',
+                }),
+            );
+            console.log('timer');
+        }, 5000);
+        checkStatusTimerSeats === false ? timerId : null; // 5 phút
+        setTimer(timerId);
+        clearTimeout(timerId);
+    };
+
     const handleSeatPress = (seatId, seatIndexNumber) => {
         // console.log({ seatIndexNumber });
         // console.log({ seatId });
@@ -214,8 +232,9 @@ const SeatScreen = ({ navigation, route }) => {
             );
             setIndexSeat([...copyWithoutFirstElement]);
             setTotalPrice(totalPrice - priceShowitmes);
-            setCheckStatusTimerSeats(true);
             setCountSeat(countSeat - 1);
+            setCheckStatusTimerSeats(true);
+            timeOut();
         } else {
             socket.emit(
                 'chonghe',
@@ -232,27 +251,13 @@ const SeatScreen = ({ navigation, route }) => {
             ]);
             setTotalPrice(totalPrice + priceShowitmes);
             setCountSeat(countSeat + 1);
-            const _timer = setCheckStatusTimerSeats(false);
-            checkStatusTimerSeats === false
-                ? setTimeout(() => {
-                      returnDefault();
-                      socket.emit(
-                          'chonghe',
-                          JSON.stringify({
-                              id: idShowtimes,
-                              index: seatIndexNumber,
-                              status: 'A',
-                          }),
-                      );
-                      console.log('timer');
-                  }, 30000)
-                : null; // 5 phút
-            setTimer(_timer);
-            clearTimeout(timer);
+            setCheckStatusTimerSeats(false);
+            timeOut();
         }
 
         setSelectedSeats(updatedSeats);
         setStorageSeats(updatedSeats.join(', '));
+        // return clearTimeout(timer);
     };
 
     // console.log({ storageSeats });
@@ -261,13 +266,13 @@ const SeatScreen = ({ navigation, route }) => {
 
     console.log({ indexSeat });
 
-    // // const navigationSeatToCombo = async () => {
+    // const navigationSeatToCombo = async () => {
     //     try {
-    //         console.log(
-    //             'id_user',
-    //             idUsersSelector.users.length !== 0 &&
-    //                 idUsersSelector.users.data.id_user,
-    //         );
+    //         // console.log(
+    //         //     'id_user',
+    //         //     idUsersSelector.users.length !== 0 &&
+    //         //         idUsersSelector.users.data.id_user,
+    //         // );
     //         console.log('id_suat', idShowtimes);
     //         console.log('listghe', [...indexSeat]);
     //         socket.emit(
@@ -282,6 +287,7 @@ const SeatScreen = ({ navigation, route }) => {
     //         );
     //         returnDefault();
     //         setCheckStatusTimerSeats(true);
+    //         // return clearTimeout(timer);
     //     } catch (error) {
     //         console.log('Error fetch seats', error);
     //     }
@@ -295,10 +301,10 @@ const SeatScreen = ({ navigation, route }) => {
         dispatch(setShowtime(headerShowtimes));
         dispatch(setTotalPayment(totalPrice));
         dispatch(setSeatsIndex(storageSeats));
-        dispatch(setShowtime(idShowtimes));
+        dispatch(setIdShowtimes(idShowtimes));
         dispatch(setListSeat([...indexSeat]));
-        clearTimeout(timer);
         returnDefault();
+        clearTimeout(timer);
         navigation.navigate('Combo', {
             idShowtimes,
             quantityTicket: countSeat,
@@ -438,8 +444,9 @@ const SeatScreen = ({ navigation, route }) => {
                                                 )
                                             }
                                             disabled={
-                                                status === STATUS_BOOKED ||
-                                                status === STATUS_ASSIGNED
+                                                status === STATUS_BOOKED
+                                                // ||
+                                                // status === STATUS_ASSIGNED
                                             }
                                         >
                                             <Text style={styles.seatText}>

@@ -55,7 +55,7 @@ const TicketScreen = ({ navigation }) => {
             }
         };
         fetchTickets();
-    }, [index]);
+    }, [index, movie]);
 
     useEffect(() => {
         // console.log('data', data);
@@ -66,9 +66,10 @@ const TicketScreen = ({ navigation }) => {
                   )
                 : [];
         setMovie(filterTypeTicket);
+        console.log({ filterTypeTicket });
         // console.log({ movie });
         console.log('movie đã đc render');
-    }, [clickTab, data]);
+    }, [clickTab]);
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>

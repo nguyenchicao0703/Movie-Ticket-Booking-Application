@@ -43,6 +43,8 @@ const PaymentScreen = ({ navigation, route }) => {
     const { width, fontScale } = useWindowDimensions();
     const textSizeInfoMovie = fontScale * 14;
 
+    const [listSeat, setListSeat] = useState([]);
+
     const { response } = route.params;
 
     const resCombo = response.data;
@@ -50,11 +52,12 @@ const PaymentScreen = ({ navigation, route }) => {
     const idUsersSelector = useSelector(usersSelector);
     const dataChairs = useSelector(chairsSelector);
     let indexGhe = null;
+    console.log('chaird', dataChairs.listSeat);
     if (dataChairs && dataChairs.listSeat && dataChairs.listSeat.length > 0) {
-        indexGhe = dataChairs.listSeat[0].index;
-        // console.log(dataChairs.listSeat.length);
+        indexGhe = dataChairs.listSeat;
     }
     const idShowtimes = dataChairs.idShowtime;
+    console.log('idShowtimes', Number(idShowtimes));
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
@@ -162,6 +165,7 @@ const PaymentScreen = ({ navigation, route }) => {
     //     };
     //     return fetchData();
     // }, []);
+    console.log('id user', idUsersSelector.users.data.id_user);
 
     const lockSeat = async () => {
         try {
@@ -172,8 +176,8 @@ const PaymentScreen = ({ navigation, route }) => {
                     id_user:
                         idUsersSelector.users.length !== 0 &&
                         idUsersSelector.users.data.id_user,
-                    id_suat: idShowtimes,
-                    listghe: indexGhe,
+                    id_suat: Number(idShowtimes),
+                    listghe: dataChairs.listGhe,
                 }),
             );
         } catch (error) {}
@@ -327,6 +331,16 @@ const PaymentScreen = ({ navigation, route }) => {
                         postData.listcombo,
                     );
                     console.log(response);
+                    socket.emit(
+                        'datghe',
+                        JSON.stringify({
+                            id_user:
+                                idUsersSelector.users.length !== 0 &&
+                                idUsersSelector.users.data.id_user,
+                            id_suat: Number(idShowtimes),
+                            listghe: dataChairs.listGhe,
+                        }),
+                    );
                 } catch (error) {
                     console.log('Error response Combo', error);
                 }
