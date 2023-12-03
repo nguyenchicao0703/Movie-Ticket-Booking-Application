@@ -5,6 +5,7 @@ import {
     ImageBackground,
     useWindowDimensions,
     Pressable,
+    ToastAndroid,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Colors, DrawerImage, Fonts } from '../constants';
@@ -13,6 +14,7 @@ import { usersSelector } from '../redux/selectors';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { resetUsers } from '../redux/slice/usersSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { is } from 'date-fns/locale';
 
 const Line = () => {
     return (
@@ -62,14 +64,17 @@ const Item = ({ imageIndex, title, navigation, router }) => {
 };
 
 const CustomDrawerContent = ({ navigation }) => {
+    const dataUser = useSelector(usersSelector);
     const { width, height, fontScale } = useWindowDimensions();
     const [userInfo, setUserInfo] = useState(null);
     const [nameUser, setNameUser] = useState('Nguyễn Văn A');
+    const [isLogin, setIsLogin] = useState(
+        dataUser.users.data ? dataUser.users.data.islogin : '',
+    );
     const [avatar, setAvatar] = useState(
         'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
     );
     const dispatch = useDispatch();
-    const dataUser = useSelector(usersSelector);
     useEffect(() => {
         setAvatar(
             dataUser.users.data
@@ -79,6 +84,7 @@ const CustomDrawerContent = ({ navigation }) => {
         setNameUser(
             dataUser.users.data ? dataUser.users.data.name : 'Nguyen Van A',
         );
+        setIsLogin(dataUser.users.data ? dataUser.users.data.islogin : '');
     }, [dataUser.users.data]);
     const handleSignOut = async () => {
         try {
@@ -93,7 +99,9 @@ const CustomDrawerContent = ({ navigation }) => {
             dispatch(resetUsers());
             console.log('Sign out');
             await AsyncStorage.removeItem('user');
-            navigation.goBack();
+            navigation.navigate('Home');
+            ToastAndroid.show('Đăng xuất thành công', ToastAndroid.SHORT);
+            console.log(isLogin);
         } catch (error) {
             console.log('Sign out error:', error.message);
         }
@@ -155,36 +163,38 @@ const CustomDrawerContent = ({ navigation }) => {
                 router={'Cinema'}
             />
             <Line />
-            <Pressable
-                style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                    height: height * 0.1,
-                }}
-                onPress={() => handleSignOut()}
-            >
-                <View
+            {isLogin ? (
+                <Pressable
                     style={{
                         flexDirection: 'row',
                         alignItems: 'center',
-                        marginLeft: -80,
+                        justifyContent: 'center',
+                        width: '100%',
+                        height: height * 0.1,
                     }}
+                    onPress={() => handleSignOut()}
                 >
-                    <Image style={{}} source={DrawerImage[7].image} />
-                    <Text
+                    <View
                         style={{
-                            fontSize: fontScale * 16,
-                            color: Colors.DEFAULT_WHITE,
-                            fontFamily: Fonts.Regular,
-                            marginLeft: 8,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginLeft: -80,
                         }}
                     >
-                        Đăng xuất
-                    </Text>
-                </View>
-            </Pressable>
+                        <Image style={{}} source={DrawerImage[7].image} />
+                        <Text
+                            style={{
+                                fontSize: fontScale * 16,
+                                color: Colors.DEFAULT_WHITE,
+                                fontFamily: Fonts.Regular,
+                                marginLeft: 8,
+                            }}
+                        >
+                            Đăng xuất
+                        </Text>
+                    </View>
+                </Pressable>
+            ) : null}
 
             <Line />
         </ImageBackground>
