@@ -73,6 +73,7 @@ const SelectShowtime = ({ data, nameMovie, nameCinema, imageMovie }) => {
         setDataShowtimes(allShowtimes);
         // console.log('Showtimes', allShowtimes);
     }, []);
+
     const handleLogin = () => {
         if (isLogin) {
             ToastAndroid.show('Bạn đã đăng nhập rồi !');
@@ -85,6 +86,7 @@ const SelectShowtime = ({ data, nameMovie, nameCinema, imageMovie }) => {
     const handleCancel = () => {
         setModalVisible(false);
     };
+
     return (
         <>
             <Text
@@ -177,7 +179,8 @@ const SelectShowtime = ({ data, nameMovie, nameCinema, imageMovie }) => {
                     marginLeft: 12,
                 }}
                 data={dataShowtimes}
-                extraData={(item) => item.id}
+                extraData={data}
+                keyExtractor={(item, index) => index.toString()}
                 numColumns={3}
                 renderItem={({ item, index }) => (
                     <Pressable
@@ -215,6 +218,7 @@ const SelectShowtime = ({ data, nameMovie, nameCinema, imageMovie }) => {
 };
 
 export default SelectShowtime;
+
 const styles = StyleSheet.create({
     modalView: {
         backgroundColor: 'white',

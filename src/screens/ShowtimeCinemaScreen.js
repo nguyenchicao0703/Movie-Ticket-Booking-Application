@@ -1,9 +1,8 @@
 import { Text, View, FlatList } from 'react-native';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import { Colors, Fonts } from '../constants';
 import {
     Header,
-    SelectShowtime,
     MovieTitle,
     NoShowtimeMessage,
     CalendarCard,
@@ -12,11 +11,10 @@ import {
 import { ScrollView } from 'react-native-virtualized-view';
 import showtimesAPI from '../api/showtimesAPI';
 import { useSelector } from 'react-redux';
-import {
-    datesRemainingSelector,
-    selectedDateSelector,
-} from '../redux/selectors';
+import { datesRemainingSelector } from '../redux/selectors';
 import { format, addDays } from 'date-fns';
+
+const SelectShowtime = React.lazy(() => import('../components/SelectShowtime'));
 
 const ShowtimeCinemaScreen = ({ navigation, route }) => {
     const { idCinema, nameCinema } = route.params;
@@ -68,7 +66,6 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
                     idCinema,
                     dateSelector.dates,
                 );
-                setIsLoading(true);
                 response.status ? setData(response.data) : setData([]);
                 setSatusGetAPI(response.status);
                 // console.log('Response showtime cinemas', data);
@@ -115,18 +112,18 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
                         />
                     )}
                 />
-                {!isLoading ? (
-                    <Loading />
-                ) : statusGetAPI ? (
+                {statusGetAPI ? (
                     data.map((_data) => (
                         <View key={_data.id_phim}>
-                            <MovieTitle title={_data.ten_phim} />
-                            <SelectShowtime
-                                data={_data.phong}
-                                nameCinema={nameCinema}
-                                nameMovie={_data.ten_phim}
-                                imageMovie={_data.hinhanh}
-                            />
+                            <Suspense fallback={<Loading />}>
+                                <MovieTitle title={_data.ten_phim} />
+                                <SelectShowtime
+                                    data={_data.phong}
+                                    nameCinema={nameCinema}
+                                    nameMovie={_data.ten_phim}
+                                    imageMovie={_data.hinhanh}
+                                />
+                            </Suspense>
                         </View>
                     ))
                 ) : (

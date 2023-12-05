@@ -1,18 +1,12 @@
-import {
-    FlatList,
-    Image,
-    Pressable,
-    Text,
-    ToastAndroid,
-    View,
-    useWindowDimensions,
-} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { Pressable, Text, View, useWindowDimensions } from 'react-native';
+import React, { useEffect, useState, Suspense } from 'react';
 import { Colors, Fonts } from '../constants';
-import { Header, MovieList, NoShowtimeMessage } from '../components';
+import { Header, Loading, NoShowtimeMessage } from '../components';
 import ticketAPI from '../api/ticketAPI';
 import { useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
+
+const MovieList = React.lazy(() => import('../components/list/MovieList'));
 
 const TopTabsTicketHistory = [
     { id: 1, category: 'Phim sắp xem' },
@@ -24,7 +18,6 @@ const TicketScreen = ({ navigation }) => {
     const [clickTab, setClickTab] = useState(0);
     const [data, setData] = useState([]);
     const [movie, setMovie] = useState([]);
-    const [index, setIndex] = useState('1');
 
     const idUser = useSelector(usersSelector);
 
@@ -40,7 +33,10 @@ const TicketScreen = ({ navigation }) => {
         navigation.openDrawer();
     };
 
+    // useEffect(() => {}, [movie]);
+
     useEffect(() => {
+        // console.log('data', data);
         const fetchTickets = async () => {
             try {
                 const response = await ticketAPI.getAll(
@@ -49,16 +45,12 @@ const TicketScreen = ({ navigation }) => {
                 // console.log('response ticket', response.data);
                 console.log('fetch');
                 response.status ? setData(response.data) : setData([]);
-                console.log('thay đổi');
             } catch (error) {
                 console.log('Error fetching tickets', error);
             }
         };
         fetchTickets();
-    }, [index, movie]);
 
-    useEffect(() => {
-        // console.log('data', data);
         let filterTypeTicket =
             data !== undefined
                 ? data.filter((item) =>
@@ -66,8 +58,8 @@ const TicketScreen = ({ navigation }) => {
                   )
                 : [];
         setMovie(filterTypeTicket);
-        console.log({ filterTypeTicket });
-        // console.log({ movie });
+        // console.log({ filterTypeTicket });
+        // console.log({ data });
         console.log('movie đã đc render');
     }, [clickTab]);
 
@@ -115,16 +107,16 @@ const TicketScreen = ({ navigation }) => {
                     </Pressable>
                 ))}
             </View>
-            {clickTab === 0 ? (
-                movie.length === 0 ? (
-                    <NoShowtimeMessage title={'Chưa có dữ liệu vé của bạn'} />
-                ) : (
-                    <MovieList data={movie} listCase={'TicketUnView'} />
-                )
-            ) : movie.length === 0 ? (
+            {movie.length === 0 ? (
                 <NoShowtimeMessage title={'Chưa có dữ liệu vé của bạn'} />
+            ) : clickTab === 0 ? (
+                <Suspense fallback={<Loading />}>
+                    <MovieList data={movie} listCase={'TicketViewed'} />
+                </Suspense>
             ) : (
-                <MovieList data={movie} listCase={'TicketViewed'} />
+                <Suspense fallback={<Loading />}>
+                    <MovieList data={movie} listCase={'TicketUnView'} />
+                </Suspense>
             )}
         </View>
     );

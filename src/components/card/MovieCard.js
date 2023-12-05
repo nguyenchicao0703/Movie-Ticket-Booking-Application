@@ -10,33 +10,22 @@ import React from 'react';
 import { Colors, Fonts } from '../../constants';
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import billAPI from '../../api/billAPI';
-import { useSelector } from 'react-redux';
-import { usersSelector } from '../../redux/selectors';
 
 const MovieCard = ({ data, listCase }) => {
     const { width, height, fontScale } = useWindowDimensions();
     const fontSize = fontScale * 14;
     const navigation = useNavigation();
 
-    const user = useSelector(usersSelector);
+    var idMovie = data.id_phim;
+    var idTicket = data.id_ve;
+    console.log({ idMovie }, { idTicket });
 
     const handleButtonMovieCard = async () => {
-        var idMovie = data.id_phim;
-        var idTicket = data.id_ve;
-        let idUser = user.users.data.id_user;
-        console.log({ idMovie }, { idTicket });
         if (listCase === 'TicketViewed' || listCase === 'TicketUnView') {
-            try {
-                const response = await billAPI.watchBill(idUser, idTicket);
-                navigation.navigate('Bill', {
-                    id: idMovie,
-                    idTicket,
-                });
-                console.log('Response data watch bill api', response.data);
-            } catch (error) {
-                console.log('Error response watch bill in movie card', error);
-            }
+            navigation.navigate('Bill', {
+                id: idMovie,
+                idTicket,
+            });
         } else {
             navigation.navigate('Detail', {
                 id: idMovie,
@@ -55,9 +44,9 @@ const MovieCard = ({ data, listCase }) => {
                   imageMovie: data.hinhanh,
               })
             : listCase === 'TicketViewed' || listCase === 'TicketUnView'
-            ? navigation.navigate('Detail', {
-                  idTicket: data.id_ve,
-                  id: data.id_phim,
+            ? navigation.navigate('Bill', {
+                  id: idMovie,
+                  idTicket,
               })
             : null;
         // console.log({ listCase });
@@ -138,7 +127,7 @@ const MovieCard = ({ data, listCase }) => {
                                     ? 'Đặt vé'
                                     : listCase === 'TicketViewed' ||
                                       listCase === 'TicketUnView'
-                                    ? 'Chi tiết phim'
+                                    ? 'Chi tiết vé'
                                     : null}
                             </Text>
                         </Pressable>

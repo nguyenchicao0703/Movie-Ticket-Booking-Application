@@ -1,9 +1,8 @@
 import { Text, View, Image, FlatList } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, Suspense } from 'react';
 import { Colors, Fonts, SelectShowTimeImage } from '../constants';
 import {
     Header,
-    SelectShowtime,
     MovieTitle,
     NoShowtimeMessage,
     CalendarCard,
@@ -15,11 +14,12 @@ import { useSelector } from 'react-redux';
 import { datesRemainingSelector } from '../redux/selectors';
 import { format, addDays } from 'date-fns';
 
+const SelectShowtime = React.lazy(() => import('../components/SelectShowtime'));
+
 const ShowtimeMovieScreen = ({ navigation, route }) => {
     const { idMovie, nameMovie } = route.params;
     const [data, setData] = useState([]);
     const [statusGetAPI, setSatusGetAPI] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const [weekSchedule, setWeekSchedule] = useState([]);
 
     let dateSelector = useSelector(datesRemainingSelector);
@@ -53,7 +53,7 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
         // Cập nhật lịch sau mỗi 1 phút
         const interval = setInterval(() => {
             updateWeekSchedule();
-        }, 60000); // 1 phút
+        }, 120000); // 2 phút
 
         return () => {
             clearInterval(interval);
@@ -68,7 +68,6 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                     dateSelector.dates,
                 );
                 // console.log('data showtimes movies', response);
-                setIsLoading(true);
                 response.status ? setData(response.data) : setData([]);
                 setSatusGetAPI(response.status);
             } catch (error) {
@@ -101,7 +100,7 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                 </Text>
                 <FlatList
                     data={weekSchedule}
-                    kextraData={weekSchedule}
+                    extraData={weekSchedule}
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     renderItem={({ item, index }) => (
@@ -116,12 +115,10 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                     )}
                 />
                 <MovieTitle title={nameMovie} />
-                {!isLoading ? (
-                    <Loading />
-                ) : statusGetAPI ? (
+                {statusGetAPI ? (
                     data.map((_data, index) => (
                         <View key={_data.id_rap}>
-                            <View>
+                            <Suspense fallback={<Loading />}>
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -150,7 +147,7 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                                     nameMovie={nameMovie}
                                     nameCinema={_data.ten_rap}
                                 />
-                            </View>
+                            </Suspense>
                         </View>
                     ))
                 ) : (
