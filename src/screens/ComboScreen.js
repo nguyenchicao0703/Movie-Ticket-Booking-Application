@@ -86,6 +86,11 @@ const ComboScreen = ({ navigation, route }) => {
         fetchData();
     }, []);
 
+    const formatCurrency = (amount) => {
+        const formatter = new Intl.NumberFormat('vi-VN');
+        return formatter.format(amount);
+    };
+    const formattedPayment = formatCurrency(dataBooking.totalPayment);
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
             <Header
@@ -104,15 +109,12 @@ const ComboScreen = ({ navigation, route }) => {
                     <Loading />
                 </View>
             ) : (
-                <ComboList
-                    data={data}
-                    totalPayment={dataBooking.totalPayment}
-                />
+                <ComboList data={data} totalPayment={formattedPayment} />
             )}
             <InformationBottom
                 nameMovie={dataBooking.movieName}
                 seat={dataBooking.seatsIndex}
-                totalPayment={dataBooking.totalPayment}
+                totalPayment={formattedPayment}
                 onPress={navigationComboToPayment}
             />
         </SafeAreaView>

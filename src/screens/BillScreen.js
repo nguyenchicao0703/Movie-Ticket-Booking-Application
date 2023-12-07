@@ -31,16 +31,17 @@ const BillScreen = ({ navigation, route }) => {
     const discountData = useSelector(discountSelector);
     const discountPrice = discountData.discountPayment;
     const userData = useSelector(usersSelector);
-    const idUser = parseInt(userData.users.data.id_user);
+    const idUser = Number(userData.users.data.id_user);
     console.log(idUser);
     console.log(idTicket);
+    const idVe = Number(idTicket)
     const handleButtonBack = () => {
         navigation.navigate('Home');
     };
     React.useEffect(() => {
         try {
             const getBill = async () => {
-                const responseBill = await billAPI.watchBill(idUser, idTicket);
+                const responseBill = await billAPI.watchBill(idUser, idVe);
 
                 const resBill = responseBill.data;
                 console.log(responseBill);
@@ -145,7 +146,7 @@ const BillScreen = ({ navigation, route }) => {
                             </Text>
                         </View>
                     </View>
-                    {/* <Image style={styles.qr} source={LineBill[1].image} /> */}
+                    <Image style={styles.qr} source={LineBill[1].image} />
                     {/* <QRCode value={str} /> */}
                 </View>
             </View>
