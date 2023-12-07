@@ -68,7 +68,11 @@ const DiscountScreen = ({ navigation }) => {
     };
     const dataDiscount = data;
     const [modalVisible, setModalVisible] = useState(false);
-
+    const formatCurrency = (amount) => {
+        const formatter = new Intl.NumberFormat('vi-VN');
+        return formatter.format(amount);
+    };
+    const formattedDiscountPrice = formatCurrency(discountPrice);
     return (
         <SafeAreaView style={styles.container}>
             <Header
@@ -174,7 +178,7 @@ const DiscountScreen = ({ navigation }) => {
                                                     ]}
                                                     numberOfLines={1}
                                                 >
-                                                    {discountPrice} đ
+                                                    {formattedDiscountPrice} đ
                                                 </Text>
                                             </View>
                                         </View>
@@ -233,7 +237,7 @@ const DiscountScreen = ({ navigation }) => {
                                                         },
                                                     ]}
                                                 >
-                                                    Xác nhận chọn{' '}
+                                                    Xác nhận{' '}
                                                 </Text>
                                             </Pressable>
                                         </View>
