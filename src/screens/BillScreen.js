@@ -4,11 +4,10 @@ import { LineBill } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import { Header } from '../components';
 import { useSelector } from 'react-redux';
-import { bookingSelector, usersSelector } from '../redux/selectors';
+import { bookingSelector } from '../redux/selectors';
 import QRCode from 'react-native-qrcode-svg';
 
 import BillAPI from '../api/apiCreateBill';
-import billAPI from '../api/billAPI';
 
 const BillScreen = ({ navigation, route }) => {
     const handleButtonMenu = () => {

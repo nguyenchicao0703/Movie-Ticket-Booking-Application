@@ -5,12 +5,14 @@ import {
     useWindowDimensions,
     StatusBar,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Header, Loading, MovieList, NoShowtimeMessage } from '../components';
+import React, { useEffect, useState, Suspense } from 'react';
+import { Header, Loading, NoShowtimeMessage } from '../components';
 import { Colors, Fonts } from '../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { moviesRemainingSelector } from '../redux/selectors';
 import { fetchMovies } from '../redux/slice/moviesSlice';
+
+const MovieList = React.lazy(() => import('../components/list/MovieList'));
 
 const TopTabsCategory = [
     { id: 1, category: 'Đang chiếu' },
@@ -19,6 +21,8 @@ const TopTabsCategory = [
 
 const moviesPresent = 1;
 const movieFuture = 2;
+
+let listCase;
 
 const MovieScreen = ({ navigation }) => {
     const { width, fontScale } = useWindowDimensions();
@@ -35,6 +39,9 @@ const MovieScreen = ({ navigation }) => {
                 : item.loaikc === movieFuture,
         );
         setMovie(filterTypePremiere);
+        clickTab === 0
+            ? (listCase = 'MoviePresent')
+            : (listCase = 'MovieFuture');
     }, [clickTab]);
 
     useEffect(() => {
@@ -87,17 +94,12 @@ const MovieScreen = ({ navigation }) => {
                     </Pressable>
                 ))}
             </View>
-            {/* <MovieList data={filterTypePremiere} listCase={listCase} /> */}
-            {clickTab === 0 ? (
-                movie.length === 0 ? (
-                    <NoShowtimeMessage title={'Chưa có dữ liệu phim'} />
-                ) : (
-                    <MovieList data={movie} listCase={'MoviePresent'} />
-                )
-            ) : movie.length === 0 ? (
+            {movie.length === 0 ? (
                 <NoShowtimeMessage title={'Chưa có dữ liệu phim'} />
             ) : (
-                <MovieList data={movie} listCase={'MovieFuture'} />
+                <Suspense fallback={<Loading />}>
+                    <MovieList data={movie} listCase={listCase} />
+                </Suspense>
             )}
         </View>
     );

@@ -11,7 +11,8 @@ const HomeList = ({ data, movieCase }) => {
                 marginTop: 8,
             }}
             data={data}
-            extraData={(item) => item.id}
+            extraData={(item) => item.id_phim}
+            keyExtractor={(item, index) => index.toString()}
             horizontal={true}
             snapToInterval={width * 0.6 + 15}
             decelerationRate={0}

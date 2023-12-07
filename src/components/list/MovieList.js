@@ -6,7 +6,8 @@ const MovieList = ({ data, listCase }) => {
     return (
         <FlatList
             data={data}
-            extraData={(item) => item.id}
+            extraData={(item) => item.id_phim}
+            keyExtractor={(item, index) => index.toString()}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => (
                 <MovieCard data={item} listCase={listCase} />
