@@ -347,7 +347,11 @@ const SeatScreen = ({ navigation, route }) => {
 
     // seat (string)
     // A, U, R, _, /
-
+    const formatCurrency = (amount) => {
+        const formatter = new Intl.NumberFormat('vi-VN');
+        return formatter.format(amount);
+    };
+    const formattedTotal = formatCurrency(totalPrice);
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
             <Header
@@ -485,7 +489,7 @@ const SeatScreen = ({ navigation, route }) => {
             <InformationBottom
                 nameMovie={nameMovie}
                 seat={storageSeats}
-                totalPayment={totalPrice}
+                totalPayment={formattedTotal}
                 onPress={storageSeats !== '' ? navigationSeatToCombo : null}
                 // onPress={navigationSeatToCombo}
             />
