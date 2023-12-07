@@ -11,7 +11,7 @@ import {
     ToastAndroid,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Colors, Fonts, Images } from '../constants';
+import { Colors, Fonts, Images, LineBill } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthAccountButton, BackButton, Input, TextTitle } from '../components';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -28,7 +28,21 @@ import { usersSelector } from '../redux/selectors';
 import { da, tr } from 'date-fns/locale';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
-
+const Line = () => {
+    return (
+        <View
+            style={{
+                width: '95%',
+                height: 1,
+                backgroundColor: Colors.LIGHT_GRAY,
+                alignSelf: 'center',
+                marginTop: 1,
+                opacity: 0.35,
+                flex: 1,
+            }}
+        />
+    );
+};
 const LoginScreen = () => {
     const [userName, setUserName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -302,37 +316,62 @@ const LoginScreen = () => {
                                 <Text style={styles.errorText}>{error}</Text>
                             )}
                         </View>
-                        <AuthAccountButton
-                            onPress={handleLoginWithPhoneNum}
-                            text={'Đăng nhập'}
-                        />
-                        <Pressable
+
+                        <View
                             style={{
-                                marginTop: 20,
-                                backgroundColor: Colors.DEFAULT_WHITE,
-                                width: '95%',
-                                borderRadius: 20,
-                                height: height * 0.06,
-                                justifyContent: 'center',
                                 alignItems: 'center',
-                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                width: '100%',
                             }}
-                            onPress={() => handleGoogleSignIn()}
                         >
-                            <Image
-                                source={require('../assets/Login/google.png')}
+                            <AuthAccountButton
+                                onPress={handleLoginWithPhoneNum}
+                                text={'Đăng nhập'}
                             />
-                            <Text
-                                style={{
-                                    color: Colors.DEFAULT_BLACK,
-                                    fontSize: height * 0.02,
-                                    fontFamily: Fonts.Medium,
-                                    paddingLeft: 10,
-                                }}
+
+                            <View
+                                style={{ flexDirection: 'row', marginTop: 20 }}
                             >
-                                Sign in with Google
-                            </Text>
-                        </Pressable>
+                                <Line />
+                                <Text
+                                    style={[
+                                        styles.textLine,
+                                        { fontSize: height * 0.018, flex: 0.3 },
+                                    ]}
+                                >
+                                    hoặc
+                                </Text>
+                                <Line />
+                            </View>
+
+                            <Pressable
+                                style={{
+                                    marginTop: 20,
+                                    backgroundColor: Colors.DEFAULT_WHITE,
+                                    width: '95%',
+                                    borderRadius: 20,
+                                    height: height * 0.06,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    flexDirection: 'row',
+                                }}
+                                onPress={() => handleGoogleSignIn()}
+                            >
+                                <Image
+                                    source={require('../assets/Login/google.png')}
+                                />
+                                <Text
+                                    style={{
+                                        color: Colors.DEFAULT_BLACK,
+                                        fontSize: height * 0.02,
+                                        fontFamily: Fonts.Medium,
+                                        paddingLeft: 10,
+                                    }}
+                                >
+                                    Sign in with Google
+                                </Text>
+                            </Pressable>
+                        </View>
 
                         <View style={styles.groupLine}>
                             <Text
