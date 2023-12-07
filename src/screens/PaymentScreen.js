@@ -59,14 +59,14 @@ const PaymentScreen = ({ navigation, route }) => {
     }
     const idShowtimes = dataChairs.idShowtime;
     console.log('idShowtimes', Number(idShowtimes));
-    let idCombo;
-    let quality;
-    for (let i = 0; i < response.data.combo.length; i++) {
-        idCombo = response.data.combo[i].id_combo;
-        quality = response.data.combo[i].soluong;
-    }
+    // let idCombo;
+    // let quality;
+    // for (let i = 0; i < response.data.combo.length; i++) {
+    //     idCombo = response.data.combo[i].id_combo;
+    //     quality = response.data.combo[i].soluong;
+    // }
     console.log('=======================');
-    console.log(idCombo, quality);
+    // console.log(idCombo, quality);
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -107,21 +107,21 @@ const PaymentScreen = ({ navigation, route }) => {
         bookingData.combo,
         discountPrice,
     ];
-    const postData = {
-        id_user: parseInt(idUsersSelector.users.data.id_user),
-        id_suat: parseInt(response.data.id_suatchieu),
-        id_km: discountId,
-        tongtien: response.data.tongbill,
-        soghe: bookingData.seatsIndex,
-        listcombo: [{ id: parseInt(idCombo), soluong: parseInt(quality) }],
-        // id_user: 69,
-        // id_suat: 44,
-        // id_km: 1,
-        // tongtien: 60000,
-        // soghe: 'D12',
-        // listcombo: null,
-    };
-    console.log(postData);
+    // const postData = {
+    //     id_user: parseInt(idUsersSelector.users.data.id_user),
+    //     id_suat: parseInt(response.data.id_suatchieu),
+    //     id_km: discountId,
+    //     tongtien: response.data.tongbill,
+    //     soghe: bookingData.seatsIndex,
+    //     listcombo: [{ id: parseInt(idCombo), soluong: parseInt(quality) }],
+    //     // id_user: 69,
+    //     // id_suat: 44,
+    //     // id_km: 1,
+    //     // tongtien: 60000,
+    //     // soghe: 'D12',
+    //     // listcombo: null,
+    // };
+    // console.log(postData);
     // console.log(token);
     // console.log(itemBK);
 
@@ -354,14 +354,14 @@ const PaymentScreen = ({ navigation, route }) => {
             if (resJson.return_code == 1) {
                 // Alert.alert('Thanh toán thành công');
                 try {
-                    const response = await BillAPI.postBill(
-                        postData.id_suat,
-                        postData.id_km,
-                        postData.id_user,
-                        postData.soghe,
-                        postData.tongtien,
-                        postData.listcombo,
-                    );
+                    // const response = await BillAPI.postBill(
+                    //     postData.id_suat,
+                    //     postData.id_km,
+                    //     postData.id_user,
+                    //     postData.soghe,
+                    //     postData.tongtien,
+                    //     postData.listcombo,
+                    // );
                     console.log(response);
                     socket.emit(
                         'datghe',
@@ -379,7 +379,7 @@ const PaymentScreen = ({ navigation, route }) => {
                 }
 
                 <Loading />;
-                navigation.navigate('Bill', { discountPrice, postData });
+                navigation.navigate('Bill', { discountPrice });
             } else {
                 // Alert.alert('Thanh toán không thành công');
             }
