@@ -49,7 +49,7 @@ const PaymentScreen = ({ navigation, route }) => {
     const { response } = route.params;
 
     const resCombo = response.data;
-    console.log(response);
+    console.log(response.data.combo);
     const idUsersSelector = useSelector(usersSelector);
     const dataChairs = useSelector(chairsSelector);
     let indexGhe = null;
@@ -59,12 +59,15 @@ const PaymentScreen = ({ navigation, route }) => {
     }
     const idShowtimes = dataChairs.idShowtime;
     console.log('idShowtimes', Number(idShowtimes));
-    // let idCombo;
-    // let quality;
-    // for (let i = 0; i < response.data.combo.length; i++) {
-    //     idCombo = response.data.combo[i].id_combo;
-    //     quality = response.data.combo[i].soluong;
-    // }
+    let idCombo;
+    let quality;
+    try {
+        for (let i in response.data.combo) {
+            idCombo = resCombo.combo[i].id_combo;
+            quality = resCombo.combo[i].soluong;
+        }
+    } catch (error) {}
+
     console.log('=======================');
     // console.log(idCombo, quality);
     const handleButtonMenu = () => {
@@ -107,21 +110,15 @@ const PaymentScreen = ({ navigation, route }) => {
         bookingData.combo,
         discountPrice,
     ];
-    // const postData = {
-    //     id_user: parseInt(idUsersSelector.users.data.id_user),
-    //     id_suat: parseInt(response.data.id_suatchieu),
-    //     id_km: discountId,
-    //     tongtien: response.data.tongbill,
-    //     soghe: bookingData.seatsIndex,
-    //     listcombo: [{ id: parseInt(idCombo), soluong: parseInt(quality) }],
-    //     // id_user: 69,
-    //     // id_suat: 44,
-    //     // id_km: 1,
-    //     // tongtien: 60000,
-    //     // soghe: 'D12',
-    //     // listcombo: null,
-    // };
-    // console.log(postData);
+    const postData = {
+        id_user: parseInt(idUsersSelector.users.data.id_user),
+        id_suat: parseInt(response.data.id_suatchieu),
+        id_km: Number(discountId),
+        tongtien: response.data.tongbill,
+        soghe: bookingData.seatsIndex,
+        listcombo: [{ id: parseInt(idCombo), soluong: parseInt(quality) }],
+    };
+    console.log(postData);
     // console.log(token);
     // console.log(itemBK);
 
@@ -328,7 +325,6 @@ const PaymentScreen = ({ navigation, route }) => {
         const dataCB = {
             app_id: config.app_id,
             app_trans_id: dataID,
-            // mac: '537e156527b4933404486e9283569bfb3d6752c89d3ea7e4d6b8a5c551ea0a32',
             mac: CryptoJS.HmacSHA256(hmacInput, config.key1).toString(),
         };
         // console.log(dataCB);
@@ -354,14 +350,14 @@ const PaymentScreen = ({ navigation, route }) => {
             if (resJson.return_code == 1) {
                 // Alert.alert('Thanh toán thành công');
                 try {
-                    // const response = await BillAPI.postBill(
-                    //     postData.id_suat,
-                    //     postData.id_km,
-                    //     postData.id_user,
-                    //     postData.soghe,
-                    //     postData.tongtien,
-                    //     postData.listcombo,
-                    // );
+                    const response = await BillAPI.postBill(
+                        postData.id_user,
+                        postData.id_suat,
+                        postData.id_km,
+                        postData.tongtien,
+                        postData.soghe,
+                        postData.listcombo,
+                    );
                     console.log(response);
                     socket.emit(
                         'datghe',
@@ -387,6 +383,17 @@ const PaymentScreen = ({ navigation, route }) => {
             console.error('Error creating order:', e);
         }
     };
+    const formatCurrency = (amount) => {
+        const formatter = new Intl.NumberFormat('vi-VN');
+        return formatter.format(amount);
+    };
+
+    // Sử dụng hàm formatCurrency với số tiền cần format
+    const formattedPaymentTotal = formatCurrency(bookingData.totalPayment);
+    const formattedDiscountPrice = formatCurrency(discountPrice);
+    const formattedPayment = formatCurrency(
+        bookingData.totalPayment - discountPrice,
+    );
     return (
         <View
             style={{
@@ -525,17 +532,17 @@ const PaymentScreen = ({ navigation, route }) => {
                 <PaymentTitleBar title={'Tổng kết'} />
                 <PaymentContentBar
                     content={'Giá vé bao gồm F&B'}
-                    number={bookingData.totalPayment}
+                    number={formattedPaymentTotal}
                     lineBoolean
                 />
                 <PaymentContentBar
                     content={'Số tiền được giảm giá'}
-                    number={discountPrice}
+                    number={formattedDiscountPrice}
                     lineBoolean
                 />
                 <PaymentContentBar
                     content={'Tổng tiền'}
-                    number={bookingData.totalPayment - discountPrice}
+                    number={formattedPayment}
                 />
                 <PaymentTitleBar title={'Thanh toán'} />
                 {/* ZaloPay */}
@@ -578,6 +585,7 @@ const PaymentScreen = ({ navigation, route }) => {
                     <AuthAccountButton
                         onPress={() => /**/ {
                             payOrder();
+                            // funcTest();
                             // callBack();
                         }}
                         text={'Thanh toán'}

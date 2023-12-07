@@ -3,20 +3,33 @@ import React, { useState } from 'react';
 import { LineBill } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import { Header } from '../components';
-import { useSelector } from 'react-redux';
-import { bookingSelector } from '../redux/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    bookingSelector,
+    discountSelector,
+    usersSelector,
+} from '../redux/selectors';
 import QRCode from 'react-native-qrcode-svg';
-
-import BillAPI from '../api/apiCreateBill';
+import billAPI from '../api/billAPI';
+import {
+    setMovieName,
+    setCinemaName,
+    setDateShowtime,
+    setShowtime,
+    setTotalPayment,
+    setSeatsIndex,
+    setCombo,
+} from '../redux/slice/bookingSlice';
 
 const BillScreen = ({ navigation, route }) => {
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
-    const { discountPrice, zpID, postData, idTicket } = route.params;
-
+    const { zpID, postData, idTicket } = route.params;
+    const dispatch = useDispatch();
     const [response, setResponse] = useState([]);
-
+    const discountData = useSelector(discountSelector);
+    const discountPrice = discountData.discountPayment;
     const userData = useSelector(usersSelector);
     const idUser = parseInt(userData.users.data.id_user);
     console.log(idUser);
@@ -25,19 +38,39 @@ const BillScreen = ({ navigation, route }) => {
         navigation.navigate('Home');
     };
     React.useEffect(() => {
-        const getBill = async () => {
-            try {
+        try {
+            const getBill = async () => {
                 const responseBill = await billAPI.watchBill(idUser, idTicket);
 
-                // const resBill = responseBill.data;
+                const resBill = responseBill.data;
                 console.log(responseBill);
-            } catch (error) {}
-        };
-        getBill();
+                if (responseBill.status == true) {
+                    dispatch(setMovieName(resBill.ten_phim)),
+                        dispatch(setCinemaName(resBill.ten_rap)),
+                        dispatch(setDateShowtime(resBill.ngaychieu)),
+                        dispatch(setShowtime(resBill.giochieu)),
+                        dispatch(setSeatsIndex(resBill.ghe)),
+                        dispatch(setTotalPayment(resBill.tongtien)),
+                        dispatch(setCombo(resBill.combo));
+                }
+            };
+            getBill();
+        } catch (error) {}
     }, []);
 
     console.log(response.ghe);
     const dataBooking = useSelector(bookingSelector);
+    const formatCurrency = (amount) => {
+        const formatter = new Intl.NumberFormat('vi-VN');
+        return formatter.format(amount);
+    };
+
+    // Sử dụng hàm formatCurrency với số tiền cần format
+    const formattedPaymentTotal = formatCurrency(dataBooking.totalPayment);
+    const formattedDiscountPrice = formatCurrency(discountPrice);
+    const formattedPayment = formatCurrency(
+        dataBooking.totalPayment - discountPrice,
+    );
     // const [discountPayment, setDiscountPayment] = React.useState(0);
     return (
         <View style={styles.container}>
@@ -89,18 +122,18 @@ const BillScreen = ({ navigation, route }) => {
                                 Giá vé bao gồm F&B:
                             </Text>
                             <Text style={styles.txt}>
-                                {dataBooking.totalPayment} đ
+                                {formattedPaymentTotal} đ
                             </Text>
                         </View>
                         <View style={styles.bodyBelow1}>
                             <Text style={styles.title}>Số tiền được giảm:</Text>
-                            <Text style={styles.txt}>{discountPrice} đ</Text>
+                            <Text style={styles.txt}>
+                                {formattedDiscountPrice} đ
+                            </Text>
                         </View>
                         <View style={styles.bodyBelow1}>
                             <Text style={styles.title}>Tổng tiền:</Text>
-                            <Text style={styles.txt}>
-                                {dataBooking.totalPayment - discountPrice} đ
-                            </Text>
+                            <Text style={styles.txt}>{formattedPayment} đ</Text>
                         </View>
                         <View style={styles.bodyBelow2}>
                             <Text style={styles.txt2}>
