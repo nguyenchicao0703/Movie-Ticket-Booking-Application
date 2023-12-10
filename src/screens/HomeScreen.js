@@ -219,7 +219,7 @@ const HomeScreen = ({ navigation }) => {
                             flexDirection: 'row',
                         }}
                     >
-                        <Pressable
+                        {/* <Pressable
                             style={[
                                 styles.headerRight,
                                 { width: 32, height: 22 },
@@ -227,7 +227,7 @@ const HomeScreen = ({ navigation }) => {
                             onPress={() => stackScreen('Ticket')}
                         >
                             <Image source={HeaderImage[2].image} />
-                        </Pressable>
+                        </Pressable> */}
                         <Pressable
                             style={[
                                 styles.headerRight,

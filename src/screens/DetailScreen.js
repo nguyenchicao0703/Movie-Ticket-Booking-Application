@@ -64,8 +64,8 @@ const DetailScreen = ({ navigation, route }) => {
                 <Image
                     key={i}
                     style={{
-                        width: width * 0.06,
-                        height: height * 0.03,
+                        width: width * 0.055,
+                        height: height * 0.028,
                     }}
                     source={DetailMovieImage[1].image}
                 />,
@@ -584,10 +584,11 @@ const styles = StyleSheet.create({
     },
     boxButton: {
         height: '6%',
+        width: '95%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 20,
+        marginBottom: 10,
     },
     button1: {
         borderRadius: 30,
@@ -611,7 +612,6 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'space-around',
-
         width: '90%',
     },
     button: {

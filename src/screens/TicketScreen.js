@@ -22,33 +22,30 @@ const TicketScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
     const [movie, setMovie] = useState([]);
 
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const idUser = useSelector(usersSelector);
-    useEffect(() => {
-        // console.log('data', data);
-        // const fetchTickets = async () => {
-        //     try {
-        //         const response = await ticketAPI.getAll(
-        //             idUser.users.data.id_user,
-        //         );
-        //         // console.log('response ticket', response.data);
-        //         console.log('fetch');
-        //         response.status ? setData(response.data) : setData([]);
-        //     } catch (error) {
-        //         console.log('Error fetching tickets', error);
-        //     }
-        // };
-        // fetchTickets();
-        console.log('fetch');
-        dispatch(fetchTicket(idUser.users.data.id_user));
-        console.log('eclaalal', { tickets });
-    }, []);
-    const tickets = useSelector((state) => state.tickets.tickets);
-    console.log({ tickets });
 
     useEffect(() => {
-        console.log('usseeft', { tickets });
-        const filterTypeTicket = tickets.filter((item) =>
+        const fetchTickets = async () => {
+            try {
+                const response = await ticketAPI.getAll(
+                    idUser.users.data.id_user,
+                );
+                // console.log('response ticket', response.data);
+                console.log('fetch');
+                response.status ? setData(response.data) : setData([]);
+            } catch (error) {
+                console.log('Error fetching tickets', error);
+            }
+        };
+        fetchTickets();
+        console.log('fetch');
+        // dispatch(fetchTicket(idUser.users.data.id_user));
+    }, []);
+    // const tickets = useSelector((state) => state.tickets.tickets);
+
+    useEffect(() => {
+        const filterTypeTicket = data.filter((item) =>
             clickTab === 0 ? item.loaikc === 1 : item.loaikc === 2,
         );
         setMovie(filterTypeTicket);
@@ -58,7 +55,7 @@ const TicketScreen = ({ navigation }) => {
         // console.log({ filterTypeTicket });
         // console.log({ data });
         console.log('movie đã đc render');
-    }, [clickTab]);
+    }, [data, clickTab]);
 
     const handleClickTopTab = (index) => {
         setClickTab(index);
@@ -116,17 +113,6 @@ const TicketScreen = ({ navigation }) => {
                     </Pressable>
                 ))}
             </View>
-            {/* {movie.length === 0 ? (
-                <NoShowtimeMessage title={'Chưa có dữ liệu vé của bạn'} />
-            ) : clickTab === 0 ? (
-                <Suspense fallback={<Loading />}>
-                    <MovieList data={movie} listCase={'TicketViewed'} />
-                </Suspense>
-            ) : (
-                <Suspense fallback={<Loading />}>
-                    <MovieList data={movie} listCase={'TicketUnView'} />
-                </Suspense>
-            )} */}
             {movie.length === 0 ? (
                 <NoShowtimeMessage title={'Chưa có dữ liệu phim'} />
             ) : (
