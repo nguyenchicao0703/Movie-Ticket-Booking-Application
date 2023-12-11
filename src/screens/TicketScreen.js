@@ -24,6 +24,13 @@ const TicketScreen = ({ navigation }) => {
 
     const dispatch = useDispatch();
     const idUser = useSelector(usersSelector);
+    const [id_user, setId_User] = useState(
+        idUser.users.data ? idUser.users.data.is_user : '',
+    );
+    useEffect(() => {
+        setId_User(idUser.users.data ? idUser.users.data.is_user : '');
+    }, [idUser.users.data]);
+
     useEffect(() => {
         // console.log('data', data);
         // const fetchTickets = async () => {

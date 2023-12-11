@@ -164,7 +164,10 @@ const DetailScreen = ({ navigation, route }) => {
                 const status = response.status;
                 if (status) {
                     console.log('đánh giá thành công', response);
-
+                    ToastAndroid.show(
+                        'Đánh giá thành công',
+                        ToastAndroid.SHORT,
+                    );
                     handleCloseModal();
                 } else {
                     console.log('đánh giá thất bại :', status);

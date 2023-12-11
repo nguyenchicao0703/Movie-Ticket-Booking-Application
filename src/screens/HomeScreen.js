@@ -62,7 +62,33 @@ const HomeScreen = ({ navigation }) => {
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
-
+    const handleItemClick = (tab) => {
+        // Xử lý sự kiện click cho từng item dựa trên giá trị 'tab'
+        if (tab === 'Ticket') {
+            if (isLogin) {
+                console.log('thành công');
+                navigation.navigate('Ticket');
+            } else {
+                console.log('Thất bại, bạn cần đăg nhập để tiếp tục');
+                setModalVisible(true);
+            }
+            // Xử lý khi người dùng click vào tab 'home'
+        } else if (tab === 'UpdateProfile') {
+            if (isLogin) {
+                console.log('thành công');
+                stackScreen('UpdateProfile');
+            } else {
+                console.log('Thất bại, bạn cần đăg nhập để tiếp tục');
+                setModalVisible(true);
+            }
+            // Xử lý khi người dùng click vào tab 'profile'
+        } else if (tab === 'Cinema') {
+            navigation.navigate('Cinema');
+            // Xử lý cho các tab khác (nếu cần)
+        } else if (tab === 'Movie') {
+            navigation.navigate('Movie');
+        }
+    };
     const dataMoviePresent = movies.movies.filter((item) => item.loaikc === 1);
     const dataMovieSpecial = movies.movies.filter((item) => item.loaikc === 2);
 
@@ -295,7 +321,7 @@ const HomeScreen = ({ navigation }) => {
                             alignSelf: 'center',
                             marginTop: 5,
                         }}
-                        onPress={() => stackScreen(value.tab)}
+                        onPress={() => handleItemClick(value.tab)}
                     >
                         <Image
                             style={{
