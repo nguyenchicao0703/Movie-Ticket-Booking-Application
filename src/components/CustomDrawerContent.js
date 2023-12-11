@@ -6,6 +6,8 @@ import {
     useWindowDimensions,
     Pressable,
     ToastAndroid,
+    StyleSheet,
+    Modal,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Colors, DrawerImage, Fonts } from '../constants';
@@ -71,6 +73,8 @@ const CustomDrawerContent = ({ navigation }) => {
     const [isLogin, setIsLogin] = useState(
         dataUser.users.data ? dataUser.users.data.islogin : '',
     );
+    const [modalVisible, setModalVisible] = useState(false);
+
     const [avatar, setAvatar] = useState(
         'https://tse4.mm.bing.net/th?id=OIP.kQyrx9VbuWXWxCVxoreXOgHaHN&pid=Api&P=0&h=220',
     );
@@ -106,11 +110,109 @@ const CustomDrawerContent = ({ navigation }) => {
             console.log('Sign out error:', error.message);
         }
     };
+    const handleCheckIslogin = () => {
+        if (isLogin) {
+            console.log('thành công');
+            navigation.navigate('Ticket');
+        } else {
+            console.log('Thất bại, bạn cần đăg nhập để tiếp tục');
+            setModalVisible(true);
+        }
+    };
+    const handleLogin = () => {
+        if (isLogin) {
+            ToastAndroid.show('Bạn đã đăng nhập rồi !');
+        } else {
+            console.log(isLogin);
+            setTimeout(() => {
+                navigation.navigate('Login');
+            });
+
+            setModalVisible(false);
+        }
+    };
+    const handleCancel = () => {
+        setModalVisible(false);
+    };
     return (
         <ImageBackground
             style={{ flex: 1, backgroundColor: Colors.DARK_DRAWER }}
             source={DrawerImage[0].image}
         >
+            <Modal transparent={true} visible={modalVisible}>
+                <View style={styles.centeredView}>
+                    <View style={[styles.modalView, { height: height * 0.18 }]}>
+                        <Text
+                            style={[
+                                styles.modalTitle,
+                                { fontSize: height * 0.024 },
+                            ]}
+                        >
+                            Thông báo
+                        </Text>
+                        <Text
+                            style={[
+                                styles.modalText,
+                                { fontSize: height * 0.02 },
+                            ]}
+                        >
+                            Bạn chưa đăng nhập !
+                        </Text>
+                        <View
+                            style={{
+                                width: '90%',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Pressable
+                                onPress={handleCancel}
+                                style={[
+                                    styles.buttonClose,
+
+                                    ,
+                                    {
+                                        width: width * 0.51,
+                                        height: height * 0.06,
+                                    },
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.textStyle,
+                                        {
+                                            fontSize: height * 0.02,
+                                            color: Colors.DARK_RED,
+                                        },
+                                    ]}
+                                >
+                                    Hủy
+                                </Text>
+                            </Pressable>
+                            <Pressable
+                                onPress={handleLogin}
+                                style={[
+                                    styles.button,
+                                    {
+                                        width: width * 0.51,
+                                        height: height * 0.06,
+                                    },
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.textStyle,
+                                        { fontSize: height * 0.02 },
+                                    ]}
+                                >
+                                    Đăng nhập
+                                </Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
             <Image
                 source={{ uri: avatar }}
                 style={{
@@ -142,12 +244,39 @@ const CustomDrawerContent = ({ navigation }) => {
                 router={'Home'}
             />
             <Line />
-            <Item
-                imageIndex={4}
-                title={'Vé của tôi'}
-                navigation={navigation}
-                router={'Ticket'}
-            />
+            <Pressable
+                style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: height * 0.1,
+                }}
+                onPress={() => handleCheckIslogin()}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginLeft: -80,
+                    }}
+                >
+                    <Image
+                        style={{ marginLeft: -14 }}
+                        source={DrawerImage[4].image}
+                    />
+                    <Text
+                        style={{
+                            fontSize: fontScale * 16,
+                            color: Colors.DEFAULT_WHITE,
+                            fontFamily: Fonts.Regular,
+                            marginLeft: 16,
+                        }}
+                    >
+                        Vé của tôi
+                    </Text>
+                </View>
+            </Pressable>
             <Line />
             <Item
                 imageIndex={1}
@@ -202,3 +331,69 @@ const CustomDrawerContent = ({ navigation }) => {
 };
 
 export default CustomDrawerContent;
+
+const styles = StyleSheet.create({
+    headerRight: {
+        alignSelf: 'center',
+    },
+    title: {
+        color: Colors.DEFAULT_WHITE,
+        fontFamily: Fonts.Medium,
+        marginLeft: 15,
+    },
+    list: {
+        marginTop: 8,
+    },
+    modalView: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '90%',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    button: {
+        borderRadius: 20,
+        elevation: 2,
+        flex: 1,
+        backgroundColor: Colors.DARK_RED,
+        width: '50%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 8,
+    },
+    buttonClose: {
+        borderRadius: 20,
+        borderColor: Colors.DARK_RED,
+        borderWidth: 1,
+        elevation: 2,
+        flex: 1,
+        backgroundColor: Colors.DEFAULT_WHITE,
+        width: '50%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 0,
+        fontFamily: Fonts.SemiBold,
+    },
+    modalText: {
+        textAlign: 'center',
+        color: Colors.DARK_GRAY,
+        fontFamily: Fonts.Light,
+        marginTop: 0,
+    },
+    textStyle: {
+        color: Colors.DEFAULT_WHITE,
+        textAlign: 'center',
+        fontFamily: Fonts.SemiBold,
+        fontSize: 18,
+    },
+    modalTitle: {
+        textAlign: 'center',
+        color: Colors.DEFAULT_BLACK,
+        fontFamily: Fonts.SemiBold,
+    },
+});
