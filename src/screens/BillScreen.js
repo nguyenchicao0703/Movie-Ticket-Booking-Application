@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { LineBill } from '../constants';
 import { Colors, Fonts } from '../constants/index';
@@ -34,7 +34,7 @@ const BillScreen = ({ navigation, route }) => {
     const idUser = Number(userData.users.data.id_user);
     console.log(idUser);
     console.log(idTicket);
-    const idVe = Number(idTicket)
+    const idVe = Number(idTicket);
     const handleButtonBack = () => {
         navigation.navigate('Home');
     };
@@ -82,35 +82,71 @@ const BillScreen = ({ navigation, route }) => {
             />
             <View style={styles.body}>
                 <View style={styles.bodyAbove}>
-                    <Text
+                    <View
                         style={{
-                            fontFamily: Fonts.Bold,
-                            textTransform: 'uppercase',
-                            color: Colors.DEFAULT_WHITE,
-                            fontSize: 22,
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                            alignItems: 'center',
                         }}
                     >
-                        {dataBooking.movieName}
-                    </Text>
+                        <Text
+                            style={{
+                                fontFamily: Fonts.Bold,
+                                textTransform: 'uppercase',
+                                color: Colors.DEFAULT_WHITE,
+                                fontSize: 22,
+                            }}
+                        >
+                            Phim bố già và những anh em chí cốt
+                        </Text>
+                        <Pressable onPress={() => console.log('Oke')}>
+                            <Text
+                                style={{
+                                    fontFamily: Fonts.Light,
+                                    color: Colors.LIGHT_GRAY,
+                                    textDecorationLine: 'underline',
+                                    fontStyle: 'italic',
+                                    marginLeft: 5,
+                                }}
+                            >
+                                {' '}
+                                xem chi tiết phim{' '}
+                            </Text>
+                        </Pressable>
+                    </View>
+
                     <View style={styles.bodyAbove1}>
-                        <Text style={styles.txt}>
-                            Ngày chiếu: {dataBooking.date}
-                        </Text>
-                        <Text style={styles.txt}>
-                            Giờ chiếu: {dataBooking.showtime}
-                        </Text>
+                        <Text style={styles.txt}>07 tháng 10, 2023</Text>
+                        <Text style={styles.txt}>15:00 ~ 19:00</Text>
                     </View>
                     <View style={styles.bodyAbove2}>
                         <Text style={styles.title}>Rạp</Text>
-                        <Text style={styles.txt}>{dataBooking.cinemaName}</Text>
+                        <Text style={styles.txt}>MTB Gò Vấp</Text>
                     </View>
                     <View style={styles.bodyAbove3}>
-                        <View style={styles.bodyAbove3Left}>
-                            <Text style={styles.title}>Ghế</Text>
-                            <Text style={styles.txt}>
-                                {dataBooking.seatsIndex}
-                            </Text>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                            }}
+                        >
+                            <View style={styles.bodyAbove3Left}>
+                                <Text style={styles.title}>Ghế</Text>
+                                <Text style={styles.txt}>H18, H19</Text>
+                            </View>
+
+                            <View style={styles.bodyAbove3Left}>
+                                <Text style={styles.title}>Phòng chiếu</Text>
+                                <Text
+                                    style={[styles.txt, { textAlign: 'right' }]}
+                                >
+                                    Cinema A2
+                                </Text>
+                            </View>
                         </View>
+
                         {/* <View style={styles.bodyAbove3Right}>
                             <Text style={styles.title}>Phòng chiếu</Text>
                             <Text style={styles.txt}>Cinema A2</Text>
@@ -119,28 +155,22 @@ const BillScreen = ({ navigation, route }) => {
                     <Image style={styles.lineBill} source={LineBill[0].image} />
                     <View style={styles.bodyBelow}>
                         <View style={styles.bodyBelow1}>
-                            <Text style={styles.title}>
-                                Giá vé bao gồm F&B:
-                            </Text>
-                            <Text style={styles.txt}>
-                                {formattedPaymentTotal} đ
-                            </Text>
+                            <Text style={styles.title}>Giá vé:</Text>
+                            <Text style={styles.txt}>200.000 đ</Text>
+                        </View>
+                        <View style={styles.bodyBelow1}>
+                            <Text style={styles.title}>Giá combo:</Text>
+                            <Text style={styles.txt}>90.000 đ</Text>
                         </View>
                         <View style={styles.bodyBelow1}>
                             <Text style={styles.title}>Số tiền được giảm:</Text>
-                            <Text style={styles.txt}>
-                                {formattedDiscountPrice} đ
-                            </Text>
+                            <Text style={styles.txt}>20.000 đ</Text>
                         </View>
                         <View style={styles.bodyBelow1}>
                             <Text style={styles.title}>Tổng tiền:</Text>
-                            <Text style={styles.txt}>{formattedPayment} đ</Text>
+                            <Text style={styles.txt}>410.000 đ</Text>
                         </View>
                         <View style={styles.bodyBelow2}>
-                            <Text style={styles.txt2}>
-                                Hãy đưa mã này hoặc màn hình vé đến quầy giao
-                                dịch để nhận vé của bạn
-                            </Text>
                             <Text numberOfLines={1} style={styles.txt2}>
                                 (*) Vé đã đặt không được hoàn trả, xin cảm ơn!
                             </Text>
@@ -211,6 +241,7 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.Regular,
         color: Colors.DEFAULT_WHITE,
         fontSize: 16,
+        marginTop: 5,
     },
     title: {
         fontFamily: Fonts.SemiBold,

@@ -58,6 +58,12 @@ const DetailScreen = ({ navigation, route }) => {
     const [nameMovie, setNameMovie] = useState('');
     const roundedRating = Math.ceil(ratingResult);
     const renderStars = () => {
+        if (roundedRating === 0) {
+            return (
+                <Text style={{ color: Colors.DARK_GRAY }}>Chưa đánh giá</Text>
+            );
+        }
+
         const stars = [];
         for (let i = 0; i < roundedRating; i++) {
             stars.push(
@@ -362,6 +368,7 @@ const DetailScreen = ({ navigation, route }) => {
                             style={{
                                 width: width * 0.08,
                                 height: height * 0.04,
+                                position: 'absolute',
                             }}
                             source={Images[3].image}
                         />
@@ -371,9 +378,9 @@ const DetailScreen = ({ navigation, route }) => {
                                 textTransform: 'uppercase',
                                 color: Colors.DEFAULT_WHITE,
                                 fontFamily: Fonts.SemiBold,
-                                marginLeft: 15,
+                                marginLeft: 40,
                             }}
-                            numberOfLines={1}
+                            numberOfLines={2}
                         >
                             {movie.ten_phim}
                         </Text>
@@ -549,6 +556,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 10,
         marginTop: 10,
+        flexWrap: 'wrap',
+        maxWidth: '100%',
     },
     groupMovie: {
         flexDirection: 'row',
