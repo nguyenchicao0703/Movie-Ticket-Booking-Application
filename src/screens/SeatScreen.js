@@ -141,9 +141,7 @@ const SeatScreen = ({ navigation, route }) => {
             }
         }
         function onSuat(value) {
-            // dispatchsetSeatString(value.results[0]['chuoighe']));
             setSeats(value.results[0]['chuoighe']);
-            // setIndexSeat([]);
         }
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
@@ -159,38 +157,6 @@ const SeatScreen = ({ navigation, route }) => {
             socket.off('suat', onDisconnect);
         };
     }, [idShowtimes]);
-
-    // useEffect(() => {
-    //     const handleAppStateChange = async (nextAppState) => {
-    //         if (nextAppState === 'background') {
-    //             console.log('Ứng dụng bị thoát');
-    //             // Return trạng thái của "ghế đang chọn" -> "ghế trống"
-    //             // Return state default
-    //             let _seatIndexNumber;
-    //             for (let i = 0; i < indexSeat.length; i++) {
-    //                 _seatIndexNumber = indexSeat[i].index;
-    //                 await socket.emit(
-    //                     'chonghe',
-    //                     JSON.stringify({
-    //                         id: idShowtimes,
-    //                         index: _seatIndexNumber,
-    //                         status: 'A',
-    //                     }),
-    //                 );
-    //                 setSelectedSeats([]);
-    //                 setIndexSeat([]);
-    //                 setTotalPrice(0);
-    //                 setStorageSeats('');
-    //             }
-    //         }
-    //     };
-
-    //     AppState.addEventListener('change', handleAppStateChange);
-
-    //     return () => {
-    //         AppState.removeEventListener('change', handleAppStateChange);
-    //     };
-    // }, []);
 
     const returnDefault = useCallback(() => {
         setSelectedSeats([]);

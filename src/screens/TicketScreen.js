@@ -3,9 +3,8 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { Colors, Fonts } from '../constants';
 import { Header, Loading, NoShowtimeMessage } from '../components';
 import ticketAPI from '../api/ticketAPI';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
-import { fetchTicket } from '../redux/slice/ticketsSlice';
 
 const MovieList = React.lazy(() => import('../components/list/MovieList'));
 
@@ -22,7 +21,6 @@ const TicketScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
     const [movie, setMovie] = useState([]);
 
-    // const dispatch = useDispatch();
     const idUser = useSelector(usersSelector);
 
     useEffect(() => {
@@ -32,17 +30,13 @@ const TicketScreen = ({ navigation }) => {
                     idUser.users.data.id_user,
                 );
                 // console.log('response ticket', response.data);
-                console.log('fetch');
                 response.status ? setData(response.data) : setData([]);
             } catch (error) {
                 console.log('Error fetching tickets', error);
             }
         };
         fetchTickets();
-        console.log('fetch');
-        // dispatch(fetchTicket(idUser.users.data.id_user));
     }, []);
-    // const tickets = useSelector((state) => state.tickets.tickets);
 
     useEffect(() => {
         const filterTypeTicket = data.filter((item) =>
@@ -52,9 +46,6 @@ const TicketScreen = ({ navigation }) => {
         clickTab === 0
             ? (listCase = 'TicketViewed')
             : (listCase = 'TicketUnView');
-        // console.log({ filterTypeTicket });
-        // console.log({ data });
-        console.log('movie đã đc render');
     }, [data, clickTab]);
 
     const handleClickTopTab = (index) => {
