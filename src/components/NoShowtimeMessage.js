@@ -22,7 +22,7 @@ const NoShowtimeMessage = ({ title, listCase }) => {
             }
             setRefreshing(false);
         }, 1000);
-    }, [dispatch, idUser.users.data?.id_user, listCase]);
+    }, []);
 
     if (listCase === 'NoTicket' || listCase === 'NoMovie') {
         return (
@@ -51,24 +51,17 @@ const NoShowtimeMessage = ({ title, listCase }) => {
     }
 
     return (
-        <ScrollView
-            style={{ flex: 1 }}
-            refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
+        <Text
+            style={{
+                textAlign: 'center',
+                color: Colors.OPACITY_MEDIUM_GRAY_LINE,
+                fontFamily: Fonts.Light,
+                fontSize: 15,
+                marginTop: 10,
+            }}
         >
-            <Text
-                style={{
-                    textAlign: 'center',
-                    color: Colors.OPACITY_MEDIUM_GRAY_LINE,
-                    fontFamily: Fonts.Light,
-                    fontSize: 15,
-                    marginTop: 10,
-                }}
-            >
-                {title}
-            </Text>
-        </ScrollView>
+            {title}
+        </Text>
     );
 };
 

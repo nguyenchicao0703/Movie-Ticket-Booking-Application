@@ -6,6 +6,7 @@ import bookingSlice from './slice/bookingSlice';
 import setChairsSlice from './setChairsSlice';
 import discountSlice from './slice/discountSlice';
 import ticketsSlice from './slice/ticketsSlice';
+import selectedSeatsSlice from './slice/selectedSeatsSlice';
 
 const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
         setCharir: setChairsSlice,
         discount: discountSlice,
         tickets: ticketsSlice,
+        selectedSeats: selectedSeatsSlice,
     },
 });
 

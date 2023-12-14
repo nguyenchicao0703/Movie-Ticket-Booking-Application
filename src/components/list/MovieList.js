@@ -24,7 +24,7 @@ const MovieList = ({ data, listCase }) => {
             }
             setRefreshing(false);
         }, 1000);
-    }, [dispatch, idUser.users.data?.id_user, listCase]);
+    }, []);
 
     return (
         <FlatList

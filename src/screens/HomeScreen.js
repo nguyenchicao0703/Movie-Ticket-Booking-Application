@@ -8,8 +8,9 @@ import {
     useWindowDimensions,
     Modal,
     ToastAndroid,
+    RefreshControl,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { BottomTabImage, HeaderImage } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import LinearGradient from 'react-native-linear-gradient';
@@ -43,6 +44,7 @@ const HomeScreen = ({ navigation }) => {
         userProfile ? userProfile.islogin : '',
     );
     const [modalVisible, setModalVisible] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         setUserProfile(dataUser.users.data);
@@ -97,6 +99,14 @@ const HomeScreen = ({ navigation }) => {
         dispatch(fetchMovies());
     }, []);
 
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+            dispatch(fetchMovies());
+            setRefreshing(false);
+        }, 1000);
+    }, []);
+
     const handleProfileScreen = () => {
         if (isLogin) {
             console.log('thành công');
@@ -141,6 +151,12 @@ const HomeScreen = ({ navigation }) => {
                     marginBottom: height * 0.1 + 13,
                     paddingBottom: 100,
                 }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
             >
                 <Modal transparent={true} visible={modalVisible}>
                     <View style={styles.centeredView}>
