@@ -14,9 +14,13 @@ const calendarsSlice = createSlice({
         isSelect: (state, action) => {
             state.isSelect = action.payload;
         },
+        resetStateCalender: (state, action) => {
+            state.dates = '';
+            state.isSelect = 0;
+        },
     },
 });
 
-export const { getDate, isSelect } = calendarsSlice.actions;
+export const { getDate, isSelect, resetStateCalender } = calendarsSlice.actions;
 
 export default calendarsSlice.reducer;
