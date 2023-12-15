@@ -40,9 +40,9 @@ const MovieScreen = ({ navigation }) => {
         );
         setMovie(filterTypePremiere);
         clickTab === 0
-            ? (listCase = 'MoviePresent')
-            : (listCase = 'MovieFuture');
-    }, [clickTab]);
+            ? (listCase = 'moviePresent')
+            : (listCase = 'movieUpcoming');
+    }, [clickTab, movies]);
 
     useEffect(() => {
         dispatch(fetchMovies());
@@ -95,7 +95,10 @@ const MovieScreen = ({ navigation }) => {
                 ))}
             </View>
             {movie.length === 0 ? (
-                <NoShowtimeMessage title={'Chưa có dữ liệu phim'} />
+                <NoShowtimeMessage
+                    title={'Chưa có dữ liệu phim'}
+                    listCase={'NoMovie'}
+                />
             ) : (
                 <Suspense fallback={<Loading />}>
                     <MovieList data={movie} listCase={listCase} />

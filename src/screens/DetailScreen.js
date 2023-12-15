@@ -6,13 +6,10 @@ import {
     useWindowDimensions,
     Pressable,
     Modal,
-    TouchableOpacity,
     ToastAndroid,
-    ActivityIndicator,
-    StatusBar,
 } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
-import { AuthAccountButton, Header, VideoView } from '../components';
+import { Header } from '../components';
 import {
     Colors,
     DetailMovieImage,
@@ -23,19 +20,18 @@ import {
 import { ScrollView } from 'react-native-virtualized-view';
 import DropDownPicker from 'react-native-dropdown-picker';
 import movieAPI from '../api/movieAPI';
-import Video from 'react-native-video';
 import VideoPlayer from 'react-native-video-controls';
-import { fetchMovies } from '../redux/slice/moviesSlice';
-import { useDispatch } from 'react-redux';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const DetailScreen = ({ navigation, route }) => {
-    const fontSizeContent = height * 0.03;
+    const { height, width } = useWindowDimensions();
+    const idPhim = route.params.id;
+    const movieCase = route.params.movieCase;
+    const idVe = Number(route.params.idTicket);
+    // const fontSizeContent = height * 0.03;
     const [isLoading, setIsLoading] = useState(true);
-
     const videoRef = useRef(null);
     const [isVideoPlaying, setIsVideoPlaying] = useState(true);
-    const { height, width, scale, fontScale } = useWindowDimensions();
     const [modalVisible, setModalVisible] = useState(false);
     const [modalVisible2, setModalVisible2] = useState(false);
 
@@ -50,14 +46,18 @@ const DetailScreen = ({ navigation, route }) => {
         { label: '1 sao ', value: 1 },
     ]);
     const [ratingResult, setRatingResult] = useState(null);
-    const idPhim = route.params.id;
-    const idVe = Number(route.params.idTicket);
-    const dispath = useDispatch();
 
     const [idMovie, setIdMovie] = useState(1);
     const [nameMovie, setNameMovie] = useState('');
     const roundedRating = Math.ceil(ratingResult);
+
     const renderStars = () => {
+        if (roundedRating === 0) {
+            return (
+                <Text style={{ color: Colors.DARK_GRAY }}>Chưa đánh giá</Text>
+            );
+        }
+
         const stars = [];
         for (let i = 0; i < roundedRating; i++) {
             stars.push(
@@ -73,6 +73,7 @@ const DetailScreen = ({ navigation, route }) => {
         }
         return stars;
     };
+
     const handleOpenModal = () => {
         if (idVe) {
             setModalVisible(true);
@@ -132,7 +133,7 @@ const DetailScreen = ({ navigation, route }) => {
                 setIdMovie(data.id_phim);
                 setNameMovie(data.ten_phim);
                 setRatingResult(data.diemdanhgia);
-                console.log('Data detail movie', data);
+                // console.log('Data detail movie', data);
                 setTimeout(() => {
                     setIsLoading(false); // Kết thúc tải dữ liệu
                 });
@@ -144,9 +145,11 @@ const DetailScreen = ({ navigation, route }) => {
 
         fetchMovieDetails();
     }, [idPhim]);
+
     if (!movie) {
         return null; // or render a loading indicator
     }
+
     const handleRating = async () => {
         console.log({ value });
         console.log({ idVe });
@@ -362,6 +365,7 @@ const DetailScreen = ({ navigation, route }) => {
                             style={{
                                 width: width * 0.08,
                                 height: height * 0.04,
+                                position: 'absolute',
                             }}
                             source={Images[3].image}
                         />
@@ -371,9 +375,9 @@ const DetailScreen = ({ navigation, route }) => {
                                 textTransform: 'uppercase',
                                 color: Colors.DEFAULT_WHITE,
                                 fontFamily: Fonts.SemiBold,
-                                marginLeft: 15,
+                                marginLeft: 40,
                             }}
-                            numberOfLines={1}
+                            numberOfLines={2}
                         >
                             {movie.ten_phim}
                         </Text>
@@ -467,52 +471,54 @@ const DetailScreen = ({ navigation, route }) => {
                     </View>
                 </ScrollView>
             )}
-            <View style={styles.boxButton}>
-                <Pressable
-                    style={[
-                        styles.button1,
-                        {
-                            flex: 1,
-                            backgroundColor: Colors.DEFAULT_WHITE,
-                        },
-                    ]}
-                    onPress={handleOpenModal}
-                >
-                    <Text
+            {movieCase === 'movieUpcoming' ? null : (
+                <View style={styles.boxButton}>
+                    <Pressable
                         style={[
-                            styles.textButton,
+                            styles.button1,
                             {
-                                color: Colors.DEFAULT_BLACK,
-                                fontSize: height * 0.02,
+                                flex: 1,
+                                backgroundColor: Colors.DEFAULT_WHITE,
+                            },
+                        ]}
+                        onPress={handleOpenModal}
+                    >
+                        <Text
+                            style={[
+                                styles.textButton,
+                                {
+                                    color: Colors.DEFAULT_BLACK,
+                                    fontSize: height * 0.02,
+                                },
+                            ]}
+                        >
+                            Đánh giá
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        onPress={navigateDetailToCinema}
+                        style={[
+                            styles.button1,
+                            {
+                                flex: 1,
+                                backgroundColor: Colors.DARK_RED,
                             },
                         ]}
                     >
-                        Đánh giá
-                    </Text>
-                </Pressable>
-                <Pressable
-                    onPress={navigateDetailToCinema}
-                    style={[
-                        styles.button1,
-                        {
-                            flex: 1,
-                            backgroundColor: Colors.DARK_RED,
-                        },
-                    ]}
-                >
-                    <Text
-                        style={[
-                            styles.textButton,
-                            {
-                                color: Colors.DEFAULT_WHITE,
-                                fontSize: height * 0.02,
-                            },
-                        ]}
-                    >
-                        Đặt vé
-                    </Text>
-                </Pressable>
-            </View>
+                        <Text
+                            style={[
+                                styles.textButton,
+                                {
+                                    color: Colors.DEFAULT_WHITE,
+                                    fontSize: height * 0.02,
+                                },
+                            ]}
+                        >
+                            Đặt vé
+                        </Text>
+                    </Pressable>
+                </View>
+            )}
         </View>
     );
 };
@@ -549,6 +555,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 10,
         marginTop: 10,
+        flexWrap: 'wrap',
+        maxWidth: '100%',
     },
     groupMovie: {
         flexDirection: 'row',

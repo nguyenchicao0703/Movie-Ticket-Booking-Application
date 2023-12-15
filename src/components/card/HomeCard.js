@@ -1,4 +1,4 @@
-import { StyleSheet, Text, Image, Pressable, View } from 'react-native';
+import { StyleSheet, Text, Image, Pressable } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../../constants/index';
 import { useNavigation } from '@react-navigation/native';
@@ -19,7 +19,7 @@ const HomeCard = ({
     const handleButtonClickItem = () => {
         var idMovie = data.id_phim;
         console.log({ idMovie });
-        navigation.navigate('Detail', { id: idMovie });
+        navigation.navigate('Detail', { id: idMovie, movieCase });
     };
 
     return (
@@ -30,7 +30,6 @@ const HomeCard = ({
                 isFirst ? { marginLeft: 15 } : isLast ? { marginRight: 0 } : {},
                 { maxWidth: cardWidth },
             ]}
-            disabled={movieCase === 'movieSpecial'}
         >
             <Image
                 style={[styles.image, { width: cardWidth, height: cardHeight }]}

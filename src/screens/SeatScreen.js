@@ -5,7 +5,6 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
-    AppState,
 } from 'react-native';
 import React, { useState, useCallback, useEffect } from 'react';
 import { Colors, Fonts, SeatImage } from '../constants';
@@ -23,7 +22,7 @@ import {
     setMovieImage,
 } from '../redux/slice/bookingSlice';
 import { setIdShowtimes, setListSeat } from '../redux/setChairsSlice';
-import { setSeatString } from '../redux/slice/seatsSlice';
+import { setSelectedSeats } from '../redux/slice/selectedSeatsSlice';
 
 const TypeSeat = React.memo(({ backgroundColor, text }) => {
     return (
@@ -89,21 +88,22 @@ const SeatScreen = ({ navigation, route }) => {
         idShowtimes,
         headerShowtimes,
     } = route.params;
-    const [selectedSeats, setSelectedSeats] = useState([]);
+    // const [selectedSeats, setSelectedSeats] = useState([]);
     const [seats, setSeats] = useState('');
     const [totalPrice, setTotalPrice] = useState(0);
     const [storageSeats, setStorageSeats] = useState('');
     const [indexSeat, setIndexSeat] = useState([]);
-    const [checkStatusTimerSeats, setCheckStatusTimerSeats] = useState(false);
+    const [checkStatusTimerSeats, setCheckStatusTimerSeats] = useState(true);
     const [timer, setTimer] = useState(null);
     const [countSeat, setCountSeat] = useState(0);
+    const [timeoutIds, setTimeoutIds] = useState([]);
 
-    console.log({ idShowtimes });
+    // console.log({ idShowtimes });
 
     const dispatch = useDispatch();
-    // const listSeat1 = useSelector((state) => state.setCharir);
-    // console.log('list hahahah', listSeat1);
-
+    const selectedSeats = useSelector(
+        (state) => state.selectedSeats.selectedSeats,
+    );
     const idUsersSelector = useSelector(usersSelector);
     const headerDate = useSelector(datesSelector); // Chỉ dùng để gửi đến header
 
@@ -134,7 +134,8 @@ const SeatScreen = ({ navigation, route }) => {
                         status: 'A',
                     }),
                 );
-                setSelectedSeats([]);
+                // setSelectedSeats([]);
+                dispatch(setSelectedSeats([]));
                 setIndexSeat([]);
                 setTotalPrice(0);
                 setStorageSeats('');
@@ -159,10 +160,12 @@ const SeatScreen = ({ navigation, route }) => {
     }, [idShowtimes]);
 
     const returnDefault = useCallback(() => {
-        setSelectedSeats([]);
+        // setSelectedSeats([]);
+        dispatch(setSelectedSeats([]));
         setStorageSeats('');
         setTotalPrice(0);
         setIndexSeat([]);
+        setTimeoutIds([]);
     }, []);
 
     const handleSeatPress = (seatId, seatIndexNumber) => {
@@ -170,6 +173,7 @@ const SeatScreen = ({ navigation, route }) => {
         // console.log({ seatId });
         const isSelected = selectedSeats.includes(seatId);
         let updatedSeats;
+        setCheckStatusTimerSeats(false);
         if (isSelected) {
             socket.emit(
                 'chonghe',
@@ -186,7 +190,8 @@ const SeatScreen = ({ navigation, route }) => {
             setIndexSeat([...copyWithoutFirstElement]);
             setTotalPrice(totalPrice - priceShowitmes);
             setCountSeat(countSeat - 1);
-            clearTimeout(timer);
+            // timeoutIds.filter((timeoutId) => timeoutId !== timer); // Hủy bỏ chọn ghế
+            // clearTimeout(timer);
         } else {
             socket.emit(
                 'chonghe',
@@ -203,29 +208,39 @@ const SeatScreen = ({ navigation, route }) => {
             ]);
             setTotalPrice(totalPrice + priceShowitmes);
             setCountSeat(countSeat + 1);
-            const timerId = setTimeout(() => {
-                returnDefault();
-                socket.emit(
-                    'chonghe',
-                    JSON.stringify({
-                        id: idShowtimes,
-                        index: seatIndexNumber,
-                        status: 'A',
-                    }),
-                );
-            }, 5000);
-            setTimer(timerId);
-        }
+            if (checkStatusTimerSeats) {
+                const timerId = setTimeout(() => {
+                    returnDefault();
+                    socket.emit(
+                        'chonghe',
+                        JSON.stringify({
+                            id: idShowtimes,
+                            index: seatIndexNumber,
+                            status: 'A',
+                        }),
+                    );
+                    setCheckStatusTimerSeats(true);
+                    console.log('log');
+                }, 5000);
 
-        setSelectedSeats(updatedSeats);
+                setTimeoutIds([...timeoutIds, timerId]);
+                setTimer(timerId);
+            }
+        }
+        setCheckStatusTimerSeats(true);
+
+        // setSelectedSeats(updatedSeats);
+        dispatch(setSelectedSeats(updatedSeats));
         setStorageSeats(updatedSeats.join(', '));
     };
 
     // console.log({ storageSeats });
     // console.log({ selectedSeats });
     // console.log({ seats });
+    // console.log({ timeoutIds });
+    // console.log({ timer });
 
-    console.log({ indexSeat });
+    // console.log({ indexSeat });
 
     // const navigationSeatToCombo = async () => {
     //     try {
@@ -265,21 +280,27 @@ const SeatScreen = ({ navigation, route }) => {
         dispatch(setListSeat([...indexSeat]));
         // returnDefault();
         // setSelectedSeats([]);
-        setStorageSeats('');
-        setTotalPrice(0);
+        // setStorageSeats('');
+        // setTotalPrice(0);
         setIndexSeat([]);
-        clearTimeout(timer);
+        timeoutIds.forEach((value) => clearTimeout(value));
         navigation.navigate('Combo', {
             idShowtimes,
             quantityTicket: countSeat,
         });
     };
 
-    console.log({ selectedSeats });
+    // console.log({ selectedSeats });
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
+
+    const formatCurrency = (amount) => {
+        const formatter = new Intl.NumberFormat('vi-VN');
+        return formatter.format(amount);
+    };
+    const formattedTotal = formatCurrency(totalPrice);
 
     const handleButtonBack = () => {
         // Return trạng thái của "ghế đang chọn" -> "ghế trống"
@@ -313,11 +334,7 @@ const SeatScreen = ({ navigation, route }) => {
 
     // seat (string)
     // A, U, R, _, /
-    const formatCurrency = (amount) => {
-        const formatter = new Intl.NumberFormat('vi-VN');
-        return formatter.format(amount);
-    };
-    const formattedTotal = formatCurrency(totalPrice);
+
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
             <Header
