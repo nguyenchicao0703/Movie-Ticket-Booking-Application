@@ -18,49 +18,103 @@ import {
     setShowtime,
     setTotalPayment,
     setSeatsIndex,
+    setRoom,
     setCombo,
 } from '../redux/slice/bookingSlice';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import { useFocusEffect } from '@react-navigation/native';
 const BillScreen = ({ navigation, route }) => {
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
-    const { zpID, postData, idTicket } = route.params;
+
+    const { idTicket, id } = route.params;
     const dispatch = useDispatch();
     const [response, setResponse] = useState([]);
     const discountData = useSelector(discountSelector);
     const discountPrice = discountData.discountPayment;
     const userData = useSelector(usersSelector);
+    const [refreshing, setRefreshing] = useState(false);
+    const [shouldFetchBill, setShouldFetchBill] = useState(false);
     const idUser = Number(userData.users.data.id_user);
-    console.log(idUser);
+    // let idUser = Number(userData.users.data.id_user);
+    console.log(id);
     console.log(idTicket);
     const idVe = Number(idTicket);
     const handleButtonBack = () => {
-        navigation.navigate('Home');
+        // navigation.navigate('Home');
+        navigation.goBack();
     };
+    const handleNaviButton = () => {
+        navigation.navigate('Detail', { id: id, idVe });
+    };
+    let str = idVe.toString();
     React.useEffect(() => {
-        try {
-            const getBill = async () => {
-                const responseBill = await billAPI.watchBill(idUser, idVe);
+        if (shouldFetchBill) {
+            const fetchBillData = async () => {
+                try {
+                    const responseBill = await billAPI.watchBill(idUser, idVe);
+                    const resBill = responseBill.data;
+                    console.log(responseBill);
 
-                const resBill = responseBill.data;
-                console.log(responseBill);
-                if (responseBill.status == true) {
-                    dispatch(setMovieName(resBill.ten_phim)),
-                        dispatch(setCinemaName(resBill.ten_rap)),
-                        dispatch(setDateShowtime(resBill.ngaychieu)),
-                        dispatch(setShowtime(resBill.giochieu)),
-                        dispatch(setSeatsIndex(resBill.ghe)),
-                        dispatch(setTotalPayment(resBill.tongtien)),
+                    if (responseBill.status === true) {
+                        dispatch(setMovieName(resBill.ten_phim));
+                        dispatch(setCinemaName(resBill.ten_rap));
+                        dispatch(setDateShowtime(resBill.ngaychieu));
+                        dispatch(setShowtime(resBill.giochieu));
+                        dispatch(setSeatsIndex(resBill.ghe));
+                        dispatch(setRoom(resBill.ten_phong));
+                        dispatch(setTotalPayment(resBill.tongtien));
                         dispatch(setCombo(resBill.combo));
+                    } else {
+                        // Xử lý trạng thái không thành công (nếu cần)
+                        console.error('Lỗi khi lấy dữ liệu: Không thành công');
+                    }
+                } catch (error) {
+                    // Xử lý lỗi khi fetch dữ liệu không thành công
+                    console.log('Lỗi khi lấy dữ liệu:', error);
+                } finally {
+                    // Đặt shouldFetchBill về false sau khi hoàn tất việc fetch dữ liệu (cả khi thành công và thất bại)
+                    setShouldFetchBill(false);
                 }
             };
-            getBill();
-        } catch (error) {}
-    }, []);
 
-    console.log(response.ghe);
+            fetchBillData();
+        }
+    }, [shouldFetchBill]);
+    React.useEffect(() => {
+        setShouldFetchBill(true);
+    }, [idUser, idVe]);
+
+    // useFocusEffect(
+    //     React.useCallback(() => {
+    //         try {
+    //             const getBill = async () => {
+    //                 const responseBill = await billAPI.watchBill(idUser, idVe);
+    //                 const resBill = responseBill.data;
+    //                 console.log(responseBill);
+
+    //                 if (responseBill.status === true) {
+    //                     dispatch(setMovieName(resBill.ten_phim));
+    //                     dispatch(setCinemaName(resBill.ten_rap));
+    //                     dispatch(setDateShowtime(resBill.ngaychieu));
+    //                     dispatch(setShowtime(resBill.giochieu));
+    //                     dispatch(setSeatsIndex(resBill.ghe));
+    //                     dispatch(setTotalPayment(resBill.tongtien));
+    //                     dispatch(setCombo(resBill.combo));
+    //                 } else {
+    //                     // Xử lý trạng thái không thành công (nếu cần)
+    //                     console.error('Lỗi khi lấy dữ liệu: Không thành công');
+    //                 }
+    //                 getBill();
+    //             };
+    //         } catch (error) {
+    //             // Xử lý lỗi khi fetch dữ liệu không thành công
+    //             console.error('Lỗi khi lấy dữ liệu:', error.message);
+    //         }
+    //     }),
+    // );
+    // console.log(response.ghe);
     const dataBooking = useSelector(bookingSelector);
     const formatCurrency = (amount) => {
         const formatter = new Intl.NumberFormat('vi-VN');
@@ -73,6 +127,7 @@ const BillScreen = ({ navigation, route }) => {
     const formattedPayment = formatCurrency(
         dataBooking.totalPayment - discountPrice,
     );
+    console.log(dataBooking.dateShowtime);
     // const [discountPayment, setDiscountPayment] = React.useState(0);
     return (
         <ScrollView style={styles.container}>
@@ -98,9 +153,9 @@ const BillScreen = ({ navigation, route }) => {
                                 fontSize: 22,
                             }}
                         >
-                            Phim bố già và những anh em chí cốt
+                            {dataBooking.movieName}
                         </Text>
-                        <Pressable onPress={() => console.log('Oke')}>
+                        <Pressable onPress={handleNaviButton}>
                             <Text
                                 style={{
                                     fontFamily: Fonts.Light,
@@ -117,12 +172,32 @@ const BillScreen = ({ navigation, route }) => {
                     </View>
 
                     <View style={styles.bodyAbove1}>
-                        <Text style={styles.txt}>07 tháng 10, 2023</Text>
-                        <Text style={styles.txt}>15:00 ~ 19:00</Text>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginTop: 5,
+                            }}
+                        >
+                            <Text style={styles.title}>Ngày chiếu:</Text>
+                            <Text style={styles.txt}>{dataBooking.date}</Text>
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginTop: 5,
+                            }}
+                        >
+                            <Text style={styles.title}>Giờ chiếu:</Text>
+                            <Text style={styles.txt}>
+                                {dataBooking.showtime}
+                            </Text>
+                        </View>
                     </View>
                     <View style={styles.bodyAbove2}>
                         <Text style={styles.title}>Rạp</Text>
-                        <Text style={styles.txt}>MTB Gò Vấp</Text>
+                        <Text style={styles.txt}>{dataBooking.cinemaName}</Text>
                     </View>
                     <View style={styles.bodyAbove3}>
                         <View
@@ -135,7 +210,9 @@ const BillScreen = ({ navigation, route }) => {
                         >
                             <View style={styles.bodyAbove3Left}>
                                 <Text style={styles.title}>Ghế</Text>
-                                <Text style={styles.txt}>H18, H19</Text>
+                                <Text style={styles.txt}>
+                                    {dataBooking.seatsIndex}
+                                </Text>
                             </View>
 
                             <View style={styles.bodyAbove3Left}>
@@ -143,7 +220,7 @@ const BillScreen = ({ navigation, route }) => {
                                 <Text
                                     style={[styles.txt, { textAlign: 'right' }]}
                                 >
-                                    Cinema A2
+                                    {dataBooking.room}
                                 </Text>
                             </View>
                         </View>
@@ -157,22 +234,26 @@ const BillScreen = ({ navigation, route }) => {
                     <View style={styles.bodyBelow}>
                         <View style={styles.bodyBelow1}>
                             <Text style={styles.title}>Giá vé:</Text>
-                            <Text style={styles.txt}>200.000 đ</Text>
+                            <Text style={styles.txt}>
+                                {formattedPaymentTotal} đ
+                            </Text>
                         </View>
                         <View style={styles.bodyBelow1}>
                             <Text style={styles.title}>Giá combo:</Text>
-                            <Text style={styles.txt}>90.000 đ</Text>
+                            <Text style={styles.txt}>0 đ</Text>
                         </View>
                         <View style={styles.bodyBelow1}>
                             <Text style={styles.title}>Số tiền được giảm:</Text>
-                            <Text style={styles.txt}>20.000 đ</Text>
+                            <Text style={styles.txt}>
+                                {formattedDiscountPrice} đ
+                            </Text>
                         </View>
                         <View style={styles.bodyBelow1}>
                             <Text style={styles.title}>Tổng tiền:</Text>
-                            <Text style={styles.txt}>410.000 đ</Text>
+                            <Text style={styles.txt}>{formattedPayment} đ</Text>
                         </View>
                         <View style={styles.bodyBelow2}>
-                            <Text numberOfLines={1} style={styles.txt2}>
+                            <Text numberOfLines={2} style={styles.txt2}>
                                 (*) Vé đã đặt không được hoàn trả, xin cảm ơn!
                             </Text>
                         </View>
@@ -181,15 +262,15 @@ const BillScreen = ({ navigation, route }) => {
                 </View>
             </View>
             <View style={{ alignItems: 'center', marginBottom: 50 }}>
-                {/* <QRCode
-                    size={250}
+                <QRCode
+                    size={120}
                     style={{
                         height: 'auto',
                         maxWidth: '100%',
                         width: '100%',
                     }}
-                    value={'123'}
-                /> */}
+                    value={str}
+                />
             </View>
         </ScrollView>
     );

@@ -9,6 +9,7 @@ const bookingSlice = createSlice({
         dateShowtime: '',
         showtime: '',
         seatsIndex: '',
+        room: '',
         totalPayment: 0,
         combo: [],
     },
@@ -30,6 +31,9 @@ const bookingSlice = createSlice({
         },
         setSeatsIndex: (state, action) => {
             state.seatsIndex = action.payload;
+        },
+        setRoom: (state, action) => {
+            state.room = action.payload;
         },
         setTotalPayment: (state, action) => {
             state.totalPayment = action.payload;
@@ -56,6 +60,7 @@ export const {
     setShowtime,
     setSeatsIndex,
     setTotalPayment,
+    setRoom,
     setCombo,
 } = bookingSlice.actions;
 

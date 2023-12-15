@@ -278,20 +278,20 @@ const PaymentScreen = ({ navigation, route }) => {
             });
         // console.log('123123123:' + dataID);
     }
-    useEffect(() => {
-        try {
-            socket.emit(
-                'datghe',
-                JSON.stringify({
-                    id_user:
-                        idUsersSelector.users.length !== 0 &&
-                        idUsersSelector.users.data.id_user,
-                    id_suat: Number(idShowtimes),
-                    listghe: dataChairs.listGhe,
-                }),
-            );
-        } catch (error) {}
-    }, []);
+    // useEffect(() => {
+    //     try {
+    //         socket.emit(
+    //             'datghe',
+    //             JSON.stringify({
+    //                 id_user:
+    //                     idUsersSelector.users.length !== 0 &&
+    //                     idUsersSelector.users.data.id_user,
+    //                 id_suat: Number(idShowtimes),
+    //                 listghe: dataChairs.listGhe,
+    //             }),
+    //         );
+    //     } catch (error) {}
+    // }, []);
 
     const payOrder = (token) => {
         createOrder(parseInt(bookingData.totalPayment - discountPrice));
