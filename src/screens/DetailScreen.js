@@ -28,6 +28,7 @@ import VideoPlayer from 'react-native-video-controls';
 import { fetchMovies } from '../redux/slice/moviesSlice';
 import { useDispatch } from 'react-redux';
 import Spinner from 'react-native-loading-spinner-overlay';
+
 const DetailScreen = ({ navigation, route }) => {
     const fontSizeContent = height * 0.03;
     const [isLoading, setIsLoading] = useState(true);
@@ -36,8 +37,10 @@ const DetailScreen = ({ navigation, route }) => {
     const [isVideoPlaying, setIsVideoPlaying] = useState(true);
     const { height, width, scale, fontScale } = useWindowDimensions();
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible2, setModalVisible2] = useState(false);
+
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState(5);
     const [movie, setMovie] = useState(null);
     const [items, setItems] = useState([
         { label: '5 sao', value: 5 },
@@ -48,22 +51,42 @@ const DetailScreen = ({ navigation, route }) => {
     ]);
     const [ratingResult, setRatingResult] = useState(null);
     const idPhim = route.params.id;
-    const idVe = route.params.idTicket;
+    const idVe = Number(route.params.idTicket);
     const dispath = useDispatch();
-    console.log('id Ve ne:', idVe);
-    console.log();
+
     const [idMovie, setIdMovie] = useState(1);
     const [nameMovie, setNameMovie] = useState('');
-
+    const roundedRating = Math.ceil(ratingResult);
+    const renderStars = () => {
+        const stars = [];
+        for (let i = 0; i < roundedRating; i++) {
+            stars.push(
+                <Image
+                    key={i}
+                    style={{
+                        width: width * 0.06,
+                        height: height * 0.03,
+                    }}
+                    source={DetailMovieImage[1].image}
+                />,
+            );
+        }
+        return stars;
+    };
     const handleOpenModal = () => {
+        if (idVe) {
+            setModalVisible(true);
+            setIsVideoPlaying(false);
+        } else {
+            setModalVisible2(true);
+        }
         // Khi mở modal, thiết lập modalVisible thành true và isVideoPlaying thành false
-        setModalVisible(true);
-        setIsVideoPlaying(false);
     };
 
     const handleCloseModal = () => {
         // Khi đóng modal, thiết lập modalVisible thành false và isVideoPlaying thành true
         setModalVisible(false);
+        setModalVisible2(false);
         setIsVideoPlaying(true);
     };
 
@@ -121,27 +144,35 @@ const DetailScreen = ({ navigation, route }) => {
 
         fetchMovieDetails();
     }, [idPhim]);
-
     if (!movie) {
         return null; // or render a loading indicator
     }
     const handleRating = async () => {
+        console.log({ value });
+        console.log({ idVe });
         const data = {
-            id_ve: idVe,
+            id_ve: parseInt(idVe),
             diem: value,
         };
+
         await movieAPI
             .postRating(data)
             .then((response) => {
                 // Lấy dữ liệu điểm từ phản hồi
                 // Lưu trữ giá trị điểm vào state
+                console.log(response);
                 const status = response.status;
-                if (status === false) {
-                    console.log('đánh giá thất bại :', status);
-                    ToastAndroid.show('Đã đánh giá !', ToastAndroid.SHORT);
+                if (status) {
+                    console.log('đánh giá thành công', response);
+
                     handleCloseModal();
                 } else {
-                    console.log('đánh giá thành công', response);
+                    console.log('đánh giá thất bại :', status);
+                    ToastAndroid.show(
+                        'Phim đã được đánh giá!',
+                        ToastAndroid.SHORT,
+                    );
+
                     handleCloseModal();
                 }
             })
@@ -214,7 +245,7 @@ const DetailScreen = ({ navigation, route }) => {
                                         { fontSize: height * 0.024 },
                                     ]}
                                 >
-                                    Đánh giá theo thang điểm 10
+                                    Đánh giá
                                 </Text>
                                 <View style={{ width: '90%' }}>
                                     <DropDownPicker
@@ -267,28 +298,61 @@ const DetailScreen = ({ navigation, route }) => {
                             </View>
                         </View>
                     </Modal>
-                    <Pressable>
-                        <View style={styles.groupRate}>
-                            <Image
-                                style={{
-                                    width: width * 0.064,
-                                    height: height * 0.032,
-                                }}
-                                source={DetailMovieImage[1].image}
-                            />
-                            <Text
-                                style={{
-                                    color: Colors.DEFAULT_WHITE,
-                                    fontFamily: Fonts.Regular,
-                                    marginLeft: 15,
-                                    fontSize: height * 0.018,
-                                    marginTop: 5,
-                                }}
+
+                    <Modal transparent={true} visible={modalVisible2}>
+                        <View style={styles.centeredView}>
+                            <View
+                                style={[
+                                    styles.modalView,
+                                    { height: height * 0.25 },
+                                ]}
                             >
-                                {ratingResult}
-                            </Text>
+                                <Text
+                                    style={[
+                                        styles.modalText,
+                                        {
+                                            fontSize: height * 0.024,
+                                            marginTop: 19,
+                                        },
+                                    ]}
+                                >
+                                    Thông báo
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontFamily: Fonts.Light,
+                                        fontSize: height * 0.018,
+                                        color: Colors.DEFAULT_BLACK,
+                                        textAlign: 'center',
+                                        margin: 10,
+                                    }}
+                                >
+                                    Bạn chưa thể bình luận! Hãy đặt vé xem phim
+                                    & để lại cảm xúc của mình nhé
+                                </Text>
+                                <Pressable
+                                    style={[
+                                        styles.button,
+                                        styles.buttonClose,
+                                        {
+                                            width: width * 0.51,
+                                            height: height * 0.06,
+                                        },
+                                    ]}
+                                    onPress={handleCloseModal}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.textStyle,
+                                            { fontSize: height * 0.018 },
+                                        ]}
+                                    >
+                                        Xác nhận
+                                    </Text>
+                                </Pressable>
+                            </View>
                         </View>
-                    </Pressable>
+                    </Modal>
 
                     <View style={styles.titleMovieName}>
                         <Image
@@ -362,6 +426,15 @@ const DetailScreen = ({ navigation, route }) => {
                                 numberOfLines={3}
                             >
                                 Nhà sản xuất: {movie.nhasanxuat}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.textDetail,
+                                    { fontSize: height * 0.02 },
+                                ]}
+                                numberOfLines={3}
+                            >
+                                Xếp hạng: {renderStars()}
                             </Text>
                         </View>
                     </View>
@@ -472,6 +545,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginLeft: 10,
+        marginTop: 10,
     },
     groupMovie: {
         flexDirection: 'row',

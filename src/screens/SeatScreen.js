@@ -141,7 +141,6 @@ const SeatScreen = ({ navigation, route }) => {
             }
         }
         function onSuat(value) {
-            console.log('test');
             // dispatchsetSeatString(value.results[0]['chuoighe']));
             setSeats(value.results[0]['chuoighe']);
             // setIndexSeat([]);
@@ -200,24 +199,6 @@ const SeatScreen = ({ navigation, route }) => {
         setIndexSeat([]);
     }, []);
 
-    const timeOut = () => {
-        const timerId = setTimeout(() => {
-            returnDefault();
-            socket.emit(
-                'chonghe',
-                JSON.stringify({
-                    id: idShowtimes,
-                    index: seatIndexNumber,
-                    status: 'A',
-                }),
-            );
-            console.log('timer');
-        }, 5000);
-        checkStatusTimerSeats === false ? timerId : null; // 5 phút
-        setTimer(timerId);
-        clearTimeout(timerId);
-    };
-
     const handleSeatPress = (seatId, seatIndexNumber) => {
         // console.log({ seatIndexNumber });
         // console.log({ seatId });
@@ -239,8 +220,7 @@ const SeatScreen = ({ navigation, route }) => {
             setIndexSeat([...copyWithoutFirstElement]);
             setTotalPrice(totalPrice - priceShowitmes);
             setCountSeat(countSeat - 1);
-            setCheckStatusTimerSeats(true);
-            timeOut();
+            clearTimeout(timer);
         } else {
             socket.emit(
                 'chonghe',
@@ -257,13 +237,22 @@ const SeatScreen = ({ navigation, route }) => {
             ]);
             setTotalPrice(totalPrice + priceShowitmes);
             setCountSeat(countSeat + 1);
-            setCheckStatusTimerSeats(false);
-            timeOut();
+            const timerId = setTimeout(() => {
+                returnDefault();
+                socket.emit(
+                    'chonghe',
+                    JSON.stringify({
+                        id: idShowtimes,
+                        index: seatIndexNumber,
+                        status: 'A',
+                    }),
+                );
+            }, 5000);
+            setTimer(timerId);
         }
 
         setSelectedSeats(updatedSeats);
         setStorageSeats(updatedSeats.join(', '));
-        // return clearTimeout(timer);
     };
 
     // console.log({ storageSeats });
@@ -292,8 +281,7 @@ const SeatScreen = ({ navigation, route }) => {
     //             }),
     //         );
     //         returnDefault();
-    //         setCheckStatusTimerSeats(true);
-    //         // return clearTimeout(timer);
+    //         clearTimeout(timer);
     //     } catch (error) {
     //         console.log('Error fetch seats', error);
     //     }
@@ -309,13 +297,19 @@ const SeatScreen = ({ navigation, route }) => {
         dispatch(setSeatsIndex(storageSeats));
         dispatch(setIdShowtimes(idShowtimes));
         dispatch(setListSeat([...indexSeat]));
-        returnDefault();
+        // returnDefault();
+        // setSelectedSeats([]);
+        setStorageSeats('');
+        setTotalPrice(0);
+        setIndexSeat([]);
         clearTimeout(timer);
         navigation.navigate('Combo', {
             idShowtimes,
             quantityTicket: countSeat,
         });
     };
+
+    console.log({ selectedSeats });
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
@@ -454,8 +448,9 @@ const SeatScreen = ({ navigation, route }) => {
                                                 )
                                             }
                                             disabled={
-                                                status === STATUS_BOOKED ||
-                                                status === STATUS_ASSIGNED
+                                                status === STATUS_BOOKED
+                                                // ||
+                                                // status === STATUS_ASSIGNED
                                             }
                                         >
                                             <Text style={styles.seatText}>

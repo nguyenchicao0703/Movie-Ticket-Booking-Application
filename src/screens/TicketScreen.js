@@ -3,8 +3,9 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { Colors, Fonts } from '../constants';
 import { Header, Loading, NoShowtimeMessage } from '../components';
 import ticketAPI from '../api/ticketAPI';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { usersSelector } from '../redux/selectors';
+import { fetchTicket } from '../redux/slice/ticketsSlice';
 
 const MovieList = React.lazy(() => import('../components/list/MovieList'));
 
@@ -13,13 +14,51 @@ const TopTabsTicketHistory = [
     { id: 2, category: 'Phim đã xem' },
 ];
 
+let listCase;
+
 const TicketScreen = ({ navigation }) => {
     const { width, height, fontScale } = useWindowDimensions();
     const [clickTab, setClickTab] = useState(0);
     const [data, setData] = useState([]);
     const [movie, setMovie] = useState([]);
 
+    const dispatch = useDispatch();
     const idUser = useSelector(usersSelector);
+    useEffect(() => {
+        // console.log('data', data);
+        // const fetchTickets = async () => {
+        //     try {
+        //         const response = await ticketAPI.getAll(
+        //             idUser.users.data.id_user,
+        //         );
+        //         // console.log('response ticket', response.data);
+        //         console.log('fetch');
+        //         response.status ? setData(response.data) : setData([]);
+        //     } catch (error) {
+        //         console.log('Error fetching tickets', error);
+        //     }
+        // };
+        // fetchTickets();
+        console.log('fetch');
+        dispatch(fetchTicket(idUser.users.data.id_user));
+        console.log('eclaalal', { tickets });
+    }, []);
+    const tickets = useSelector((state) => state.tickets.tickets);
+    console.log({ tickets });
+
+    useEffect(() => {
+        console.log('usseeft', { tickets });
+        const filterTypeTicket = tickets.filter((item) =>
+            clickTab === 0 ? item.loaikc === 1 : item.loaikc === 2,
+        );
+        setMovie(filterTypeTicket);
+        clickTab === 0
+            ? (listCase = 'TicketViewed')
+            : (listCase = 'TicketUnView');
+        // console.log({ filterTypeTicket });
+        // console.log({ data });
+        console.log('movie đã đc render');
+    }, [clickTab]);
 
     const handleClickTopTab = (index) => {
         setClickTab(index);
@@ -32,36 +71,6 @@ const TicketScreen = ({ navigation }) => {
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
-
-    // useEffect(() => {}, [movie]);
-
-    useEffect(() => {
-        // console.log('data', data);
-        const fetchTickets = async () => {
-            try {
-                const response = await ticketAPI.getAll(
-                    idUser.users.data.id_user,
-                );
-                // console.log('response ticket', response.data);
-                console.log('fetch');
-                response.status ? setData(response.data) : setData([]);
-            } catch (error) {
-                console.log('Error fetching tickets', error);
-            }
-        };
-        fetchTickets();
-
-        let filterTypeTicket =
-            data !== undefined
-                ? data.filter((item) =>
-                      clickTab === 0 ? item.loaikc === 1 : item.loaikc === 2,
-                  )
-                : [];
-        setMovie(filterTypeTicket);
-        // console.log({ filterTypeTicket });
-        // console.log({ data });
-        console.log('movie đã đc render');
-    }, [clickTab]);
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.DARK_BG }}>
@@ -107,7 +116,7 @@ const TicketScreen = ({ navigation }) => {
                     </Pressable>
                 ))}
             </View>
-            {movie.length === 0 ? (
+            {/* {movie.length === 0 ? (
                 <NoShowtimeMessage title={'Chưa có dữ liệu vé của bạn'} />
             ) : clickTab === 0 ? (
                 <Suspense fallback={<Loading />}>
@@ -116,6 +125,13 @@ const TicketScreen = ({ navigation }) => {
             ) : (
                 <Suspense fallback={<Loading />}>
                     <MovieList data={movie} listCase={'TicketUnView'} />
+                </Suspense>
+            )} */}
+            {movie.length === 0 ? (
+                <NoShowtimeMessage title={'Chưa có dữ liệu phim'} />
+            ) : (
+                <Suspense fallback={<Loading />}>
+                    <MovieList data={movie} listCase={listCase} />
                 </Suspense>
             )}
         </View>

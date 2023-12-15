@@ -15,7 +15,6 @@ import usersAPI from '../api/usersAPI';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const RegisterScreen = ({ navigation }) => {
-    const [unTickedRule, setUnTickedRule] = useState(true);
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [checkpassword, setCheckpassword] = useState('');
@@ -56,12 +55,6 @@ const RegisterScreen = ({ navigation }) => {
     };
     console.log(password);
     const handleSubmit = () => {
-        if (!unTickedRule) {
-            setError(
-                'Bạn hãy đồng ý với điều khoản của chúng tôi để tiếp tục!',
-            );
-            return;
-        }
         if (phone.trim() === '') {
             setError('Số điện thoại bị để trống! ');
             return;
@@ -178,57 +171,6 @@ const RegisterScreen = ({ navigation }) => {
                         </View>
                     </View>
 
-                    <View style={styles.groupRule}>
-                        {unTickedRule ? (
-                            <Pressable
-                                onPress={() => setUnTickedRule(!unTickedRule)}
-                                style={[
-                                    styles.ButtonCheckBoxRule,
-                                    {
-                                        width: width * 0.06,
-                                        height: height * 0.03,
-                                    },
-                                ]}
-                            >
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                        fontSize: height * 0.018,
-                                    }}
-                                >
-                                    ✓
-                                </Text>
-                            </Pressable>
-                        ) : (
-                            <Pressable
-                                onPress={() => setUnTickedRule(!unTickedRule)}
-                                style={[
-                                    styles.ButtonCheckBoxRule,
-                                    {
-                                        width: width * 0.06,
-                                        height: height * 0.03,
-                                    },
-                                ]}
-                            ></Pressable>
-                        )}
-                        <Text
-                            style={[
-                                styles.textRule,
-                                { fontSize: height * 0.018 },
-                            ]}
-                        >
-                            Khi đăng ký, tối đã xem xét và đồng ý với{' '}
-                            <Text style={styles.textAttention}>
-                                điều khoản sử dụng
-                            </Text>{' '}
-                            và{' '}
-                            <Text style={styles.textAttention}>
-                                {' '}
-                                chính sách bảo mật
-                            </Text>{' '}
-                            của MTB Cinema.
-                        </Text>
-                    </View>
                     {error !== '' && (
                         <Text style={styles.errorText}>{error}</Text>
                     )}
@@ -260,6 +202,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         width: '95%',
+        marginTop: 15,
     },
     text: {
         color: Colors.LIGHT_GRAY,

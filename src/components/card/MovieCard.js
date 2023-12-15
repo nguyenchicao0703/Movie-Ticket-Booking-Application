@@ -44,7 +44,7 @@ const MovieCard = ({ data, listCase }) => {
                   imageMovie: data.hinhanh,
               })
             : listCase === 'TicketViewed' || listCase === 'TicketUnView'
-            ? navigation.navigate('Bill', {
+            ? navigation.navigate('Detail', {
                   id: idMovie,
                   idTicket,
               })
@@ -127,7 +127,7 @@ const MovieCard = ({ data, listCase }) => {
                                     ? 'Đặt vé'
                                     : listCase === 'TicketViewed' ||
                                       listCase === 'TicketUnView'
-                                    ? 'Chi tiết vé'
+                                    ? 'Chi tiết phim'
                                     : null}
                             </Text>
                         </Pressable>
