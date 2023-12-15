@@ -109,7 +109,10 @@ const ComboScreen = ({ navigation, route }) => {
                     <Loading />
                 </View>
             ) : (
-                <ComboList data={data} totalPayment={formattedPayment} />
+                <ComboList
+                    data={data}
+                    totalPayment={dataBooking.totalPayment}
+                />
             )}
             <InformationBottom
                 nameMovie={dataBooking.movieName}

@@ -9,7 +9,7 @@ import {
     discountSelector,
     usersSelector,
 } from '../redux/selectors';
-import QRCode from 'react-native-qrcode-svg';
+import QRCode from 'react-qr-code';
 import billAPI from '../api/billAPI';
 import {
     setMovieName,
@@ -20,6 +20,7 @@ import {
     setSeatsIndex,
     setCombo,
 } from '../redux/slice/bookingSlice';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const BillScreen = ({ navigation, route }) => {
     const handleButtonMenu = () => {
@@ -34,7 +35,7 @@ const BillScreen = ({ navigation, route }) => {
     const idUser = Number(userData.users.data.id_user);
     console.log(idUser);
     console.log(idTicket);
-    const idVe = Number(idTicket)
+    const idVe = Number(idTicket);
     const handleButtonBack = () => {
         navigation.navigate('Home');
     };
@@ -74,7 +75,7 @@ const BillScreen = ({ navigation, route }) => {
     );
     // const [discountPayment, setDiscountPayment] = React.useState(0);
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <Header
                 titleHeader={'Thông tin chi tiết'}
                 onButtonBack={handleButtonBack}
@@ -146,11 +147,21 @@ const BillScreen = ({ navigation, route }) => {
                             </Text>
                         </View>
                     </View>
-                    <Image style={styles.qr} source={LineBill[1].image} />
-                    {/* <QRCode value={str} /> */}
+                    {/* <Image style={styles.qr} source={LineBill[1].image} /> */}
                 </View>
             </View>
-        </View>
+            <View style={{ alignItems: 'center', marginBottom: 50 }}>
+                {/* <QRCode
+                    size={250}
+                    style={{
+                        height: 'auto',
+                        maxWidth: '100%',
+                        width: '100%',
+                    }}
+                    value={'123'}
+                /> */}
+            </View>
+        </ScrollView>
     );
 };
 
