@@ -21,6 +21,7 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
     const [data, setData] = useState([]);
     const [statusGetAPI, setSatusGetAPI] = useState(false);
     const [weekSchedule, setWeekSchedule] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     let dateSelector = useSelector(datesRemainingSelector);
 
@@ -63,12 +64,14 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
     useEffect(() => {
         const fetchingShowtimeMovies = async () => {
             try {
+                setLoading(true);
                 const response = await showtimesAPI.getAllMovies(
                     idMovie,
                     dateSelector.dates,
                 );
                 // console.log('data showtimes movies', response);
                 response.status ? setData(response.data) : setData([]);
+                setLoading(false);
                 setSatusGetAPI(response.status);
             } catch (error) {
                 console.log('Error fetching showtime movies', error);
@@ -115,7 +118,9 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                     )}
                 />
                 <MovieTitle title={nameMovie} />
-                {statusGetAPI ? (
+                {loading ? (
+                    <Loading />
+                ) : statusGetAPI ? (
                     data.map((_data, index) => (
                         <View key={_data.id_rap}>
                             <Suspense fallback={<Loading />}>

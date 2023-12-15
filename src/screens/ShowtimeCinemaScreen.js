@@ -62,11 +62,13 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
     useEffect(() => {
         const fetchingShowtimeCinemas = async () => {
             try {
+                setIsLoading(true);
                 const response = await showtimesAPI.getAllCinemas(
                     idCinema,
                     dateSelector.dates,
                 );
                 response.status ? setData(response.data) : setData([]);
+                setIsLoading(false);
                 setSatusGetAPI(response.status);
                 // console.log('Response showtime cinemas', data);
             } catch (error) {
@@ -112,7 +114,9 @@ const ShowtimeCinemaScreen = ({ navigation, route }) => {
                         />
                     )}
                 />
-                {statusGetAPI ? (
+                {isLoading ? (
+                    <Loading />
+                ) : statusGetAPI ? (
                     data.map((_data) => (
                         <View key={_data.id_phim}>
                             <Suspense fallback={<Loading />}>

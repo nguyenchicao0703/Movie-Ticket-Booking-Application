@@ -18,7 +18,7 @@ const MovieCard = ({ data, listCase }) => {
 
     var idMovie = data.id_phim;
     var idTicket = data.id_ve;
-    console.log({ idMovie }, { idTicket });
+    // console.log({ idMovie }, { idTicket });
 
     const handleButtonMovieCard = async () => {
         if (listCase === 'TicketViewed' || listCase === 'TicketUnView') {
@@ -44,7 +44,7 @@ const MovieCard = ({ data, listCase }) => {
                   imageMovie: data.hinhanh,
               })
             : listCase === 'TicketViewed' || listCase === 'TicketUnView'
-            ? navigation.navigate('Detail', {
+            ? navigation.navigate('Bill', {
                   id: idMovie,
                   idTicket,
               })
@@ -65,7 +65,6 @@ const MovieCard = ({ data, listCase }) => {
                 alignSelf: 'center',
             }}
             onPress={handleButtonMovieCard}
-            // disabled={listCase === 'TicketHistory' ? true : false}
         >
             <Image
                 source={{ uri: data.hinhanh }}
@@ -83,7 +82,7 @@ const MovieCard = ({ data, listCase }) => {
                         fontFamily: Fonts.Bold,
                         maxWidth: width / 2 + 30,
                     }}
-                    numberOfLines={1}
+                    numberOfLines={3}
                 >
                     {data.ten_phim}
                 </Text>
@@ -99,11 +98,7 @@ const MovieCard = ({ data, listCase }) => {
                     Thể loại: {data.theloai}
                 </Text>
                 <LinearGradient
-                    colors={
-                        listCase === 'TicketHistory'
-                            ? [Colors.LIGHT_GRAY, Colors.LIGHT_GRAY]
-                            : [Colors.DARK_RED, '#FF6666']
-                    }
+                    colors={[Colors.DARK_RED, '#FF6666']}
                     locations={[0.35, 1]}
                     style={{
                         width: width * 0.5 - 50,
@@ -127,7 +122,7 @@ const MovieCard = ({ data, listCase }) => {
                                     ? 'Đặt vé'
                                     : listCase === 'TicketViewed' ||
                                       listCase === 'TicketUnView'
-                                    ? 'Chi tiết phim'
+                                    ? 'Chi tiết vé'
                                     : null}
                             </Text>
                         </Pressable>
