@@ -25,7 +25,7 @@ const bottomTabs = [
     { id: 2, image: 0, title: 'Rạp', tab: 'Cinema' },
     { id: 3, image: 4, title: '', tab: 'Home' },
     { id: 4, image: 2, title: 'Vé', tab: 'Ticket' },
-    { id: 5, image: 3, title: 'Quản lí', tab: 'UpdateProfile' },
+    { id: 5, image: 3, title: 'Hồ sơ', tab: 'UpdateProfile' },
 ];
 
 const HomeScreen = ({ navigation }) => {
