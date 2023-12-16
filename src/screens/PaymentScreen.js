@@ -21,7 +21,7 @@ import {
     AuthAccountButton,
     Loading,
 } from '../components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     bookingSelector,
     discountSelector,
@@ -31,9 +31,8 @@ import {
 import PaymentBar from '../components/PaymentBar';
 import PaymentDiscount from '../components/PaymentDiscount';
 import socket from '../utils/socket';
-import axios from 'axios';
-import axiosClient from '../api/axiosClient';
 import BillAPI from '../api/apiCreateBill';
+import { setSelectedSeats } from '../redux/slice/selectedSeatsSlice';
 
 const { PayZaloBridge } = NativeModules;
 
@@ -43,13 +42,13 @@ const PaymentScreen = ({ navigation, route }) => {
     const { width, fontScale } = useWindowDimensions();
     const textSizeInfoMovie = fontScale * 14;
 
-    const [listSeat, setListSeat] = useState([]);
     const [socket1, setSocket1] = useState(null);
 
     const { response } = route.params;
 
     const resCombo = response.data;
-    console.log(response.data.combo);
+    // console.log(response.data.combo);
+    const dispatch = useDispatch();
     const idUsersSelector = useSelector(usersSelector);
     const dataChairs = useSelector(chairsSelector);
     let indexGhe = null;
@@ -370,6 +369,7 @@ const PaymentScreen = ({ navigation, route }) => {
                         }),
                     );
                     socket1.emit('suat', JSON.stringify({ id: idShowtimes }));
+                    dispatch(setSelectedSeats([]));
                 } catch (error) {
                     console.log('Error response Combo', error);
                 }

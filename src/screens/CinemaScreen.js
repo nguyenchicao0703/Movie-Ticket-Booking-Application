@@ -2,11 +2,12 @@ import { StyleSheet, View, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { CinemaList, Header, Loading } from '../components';
 import { Colors, Fonts } from '../constants';
-import cinemaAPI from '../api/CinemaAPI';
+import cinemaAPI from '../api/cinemaAPI';
 
 const CinemaScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+
     const handleButtonBack = () => {
         navigation.goBack(null);
     };
@@ -15,17 +16,18 @@ const CinemaScreen = ({ navigation }) => {
         navigation.openDrawer();
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await cinemaAPI.getAll();
-                setIsLoading(true);
-                response.status ? setData(response.data) : setData([]);
-            } catch (error) {
-                console.log(error);
-            }
-        };
+    const fetchData = async () => {
+        try {
+            setIsLoading(false);
+            const response = await cinemaAPI.getAll();
+            setIsLoading(true);
+            response.status ? setData(response.data) : setData([]);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -39,7 +41,11 @@ const CinemaScreen = ({ navigation }) => {
             <View style={styles.tabBottomText}>
                 <Text style={styles.text}>KHU VỰC TP.HCM</Text>
             </View>
-            {!isLoading ? <Loading /> : <CinemaList data={data} />}
+            {!isLoading ? (
+                <Loading />
+            ) : (
+                <CinemaList data={data} fetchData={fetchData} />
+            )}
         </View>
     );
 };

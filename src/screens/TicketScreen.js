@@ -2,6 +2,7 @@ import { Pressable, Text, View, useWindowDimensions } from 'react-native';
 import React, { useEffect, useState, Suspense } from 'react';
 import { Colors, Fonts } from '../constants';
 import { Header, Loading, NoShowtimeMessage } from '../components';
+import ticketAPI from '../api/ticketAPI';
 import { useSelector, useDispatch } from 'react-redux';
 import { ticketsSelector, usersSelector } from '../redux/selectors';
 import { fetchTicket } from '../redux/slice/ticketsSlice';
@@ -18,7 +19,6 @@ let listCase;
 const TicketScreen = ({ navigation }) => {
     const { width, height, fontScale } = useWindowDimensions();
     const [clickTab, setClickTab] = useState(0);
-    const [data, setData] = useState([]);
     const [movie, setMovie] = useState([]);
 
     const dispatch = useDispatch();
@@ -40,14 +40,14 @@ const TicketScreen = ({ navigation }) => {
     }, [ticketMovie, clickTab]);
 
     useEffect(() => {
-        const filterTypeTicket = data.filter((item) =>
+        const filterTypeTicket = ticketMovie.filter((item) =>
             clickTab === 0 ? item.loaikc === 1 : item.loaikc === 2,
         );
         setMovie(filterTypeTicket);
         clickTab === 0
             ? (listCase = 'TicketViewed')
             : (listCase = 'TicketUnView');
-    }, [data, clickTab]);
+    }, [ticketMovie, clickTab]);
 
     const handleClickTopTab = (index) => {
         setClickTab(index);

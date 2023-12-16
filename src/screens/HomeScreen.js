@@ -7,11 +7,11 @@ import {
     View,
     useWindowDimensions,
     Modal,
-    BackHandler,
     ToastAndroid,
+    RefreshControl,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { BottomTabImage, DrawerImage, HeaderImage } from '../constants';
+import React, { useCallback, useEffect, useState } from 'react';
+import { BottomTabImage, HeaderImage } from '../constants';
 import { Colors, Fonts } from '../constants/index';
 import LinearGradient from 'react-native-linear-gradient';
 import { HomeList, Loading } from '../components';
@@ -19,8 +19,7 @@ import { ScrollView } from 'react-native-virtualized-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovies } from '../redux/slice/moviesSlice';
 import { moviesListSelector, usersSelector } from '../redux/selectors';
-import Spinner from 'react-native-loading-spinner-overlay';
-import { tr } from 'date-fns/locale';
+
 const bottomTabs = [
     { id: 1, image: 1, title: 'Phim', tab: 'Movie' },
     { id: 2, image: 0, title: 'Rạp', tab: 'Cinema' },
@@ -45,6 +44,8 @@ const HomeScreen = ({ navigation }) => {
         userProfile ? userProfile.islogin : '',
     );
     const [modalVisible, setModalVisible] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+
     useEffect(() => {
         setUserProfile(dataUser.users.data);
         setIsLogin(dataUser.users.data ? dataUser.users.data.islogin : '');
@@ -62,6 +63,7 @@ const HomeScreen = ({ navigation }) => {
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
+
     const handleItemClick = (tab) => {
         // Xử lý sự kiện click cho từng item dựa trên giá trị 'tab'
         if (tab === 'Ticket') {
@@ -89,11 +91,20 @@ const HomeScreen = ({ navigation }) => {
             navigation.navigate('Movie');
         }
     };
+
     const dataMoviePresent = movies.movies.filter((item) => item.loaikc === 1);
     const dataMovieSpecial = movies.movies.filter((item) => item.loaikc === 2);
 
     useEffect(() => {
         dispatch(fetchMovies());
+    }, []);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+            dispatch(fetchMovies());
+            setRefreshing(false);
+        }, 1000);
     }, []);
 
     const handleProfileScreen = () => {
@@ -140,6 +151,12 @@ const HomeScreen = ({ navigation }) => {
                     marginBottom: height * 0.1 + 13,
                     paddingBottom: 100,
                 }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
             >
                 <Modal transparent={true} visible={modalVisible}>
                     <View style={styles.centeredView}>
@@ -278,7 +295,7 @@ const HomeScreen = ({ navigation }) => {
                 ) : (
                     <HomeList
                         data={dataMoviePresent}
-                        movieCase={'moviePresent'}
+                        movieCase={'movieSpecial'}
                     />
                 )}
                 <Text
@@ -294,7 +311,7 @@ const HomeScreen = ({ navigation }) => {
                 ) : (
                     <HomeList
                         data={dataMovieSpecial}
-                        movieCase={'movieSpecial'}
+                        movieCase={'movieUpcoming'}
                     />
                 )}
             </ScrollView>

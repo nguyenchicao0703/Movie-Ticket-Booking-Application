@@ -104,18 +104,18 @@ const MovieCard = ({ data, listCase }) => {
                 <Text style={[styles.text, { fontSize }]} numberOfLines={2}>
                     Thể loại: {data.theloai}
                 </Text>
-                <LinearGradient
-                    colors={[Colors.DARK_RED, '#FF6666']}
-                    locations={[0.35, 1]}
-                    style={{
-                        width: width * 0.5 - 50,
-                        height: width * 0.1 + 5,
-                        justifyContent: 'center',
-                        borderRadius: 40,
-                        marginTop: 10,
-                    }}
-                >
-                    {listCase === 'MovieFuture' ? null : (
+                {listCase === 'movieUpcoming' ? null : (
+                    <LinearGradient
+                        colors={[Colors.DARK_RED, '#FF6666']}
+                        locations={[0.35, 1]}
+                        style={{
+                            width: width * 0.5 - 50,
+                            height: width * 0.1 + 5,
+                            justifyContent: 'center',
+                            borderRadius: 40,
+                            marginTop: 10,
+                        }}
+                    >
                         <Pressable onPress={navigateMovieToShowtimeMovie}>
                             <Text
                                 style={{
@@ -125,7 +125,7 @@ const MovieCard = ({ data, listCase }) => {
                                     fontSize: fontScale * 16,
                                 }}
                             >
-                                {listCase === 'MoviePresent'
+                                {listCase === 'moviePresent'
                                     ? 'Đặt vé'
                                     : listCase === 'TicketViewed' ||
                                       listCase === 'TicketUnView'
@@ -133,8 +133,8 @@ const MovieCard = ({ data, listCase }) => {
                                     : null}
                             </Text>
                         </Pressable>
-                    )}
-                </LinearGradient>
+                    </LinearGradient>
+                )}
             </View>
             {/* <View
                 style={{

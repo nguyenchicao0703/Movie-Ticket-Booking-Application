@@ -8,9 +8,8 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { Colors, Fonts } from '../../constants';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setCombo, setTotalPayment } from '../../redux/slice/bookingSlice';
-import { bookingSelector } from '../../redux/selectors';
 
 const ComboCard = ({ data, totalPayment }) => {
     const { width, fontScale } = useWindowDimensions();
@@ -20,8 +19,6 @@ const ComboCard = ({ data, totalPayment }) => {
     const [quantity, setQuantity] = useState(0);
 
     const dispatch = useDispatch();
-    // const dataBooking = useSelector(bookingSelector);
-    // console.log('dataBooking', dataBooking.combo);
 
     const handleQuantityCombo = (operator) => {
         if (operator === '+') {
@@ -29,6 +26,7 @@ const ComboCard = ({ data, totalPayment }) => {
             dispatch(setTotalPayment(totalPayment + Number(data.giasanpham)));
             dispatch(setCombo({ id: Number(data.id_combo), soluong: 1 }));
         } else if (operator === '-') {
+            if (quantity === 0) return;
             setQuantity(quantity - 1);
             dispatch(setTotalPayment(totalPayment - Number(data.giasanpham)));
         }
@@ -63,7 +61,7 @@ const ComboCard = ({ data, totalPayment }) => {
                     ]}
                     numberOfLines={1}
                 >
-                    {data.giasanpham}
+                    {data.giasanpham} đ
                 </Text>
                 <Text
                     style={[
@@ -95,7 +93,6 @@ const ComboCard = ({ data, totalPayment }) => {
                     <Pressable
                         style={[styles.buttonView, styles.downButton]}
                         onPress={() => handleQuantityCombo('-')}
-                        disabled={quantity === 0}
                     >
                         <Text
                             style={[

@@ -10,9 +10,10 @@ import {
 } from '../components';
 import { ScrollView } from 'react-native-virtualized-view';
 import showtimesAPI from '../api/showtimesAPI';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { datesRemainingSelector } from '../redux/selectors';
 import { format, addDays } from 'date-fns';
+import { getDate, resetStateCalender } from '../redux/slice/calendarsSlice';
 
 const SelectShowtime = React.lazy(() => import('../components/SelectShowtime'));
 
@@ -22,7 +23,10 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
     const [statusGetAPI, setSatusGetAPI] = useState(false);
     const [weekSchedule, setWeekSchedule] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [firstItem, setFirstItem] = useState(null);
+    const [isScheduleUpdated, setIsScheduleUpdated] = useState(false);
 
+    const dispatch = useDispatch();
     let dateSelector = useSelector(datesRemainingSelector);
 
     // console.log({ idMovie });
@@ -50,16 +54,24 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
 
     useEffect(() => {
         updateWeekSchedule();
+        setIsScheduleUpdated(true);
 
         // Cập nhật lịch sau mỗi 1 phút
         const interval = setInterval(() => {
             updateWeekSchedule();
+            setIsScheduleUpdated(false);
         }, 120000); // 2 phút
 
         return () => {
             clearInterval(interval);
         };
     }, []);
+
+    useEffect(() => {
+        if (isScheduleUpdated && firstItem) {
+            dispatch(getDate(format(firstItem, 'yyyy-MM-dd')));
+        }
+    }, [isScheduleUpdated, firstItem]);
 
     useEffect(() => {
         const fetchingShowtimeMovies = async () => {
@@ -116,6 +128,12 @@ const ShowtimeMovieScreen = ({ navigation, route }) => {
                             data={format(item, 'yyyy-MM-dd')}
                         />
                     )}
+                    onViewableItemsChanged={({ viewableItems }) => {
+                        if (viewableItems.length > 0) {
+                            const firstViewableItem = viewableItems[0].item;
+                            setFirstItem(firstViewableItem);
+                        }
+                    }}
                 />
                 <MovieTitle title={nameMovie} />
                 {loading ? (
