@@ -18,7 +18,7 @@ const MovieCard = ({ data, listCase }) => {
 
     var idMovie = data.id_phim;
     var idTicket = data.id_ve;
-    // console.log({ idMovie }, { idTicket });
+    console.log({ idMovie }, { idTicket });
 
     const handleButtonMovieCard = async () => {
         if (listCase === 'TicketViewed' || listCase === 'TicketUnView') {
@@ -27,9 +27,16 @@ const MovieCard = ({ data, listCase }) => {
                 idTicket,
             });
         } else {
+            let _listCase =
+                listCase === 'moviePresent'
+                    ? (_listCase = 'moviePresent')
+                    : listCase === 'movieUpcoming'
+                    ? 'movieUpcoming'
+                    : null;
             navigation.navigate('Detail', {
                 id: idMovie,
                 idTicket,
+                movieCase: _listCase,
             });
         }
         console.log('id phim', data.id_phim);
@@ -37,7 +44,7 @@ const MovieCard = ({ data, listCase }) => {
     };
 
     const navigateMovieToShowtimeMovie = () => {
-        listCase === 'MoviePresent'
+        listCase === 'moviePresent'
             ? navigation.navigate('ShowtimeMovie', {
                   idMovie: data.id_phim,
                   nameMovie: data.ten_phim,

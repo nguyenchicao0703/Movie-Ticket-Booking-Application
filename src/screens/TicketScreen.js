@@ -2,9 +2,9 @@ import { Pressable, Text, View, useWindowDimensions } from 'react-native';
 import React, { useEffect, useState, Suspense } from 'react';
 import { Colors, Fonts } from '../constants';
 import { Header, Loading, NoShowtimeMessage } from '../components';
-import ticketAPI from '../api/ticketAPI';
-import { useSelector } from 'react-redux';
-import { usersSelector } from '../redux/selectors';
+import { useSelector, useDispatch } from 'react-redux';
+import { ticketsSelector, usersSelector } from '../redux/selectors';
+import { fetchTicket } from '../redux/slice/ticketsSlice';
 
 const MovieList = React.lazy(() => import('../components/list/MovieList'));
 
@@ -21,22 +21,23 @@ const TicketScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
     const [movie, setMovie] = useState([]);
 
+    const dispatch = useDispatch();
     const idUser = useSelector(usersSelector);
+    const ticketMovie = useSelector(ticketsSelector);
 
     useEffect(() => {
-        const fetchTickets = async () => {
-            try {
-                const response = await ticketAPI.getAll(
-                    idUser.users.data.id_user,
-                );
-                // console.log('response ticket', response.data);
-                response.status ? setData(response.data) : setData([]);
-            } catch (error) {
-                console.log('Error fetching tickets', error);
-            }
-        };
-        fetchTickets();
+        dispatch(fetchTicket(idUser.users.data?.id_user));
     }, []);
+
+    useEffect(() => {
+        const filterTypeTicket = ticketMovie.filter((item) =>
+            clickTab === 0 ? item.loaikc === 1 : item.loaikc === 2,
+        );
+        setMovie(filterTypeTicket);
+        clickTab === 0
+            ? (listCase = 'TicketViewed')
+            : (listCase = 'TicketUnView');
+    }, [ticketMovie, clickTab]);
 
     useEffect(() => {
         const filterTypeTicket = data.filter((item) =>
@@ -105,7 +106,10 @@ const TicketScreen = ({ navigation }) => {
                 ))}
             </View>
             {movie.length === 0 ? (
-                <NoShowtimeMessage title={'Chưa có dữ liệu phim'} />
+                <NoShowtimeMessage
+                    title={'Chưa có dữ liệu vé của bạn'}
+                    listCase={'NoTicket'}
+                />
             ) : (
                 <Suspense fallback={<Loading />}>
                     <MovieList data={movie} listCase={listCase} />
