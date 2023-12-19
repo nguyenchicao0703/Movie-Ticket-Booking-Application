@@ -8,12 +8,20 @@ import {
 } from 'react-native';
 import React from 'react';
 import { Colors, ComboImage, Fonts, PaymentImage } from '../constants';
+import { useDispatch } from 'react-redux';
 
-const PaymentCombo = ({ name, number, amount, image }) => {
+const PaymentCombo = ({ data }) => {
     const { width, fontScale } = useWindowDimensions();
     const fontSize = fontScale * 15;
+    console.log(data.id);
+    const dispatch = useDispatch();
+    const handleCancelCombo = () => {
+        // dispatch(setCombo({ id: Number(data.id_combo), soluong: -1, cancel: '-' }))
+    };
+
     return (
         <View
+            key={data.id}
             style={{
                 width: '100%',
                 justifyContent: 'center',
@@ -27,7 +35,7 @@ const PaymentCombo = ({ name, number, amount, image }) => {
         >
             <View style={{ flexDirection: 'row' }}>
                 <Image
-                    source={{ uri: image }}
+                    source={{ uri: data.image }}
                     style={{ width: width * 0.15, height: width * 0.19 }}
                 />
                 <View
@@ -48,7 +56,7 @@ const PaymentCombo = ({ name, number, amount, image }) => {
                         ]}
                         numberOfLines={1}
                     >
-                        {name}
+                        {data.name}
                     </Text>
                     <Text
                         style={[
@@ -58,7 +66,8 @@ const PaymentCombo = ({ name, number, amount, image }) => {
                             },
                         ]}
                     >
-                        Giá: {amount} đ
+                        {/* Giá: {amount} đ */}
+                        Giá: đ
                     </Text>
                     <Text
                         style={[
@@ -68,7 +77,7 @@ const PaymentCombo = ({ name, number, amount, image }) => {
                             },
                         ]}
                     >
-                        Số lượng: {number}
+                        Số lượng: {data.soluong}
                     </Text>
                 </View>
             </View>
@@ -80,6 +89,7 @@ const PaymentCombo = ({ name, number, amount, image }) => {
                         alignSelf: 'center',
                     },
                 ]}
+                onPress={handleCancelCombo}
             >
                 <Image
                     source={PaymentImage[2].image}

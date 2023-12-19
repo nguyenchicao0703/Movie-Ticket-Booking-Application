@@ -12,10 +12,9 @@ import {
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import CryptoJS from 'crypto-js';
-import { Colors, Fonts, HomeImage, PaymentImage } from '../constants';
+import { Colors, Fonts, PaymentImage } from '../constants';
 import {
     Header,
-    PaymentCombo,
     PaymentContentBar,
     PaymentTitleBar,
     AuthAccountButton,
@@ -33,6 +32,7 @@ import PaymentDiscount from '../components/PaymentDiscount';
 import socket from '../utils/socket';
 import BillAPI from '../api/apiCreateBill';
 import { setSelectedSeats } from '../redux/slice/selectedSeatsSlice';
+import { changeState, resetCombo } from '../redux/slice/bookingSlice';
 
 const { PayZaloBridge } = NativeModules;
 
@@ -40,24 +40,19 @@ const payZaloBridgeEmitter = new NativeEventEmitter(PayZaloBridge);
 
 const PaymentScreen = ({ navigation, route }) => {
     const { width, fontScale } = useWindowDimensions();
+    const fontSize = fontScale * 15;
     const textSizeInfoMovie = fontScale * 14;
-
     const [socket1, setSocket1] = useState(null);
-
     const { response } = route.params;
-
     const resCombo = response.data;
-    // console.log(response.data.combo);
     const dispatch = useDispatch();
     const idUsersSelector = useSelector(usersSelector);
     const dataChairs = useSelector(chairsSelector);
-    let indexGhe = null;
-    console.log('chaird', dataChairs.listSeat);
+
     if (dataChairs && dataChairs.listSeat && dataChairs.listSeat.length > 0) {
         indexGhe = dataChairs.listSeat;
     }
     const idShowtimes = dataChairs.idShowtime;
-    console.log('idShowtimes', Number(idShowtimes));
     let idCombo;
     let quality;
     try {
@@ -67,8 +62,6 @@ const PaymentScreen = ({ navigation, route }) => {
         }
     } catch (error) {}
 
-    console.log('=======================');
-    // console.log(idCombo, quality);
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };
@@ -95,9 +88,10 @@ const PaymentScreen = ({ navigation, route }) => {
     const discountCode = discountData.discountCode;
     const discountPrice = discountData.discountPayment;
     const discountId = discountData.discountId;
-    const [money, setMoney] = React.useState('0');
     const [token, setToken] = React.useState('');
     const bookingData = useSelector(bookingSelector);
+    const [bookingCombo, setBookingCombo] = useState(bookingData.combo);
+    console.log('bokking data combo', bookingData.combo);
     const itemBK = [
         bookingData.movieName,
         bookingData.movieImage,
@@ -110,24 +104,17 @@ const PaymentScreen = ({ navigation, route }) => {
         discountPrice,
     ];
     const postData = {
-        id_user: parseInt(idUsersSelector.users.data.id_user),
-        id_suat: parseInt(response.data.id_suatchieu),
+        id_user: parseInt(idUsersSelector.users?.data?.id_user),
+        id_suat: parseInt(response.data?.id_suatchieu),
         id_km: Number(discountId),
-        tongtien: response.data.tongbill,
+        tongtien: response.data?.tongbill,
         soghe: bookingData.seatsIndex,
         listcombo: [{ id: parseInt(idCombo), soluong: parseInt(quality) }],
     };
-    console.log(postData);
-    // console.log(token);
-    // console.log(itemBK);
 
     const token_trans_id = token;
     const [dataApi, setDataApi] = React.useState('');
-    const data = dataApi;
-    const [returncode, setReturnCode] = React.useState('');
     const [dataID, setDataID] = React.useState('');
-    const [dataMac, setDataMac] = React.useState();
-    const [zpCode, setZpCode] = React.useState([]);
 
     useEffect(() => {
         const subscription = payZaloBridgeEmitter.addListener(
@@ -146,55 +133,7 @@ const PaymentScreen = ({ navigation, route }) => {
         );
         return () => subscription?.remove();
     }, []);
-    // useEffect(() => {
-    //     socket.connect();
-    //     function onConnect() {
-    //         console.log('connect');
-    //     }
-    //     function onDisconnect(value) {
-    //         console.log('disconnect');
-    //         console.log('discount', value);
-    //     }
-    //     socket.on('connect', onConnect);
-    //     socket.on('disconnect', onDisconnect);
-    //     socket.on('connect_error', (err) => {
-    //         console.log(err instanceof Error);
-    //         console.log(err.message);
-    //     });
-    //     return () => {
-    //         socket.disconnect();
-    //         socket.off('connect', onConnect);
-    //         socket.off('disconnect', onDisconnect);
-    //     };
-    // }, []);
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const response = await BillAPI.postBill(postData);
-    //             console.log(response);
-    //         } catch (error) {
-    //             console.log('Error response Combo', error);
-    //         }
-    //     };
-    //     return fetchData();
-    // }, []);
-    console.log('id user', idUsersSelector.users.data.id_user);
 
-    const lockSeat = async () => {
-        try {
-            // console.log('listghe', [...indexSeat]);
-            socket.emit(
-                'datghe',
-                JSON.stringify({
-                    id_user:
-                        idUsersSelector.users.length !== 0 &&
-                        idUsersSelector.users.data.id_user,
-                    id_suat: Number(idShowtimes),
-                    listghe: dataChairs.listGhe,
-                }),
-            );
-        } catch (error) {}
-    };
     function getCurrentDateYYMMDD() {
         var todayDate = new Date().toISOString().slice(2, 10);
         return todayDate.split('-').join('');
@@ -204,6 +143,7 @@ const PaymentScreen = ({ navigation, route }) => {
         var todayDate = new Date().toISOString().slice(2, 10);
         return todayDate.split('-').join('');
     }
+
     async function createOrder(money) {
         let apptransid = getCurrentDateYYMMDD() + '_' + new Date().getTime();
 
@@ -234,10 +174,6 @@ const PaymentScreen = ({ navigation, route }) => {
         ).toString();
         setDataID(apptransid);
         setDataMac(mac);
-        // console.log('====================================');
-        // console.log('hmacInput: ' + hmacInput);
-        // console.log('mac: ' + mac);
-        // console.log('====================================');
         let order = {
             app_id: appid,
             app_user: appuser,
@@ -249,7 +185,6 @@ const PaymentScreen = ({ navigation, route }) => {
             description: description,
             mac: mac,
         };
-        // console.log(order);
 
         let formBody = [];
         for (let i in order) {
@@ -268,7 +203,6 @@ const PaymentScreen = ({ navigation, route }) => {
         })
             .then((response) => response.json())
             .then((resJson) => {
-                // console.log(resJson);
                 setDataApi(resJson);
                 setToken(resJson.zp_trans_token);
                 setReturnCode(resJson.return_code);
@@ -276,33 +210,12 @@ const PaymentScreen = ({ navigation, route }) => {
             .catch((error) => {
                 console.log('error ', error);
             });
-        // console.log('123123123:' + dataID);
     }
-    // useEffect(() => {
-    //     try {
-    //         socket.emit(
-    //             'datghe',
-    //             JSON.stringify({
-    //                 id_user:
-    //                     idUsersSelector.users.length !== 0 &&
-    //                     idUsersSelector.users.data.id_user,
-    //                 id_suat: Number(idShowtimes),
-    //                 listghe: dataChairs.listGhe,
-    //             }),
-    //         );
-    //     } catch (error) {}
-    // }, []);
 
     const payOrder = (token) => {
         createOrder(parseInt(bookingData.totalPayment - discountPrice));
         // token từ BE trả về nha
         const payZP = NativeModules.ZaloPayBridge;
-        // console.log(token);
-        // console.log(returncode);
-        // console.log(token_trans_id);
-        // console.log(data);
-        // console.log('=====================');
-        // console.log('order:' + reqmac);
 
         payZP.payOrder(token_trans_id);
 
@@ -370,6 +283,8 @@ const PaymentScreen = ({ navigation, route }) => {
                     );
                     socket1.emit('suat', JSON.stringify({ id: idShowtimes }));
                     dispatch(setSelectedSeats([]));
+                    dispatch(resetCombo([]));
+                    dispatch(changeState(1));
                 } catch (error) {
                     console.log('Error response Combo', error);
                 }
@@ -394,6 +309,11 @@ const PaymentScreen = ({ navigation, route }) => {
     const formattedPayment = formatCurrency(
         bookingData.totalPayment - discountPrice,
     );
+
+    useEffect(() => {
+        setBookingCombo(bookingData.combo);
+    }, [bookingData.combo]);
+
     return (
         <View
             style={{
@@ -420,7 +340,7 @@ const PaymentScreen = ({ navigation, route }) => {
                             height: width * 0.35,
                             borderRadius: 5,
                         }}
-                        source={{ uri: response.data.hinhanh }}
+                        source={{ uri: response.data?.hinhanh }}
                     />
                     <View
                         style={{
@@ -489,26 +409,75 @@ const PaymentScreen = ({ navigation, route }) => {
                 <PaymentBar content={'Số lượng'} number={1} lineBoolean />
                 <PaymentContentBar
                     content={'Tổng'}
-                    number={bookingData.totalPayment}
+                    number={formatCurrency(bookingData.totalPayment)}
                 />
                 <PaymentTitleBar title={'Thông tin bắp nước'} />
-                {/* <PaymentCombo
-                    name={response.data.combo.tensanpham}
-                    amount={response.data.combo.giatien}
-                    number={response.data.combo.soluong}
-                    image={response.data.combo.hinhanh}
-                /> */}
-                {/* <PaymentCombo
-                    name={'BABY SHARK SINGLE COMBO '}
-                    amount={'195.000'}
-                    number={'1'}
-                /> */}
-                {/* <PaymentContentBar content={'Tổng'} number={'>'} /> */}
-                <PaymentContentBar
-                    content={'Combo'}
-                    number={'>'}
-                    numberBoolean
-                />
+                {bookingCombo.map((data) => (
+                    <View
+                        key={data.id}
+                        style={{
+                            width: '100%',
+                            justifyContent: 'center',
+                            paddingVertical: 12,
+                            justifyContent: 'space-between',
+                            paddingHorizontal: 10,
+                            flexDirection: 'row',
+                            borderBottomWidth: 1,
+                            borderColor: Colors.OPACITY_MEDIUM_GRAY_LINE,
+                        }}
+                    >
+                        <View style={{ flexDirection: 'row' }}>
+                            <Image
+                                source={{ uri: data.image }}
+                                style={{
+                                    width: width * 0.15,
+                                    height: width * 0.19,
+                                }}
+                            />
+                            <View
+                                style={{
+                                    width: '80%',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    marginLeft: 5,
+                                }}
+                            >
+                                <Text
+                                    style={[
+                                        styles.text,
+                                        {
+                                            fontSize,
+                                            textTransform: 'uppercase',
+                                        },
+                                    ]}
+                                    numberOfLines={1}
+                                >
+                                    {data.name}
+                                </Text>
+                                <Text
+                                    style={[
+                                        styles.text,
+                                        {
+                                            fontSize,
+                                        },
+                                    ]}
+                                >
+                                    Giá: {formatCurrency(data.price)} đ
+                                </Text>
+                                <Text
+                                    style={[
+                                        styles.text,
+                                        {
+                                            fontSize,
+                                        },
+                                    ]}
+                                >
+                                    Số lượng: {data.soluong}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                ))}
                 <PaymentTitleBar title={'Phương thức giảm giá'} />
                 {discountPrice != 0 ? (
                     <PaymentDiscount
@@ -606,5 +575,9 @@ const styles = StyleSheet.create({
     textContent: {
         fontFamily: Fonts.Regular,
         fontSize: 13,
+    },
+    text: {
+        color: Colors.LIGHT_GRAY,
+        fontFamily: Fonts.Regular,
     },
 });

@@ -8,8 +8,12 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { Colors, Fonts } from '../../constants';
-import { useDispatch } from 'react-redux';
-import { setCombo, setTotalPayment } from '../../redux/slice/bookingSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    resetCombo,
+    setCombo,
+    setTotalPayment,
+} from '../../redux/slice/bookingSlice';
 
 const ComboCard = ({ data, totalPayment }) => {
     const { width, fontScale } = useWindowDimensions();
@@ -19,16 +23,39 @@ const ComboCard = ({ data, totalPayment }) => {
     const [quantity, setQuantity] = useState(0);
 
     const dispatch = useDispatch();
+    const changeStateSelector = useSelector(
+        (state) => state.booking.changeState,
+    );
+
+    React.useEffect(() => {
+        setQuantity(0);
+        dispatch(resetCombo([]));
+    }, [changeStateSelector]);
 
     const handleQuantityCombo = (operator) => {
         if (operator === '+') {
             setQuantity(quantity + 1);
             dispatch(setTotalPayment(totalPayment + Number(data.giasanpham)));
-            dispatch(setCombo({ id: Number(data.id_combo), soluong: 1 }));
+            dispatch(
+                setCombo({
+                    id: Number(data.id_combo),
+                    soluong: 1,
+                    image: data.hinhanh,
+                    name: data.tensanpham,
+                    price: data.giasanpham,
+                }),
+            );
         } else if (operator === '-') {
             if (quantity === 0) return;
             setQuantity(quantity - 1);
             dispatch(setTotalPayment(totalPayment - Number(data.giasanpham)));
+            dispatch(
+                setCombo({
+                    id: Number(data.id_combo),
+                    soluong: -1,
+                    price: data.giasanpham,
+                }),
+            );
         }
     };
 

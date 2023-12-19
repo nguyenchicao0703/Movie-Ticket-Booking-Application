@@ -221,7 +221,7 @@ const SeatScreen = ({ navigation, route }) => {
                     );
                     setCheckStatusTimerSeats(true);
                     console.log('log');
-                }, 60000); // 1 phuts
+                }, 5000); // 1 phuts
 
                 setTimeoutIds([...timeoutIds, timerId]);
                 setTimer(timerId);

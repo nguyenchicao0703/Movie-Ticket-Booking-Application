@@ -3,20 +3,20 @@ import React from 'react';
 import { Colors, Fonts } from '../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTicket } from '../redux/slice/ticketsSlice';
-import { ticketsSelector } from '../redux/selectors';
+import { ticketsSelector, usersSelector } from '../redux/selectors';
 import { fetchMovies } from '../redux/slice/moviesSlice';
 
 const NoShowtimeMessage = ({ title, listCase }) => {
     const [refreshing, setRefreshing] = React.useState(false);
 
     const dispatch = useDispatch();
-    const idUser = useSelector(ticketsSelector);
+    const idUser = useSelector(usersSelector);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         setTimeout(() => {
             if (listCase === 'NoTicket') {
-                dispatch(fetchTicket(idUser.users.data?.id_user));
+                dispatch(fetchTicket(idUser.users?.data?.id_user));
             } else if (listCase === 'NoMovie') {
                 dispatch(fetchMovies());
             }

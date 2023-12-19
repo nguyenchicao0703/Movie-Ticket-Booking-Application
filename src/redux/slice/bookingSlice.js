@@ -12,6 +12,7 @@ const bookingSlice = createSlice({
         room: '',
         totalPayment: 0,
         combo: [],
+        changeState: 0,
     },
     reducers: {
         setMovieName: (state, action) => {
@@ -41,13 +42,25 @@ const bookingSlice = createSlice({
         setCombo: (state, action) => {
             const newItem = action.payload;
             const existingItem = state.combo.find(
-                (item) => item.id === newItem.id,
+                (item) => item?.id === newItem?.id,
             );
             if (existingItem) {
                 existingItem.soluong += newItem.soluong;
+                existingItem.price = existingItem.soluong * newItem.price;
+                if (existingItem.soluong === 0 || newItem.soluong === 0) {
+                    state.combo = state.combo.filter(
+                        (item) => item?.id !== newItem?.id,
+                    );
+                }
             } else {
                 state.combo.push(newItem);
             }
+        },
+        resetCombo: (state, action) => {
+            state.combo = action.payload;
+        },
+        changeState: (state, action) => {
+            state.changeState += action.payload;
         },
     },
 });
@@ -62,6 +75,8 @@ export const {
     setTotalPayment,
     setRoom,
     setCombo,
+    resetCombo,
+    changeState,
 } = bookingSlice.actions;
 
 export default bookingSlice.reducer;

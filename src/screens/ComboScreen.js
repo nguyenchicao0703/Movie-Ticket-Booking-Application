@@ -7,6 +7,8 @@ import { Colors } from '../constants';
 import comboAPI from '../api/comboAPI';
 import { useSelector } from 'react-redux';
 import { bookingSelector } from '../redux/selectors';
+import { useDispatch } from 'react-redux';
+import { changeState } from '../redux/slice/bookingSlice';
 
 const ComboScreen = ({ navigation, route }) => {
     const [data, setData] = useState();
@@ -16,8 +18,8 @@ const ComboScreen = ({ navigation, route }) => {
 
     // console.log({ idShowtimes }, { quantityTicket });
 
+    const dispatch = useDispatch();
     const dataBooking = useSelector(bookingSelector);
-    // console.log({ dataBooking });
 
     const handleButtonMenu = () => {
         navigation.openDrawer();
@@ -25,6 +27,7 @@ const ComboScreen = ({ navigation, route }) => {
 
     const handleButtonBack = () => {
         navigation.goBack(null);
+        dispatch(changeState(1));
     };
 
     const navigationComboToPayment = async () => {

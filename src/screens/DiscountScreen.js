@@ -32,7 +32,7 @@ const DiscountScreen = ({ navigation }) => {
     const dispatch = useDispatch();
     const dataUser = useSelector(usersSelector);
     // console.log(dataUser.users.data.id_user);
-    const user_id = dataUser.users.data.id_user;
+    const user_id = dataUser.users?.data?.id_user;
     const handleButtonMenu = () => {
         navigation.openDrawer();
     };

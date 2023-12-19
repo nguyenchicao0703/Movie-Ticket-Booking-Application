@@ -39,7 +39,7 @@ const BillScreen = ({ navigation, route }) => {
     const idUser = Number(userData.users.data.id_user);
     // let idUser = Number(userData.users.data.id_user);
     console.log(id);
-    console.log(idTicket);
+    console.log({ idTicket });
     const idVe = Number(idTicket);
     const handleButtonBack = () => {
         // navigation.navigate('Home');
@@ -55,7 +55,7 @@ const BillScreen = ({ navigation, route }) => {
                 try {
                     const responseBill = await billAPI.watchBill(idUser, idVe);
                     const resBill = responseBill.data;
-                    console.log(responseBill);
+                    console.log({ responseBill });
 
                     if (responseBill.status === true) {
                         dispatch(setMovieName(resBill.ten_phim));
@@ -70,6 +70,7 @@ const BillScreen = ({ navigation, route }) => {
                         // Xử lý trạng thái không thành công (nếu cần)
                         console.error('Lỗi khi lấy dữ liệu: Không thành công');
                     }
+                    console.log('akalalalla');
                 } catch (error) {
                     // Xử lý lỗi khi fetch dữ liệu không thành công
                     console.log('Lỗi khi lấy dữ liệu:', error);
