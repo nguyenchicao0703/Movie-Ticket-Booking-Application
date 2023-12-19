@@ -93,10 +93,10 @@ const SeatScreen = ({ navigation, route }) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [storageSeats, setStorageSeats] = useState('');
     const [indexSeat, setIndexSeat] = useState([]);
-    const [checkStatusTimerSeats, setCheckStatusTimerSeats] = useState(true);
-    const [timer, setTimer] = useState(null);
+    // const [checkStatusTimerSeats, setCheckStatusTimerSeats] = useState(true);
+    // const [timer, setTimer] = useState(null);
     const [countSeat, setCountSeat] = useState(0);
-    const [timeoutIds, setTimeoutIds] = useState([]);
+    // const [timeoutIds, setTimeoutIds] = useState([]);
 
     // console.log({ idShowtimes });
 
@@ -165,7 +165,7 @@ const SeatScreen = ({ navigation, route }) => {
         setStorageSeats('');
         setTotalPrice(0);
         setIndexSeat([]);
-        setTimeoutIds([]);
+        // setTimeoutIds([]);
     }, []);
 
     const handleSeatPress = (seatId, seatIndexNumber) => {
@@ -173,7 +173,7 @@ const SeatScreen = ({ navigation, route }) => {
         // console.log({ seatId });
         const isSelected = selectedSeats.includes(seatId);
         let updatedSeats;
-        setCheckStatusTimerSeats(false);
+        // setCheckStatusTimerSeats(false);
         if (isSelected) {
             socket.emit(
                 'chonghe',
@@ -208,26 +208,26 @@ const SeatScreen = ({ navigation, route }) => {
             ]);
             setTotalPrice(totalPrice + priceShowitmes);
             setCountSeat(countSeat + 1);
-            if (checkStatusTimerSeats) {
-                const timerId = setTimeout(() => {
-                    returnDefault();
-                    socket.emit(
-                        'chonghe',
-                        JSON.stringify({
-                            id: idShowtimes,
-                            index: seatIndexNumber,
-                            status: 'A',
-                        }),
-                    );
-                    setCheckStatusTimerSeats(true);
-                    console.log('log');
-                }, 5000); // 1 phuts
+            // if (checkStatusTimerSeats) {
+            // const timerId = setTimeout(() => {
+            //     returnDefault();
+            //     socket.emit(
+            //         'chonghe',
+            //         JSON.stringify({
+            //             id: idShowtimes,
+            //             index: seatIndexNumber,
+            //             status: 'A',
+            //         }),
+            //     );
+            //     setCheckStatusTimerSeats(true);
+            //     console.log('log');
+            // }, 5000); // 1 phuts
 
-                setTimeoutIds([...timeoutIds, timerId]);
-                setTimer(timerId);
-            }
+            // setTimeoutIds([...timeoutIds, timerId]);
+            // setTimer(timerId);
+            // }
         }
-        setCheckStatusTimerSeats(true);
+        // setCheckStatusTimerSeats(true);
 
         // setSelectedSeats(updatedSeats);
         dispatch(setSelectedSeats(updatedSeats));
@@ -283,7 +283,7 @@ const SeatScreen = ({ navigation, route }) => {
         // setStorageSeats('');
         // setTotalPrice(0);
         setIndexSeat([]);
-        timeoutIds.forEach((value) => clearTimeout(value));
+        // timeoutIds.forEach((value) => clearTimeout(value));
         navigation.navigate('Combo', {
             idShowtimes,
             quantityTicket: countSeat,

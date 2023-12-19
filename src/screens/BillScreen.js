@@ -22,7 +22,7 @@ import {
     setCombo,
 } from '../redux/slice/bookingSlice';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useFocusEffect } from '@react-navigation/native';
+
 const BillScreen = ({ navigation, route }) => {
     const handleButtonMenu = () => {
         navigation.openDrawer();
@@ -70,7 +70,6 @@ const BillScreen = ({ navigation, route }) => {
                         // Xử lý trạng thái không thành công (nếu cần)
                         console.error('Lỗi khi lấy dữ liệu: Không thành công');
                     }
-                    console.log('akalalalla');
                 } catch (error) {
                     // Xử lý lỗi khi fetch dữ liệu không thành công
                     console.log('Lỗi khi lấy dữ liệu:', error);
@@ -83,39 +82,11 @@ const BillScreen = ({ navigation, route }) => {
             fetchBillData();
         }
     }, [shouldFetchBill]);
+
     React.useEffect(() => {
         setShouldFetchBill(true);
     }, [idUser, idVe]);
 
-    // useFocusEffect(
-    //     React.useCallback(() => {
-    //         try {
-    //             const getBill = async () => {
-    //                 const responseBill = await billAPI.watchBill(idUser, idVe);
-    //                 const resBill = responseBill.data;
-    //                 console.log(responseBill);
-
-    //                 if (responseBill.status === true) {
-    //                     dispatch(setMovieName(resBill.ten_phim));
-    //                     dispatch(setCinemaName(resBill.ten_rap));
-    //                     dispatch(setDateShowtime(resBill.ngaychieu));
-    //                     dispatch(setShowtime(resBill.giochieu));
-    //                     dispatch(setSeatsIndex(resBill.ghe));
-    //                     dispatch(setTotalPayment(resBill.tongtien));
-    //                     dispatch(setCombo(resBill.combo));
-    //                 } else {
-    //                     // Xử lý trạng thái không thành công (nếu cần)
-    //                     console.error('Lỗi khi lấy dữ liệu: Không thành công');
-    //                 }
-    //                 getBill();
-    //             };
-    //         } catch (error) {
-    //             // Xử lý lỗi khi fetch dữ liệu không thành công
-    //             console.error('Lỗi khi lấy dữ liệu:', error.message);
-    //         }
-    //     }),
-    // );
-    // console.log(response.ghe);
     const dataBooking = useSelector(bookingSelector);
     const formatCurrency = (amount) => {
         const formatter = new Intl.NumberFormat('vi-VN');

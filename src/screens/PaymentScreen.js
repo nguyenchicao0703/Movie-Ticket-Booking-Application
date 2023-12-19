@@ -114,7 +114,10 @@ const PaymentScreen = ({ navigation, route }) => {
 
     const token_trans_id = token;
     const [dataApi, setDataApi] = React.useState('');
+    const [returncode, setReturnCode] = React.useState('');
     const [dataID, setDataID] = React.useState('');
+    const [dataMac, setDataMac] = React.useState();
+    const [zpCode, setZpCode] = React.useState([]);
 
     useEffect(() => {
         const subscription = payZaloBridgeEmitter.addListener(
@@ -414,7 +417,7 @@ const PaymentScreen = ({ navigation, route }) => {
                 <PaymentTitleBar title={'Thông tin bắp nước'} />
                 {bookingCombo.map((data) => (
                     <View
-                        key={data.id}
+                        key={data?.id}
                         style={{
                             width: '100%',
                             justifyContent: 'center',
@@ -428,7 +431,7 @@ const PaymentScreen = ({ navigation, route }) => {
                     >
                         <View style={{ flexDirection: 'row' }}>
                             <Image
-                                source={{ uri: data.image }}
+                                source={{ uri: data?.image }}
                                 style={{
                                     width: width * 0.15,
                                     height: width * 0.19,
@@ -452,7 +455,7 @@ const PaymentScreen = ({ navigation, route }) => {
                                     ]}
                                     numberOfLines={1}
                                 >
-                                    {data.name}
+                                    {data?.name}
                                 </Text>
                                 <Text
                                     style={[
@@ -462,7 +465,7 @@ const PaymentScreen = ({ navigation, route }) => {
                                         },
                                     ]}
                                 >
-                                    Giá: {formatCurrency(data.price)} đ
+                                    Giá: {formatCurrency(data?.price)} đ
                                 </Text>
                                 <Text
                                     style={[
@@ -472,7 +475,7 @@ const PaymentScreen = ({ navigation, route }) => {
                                         },
                                     ]}
                                 >
-                                    Số lượng: {data.soluong}
+                                    Số lượng: {data?.soluong}
                                 </Text>
                             </View>
                         </View>

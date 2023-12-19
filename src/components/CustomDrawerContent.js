@@ -16,7 +16,6 @@ import { usersSelector } from '../redux/selectors';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { resetUsers } from '../redux/slice/usersSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { is } from 'date-fns/locale';
 
 const Line = () => {
     return (
@@ -279,14 +278,14 @@ const CustomDrawerContent = ({ navigation }) => {
             </Pressable>
             <Line />
             <Item
-                imageIndex={1}
+                imageIndex={3}
                 title={'Đặt vé theo phim'}
                 navigation={navigation}
                 router={'Movie'}
             />
             <Line />
             <Item
-                imageIndex={3}
+                imageIndex={1}
                 title={'Đặt vé theo rạp'}
                 navigation={navigation}
                 router={'Cinema'}
