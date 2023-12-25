@@ -1,5 +1,11 @@
 # Movie Ticket Booking Application
 
+### Mô tả
+Ứng dụng đặt vé xem phim trực tuyến
+
+### Demo
+https://github.com/nguyenchicao0703/Movie-Ticket-Booking-Application/assets/109658324/263e5808-0e3d-4f9e-9b02-154fea3115b6
+
 ### Developer React-Native
 **Tổng:** 3.
 
@@ -9,47 +15,45 @@
 ### Chí Cao
 | Task giao diện                                            | Cấp độ               | Trạng thái           |
 |-----------------------------------------------------------|----------------------|----------------------|
-| Màn hình Home                                             | Khó                  | Hoàn thành           |
+| Màn hình Home                                             | Trung bình           | Hoàn thành           |
 | Màn hình Select Showtime                                  | Khó                  | Hoàn thành           |
-| Màn hình Seat                                             | Khó                  | Đang làm việc        |
+| Màn hình Seat                                             | Khó                  | Hoàn thành           |
+| Màn hình Combo                                            | Khó                  | Hoàn thành           |
 | Màn hình Movie                                            | Trung bình           | Hoàn thành           |
 | Màn hình Ticket History                                   | Trung bình           | Hoàn thành           |
 
 ### Hoàng Dũng
 | Task giao diện                                            | Cấp độ               | Trạng thái           |
 |-----------------------------------------------------------|----------------------|----------------------|
-| Màn hình Combo                                            | Khó                  | Đang làm việc        |
-| Màn hình Payment                                          | Khó                  | Đang làm việc        |
-| Màn hình Discount                                         | Dễ                   | Đang làm việc        |
-| Màn hình Bill                                             | Dễ                   | Chỉnh sửa            |
-| Màn hình Profile                                          | Dễ                   | Hoàn thành           |
-| Màn hình Update Profile                                   | Trung bình           | Đang làm việc        |
+| Màn hình Payment                                          | Khó                  | Hoàn thành           |
+| Màn hình Discount                                         | Dễ                   | Hoàn thành           |
+| Màn hình Bill                                             | Dễ                   | Hoàn thành           |
 
 ### Gia Thuận
 | Task giao diện                                            | Cấp độ               | Trạng thái           |
 |-----------------------------------------------------------|----------------------|----------------------|
 | Màn hình Welcome                                          | Dễ                   | Hoàn thành           |
 | Màn hình Login                                            | Dễ                   | Hoàn thành           |
-| Màn hình Register                                         | Trung bình           | Chỉnh sửa            |
-| Màn hình Auth OTP                                         | Trung bình           | Hoàn thành           |
+| Màn hình Register                                         | Trung bình           | Hoàn thành           |
 | Màn hình Cinema                                           | Dễ                   | Hoàn thành           |
 | Màn hình Detail Movie                                     | khó                  | Hoàn thành           |
-
-------Task giao diện chưa được responsive theo cửa sổ màn hình------
+| Màn hình Update Profile                                   | Trung bình           | Hoàn thành           |
 
 ### Cấu trúc thư mục
 - `src/`: Thư mục gốc của dự án.
   - `api/`: Chứa các tệp tin liên quan đến việc giao tiếp với API.
-    - `index.js`: Tệp tin xử lý API.
-  - `assets/`: Chứa các tài nguyên như hình ảnh.
-    - `Homes/`: Chứa các tài nguyên liên quan đến trang chủ.
-      - `image1.png`
-      - `image2.png`
-      - `image3.png`
-    - `Movies/`: Chứa các tài nguyên liên quan đến phim.
-      - `image1.png`
-      - `image2.png`
-      - `image3.png`
+    - `axiosClient.js`: Tệp tin xử lý API.
+  - `assets/`: Chứa các tài nguyên như hình ảnh, phong chữ, ....
+    - `fonts/`: Chứa các phong chữ.
+    - `images/`: Chứa các tài nguyên như hình ảnh.
+      - `Homes/`: Chứa các tài nguyên liên quan đến trang chủ.
+        - `image1.png`
+        - `image2.png`
+        - `image3.png`
+      - `Movies/`: Chứa các tài nguyên liên quan đến phim.
+        - `image1.png`
+        - `image2.png`
+        - `image3.png`
   - `screens/`: Chứa các thành phần màn hình.
     - `HomeScreen.js`
     - `LoginScreen.js`
@@ -63,7 +67,6 @@
   - `constants/`: Chứa các tệp tin chứa hằng số và giá trị cố định.
     - `Colors.js`
     - `Images.js`
-    - `Fonts.js`
     - `index.js`
   - `navigators/`: Chứa các tệp tin liên quan đến điều hướng.
     - `index.js`
